@@ -1,0 +1,11 @@
+node_modules/
+test-results/
+tools/_out/
+.DS_Store
+.playwright-mcp/
+proto/
+.smoke/
+
+# python caches
+__pycache__/
+*.pyc
