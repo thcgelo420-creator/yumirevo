@@ -34,8 +34,7 @@ test.describe('the shell', () => {
     await expect(page.locator('#mod-launch')).toBeVisible();
     await expect(page.locator('#mod-apps')).toBeVisible();
     await expect(page.locator('#bar-clock')).not.toBeEmpty();
-    await expect(page.locator('#bar-cps')).toBeVisible();          // real numbers: checkpoints reached, no XP, no rank
-    await expect(page.locator('#bar-cps')).toContainText('checkpoints');
+    await expect(page.locator('#bar-cps, #bar-net')).toHaveCount(0);   // the bar keeps one readout: the clock
 
     const workspaces = await page.locator('#workspaces .ws').evaluateAll(els => els.map(el => ({
       n: el.querySelector('.num').textContent,

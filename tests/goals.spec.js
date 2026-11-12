@@ -53,10 +53,9 @@ test.describe('the goals pane', () => {
     await openGoals(page);
     await expect(page.locator(`${sys} .goal-status .cps`)).toHaveText('9 / 210');
     expect(await page.evaluate(() => window.ossuary.cps())).toBe(9);
-    // the bar on the other workspaces agrees with the pane
+    // the bar carries no score of its own: no count, no XP, no rank
     await key(page, 'Alt+Digit3');
-    await expect(page.locator('#bar-cps .v')).toHaveText('9/210');
-    await expect(page.locator('#bar-rank, #bar-xp')).toHaveCount(0);
+    await expect(page.locator('#bar-cps, #bar-rank, #bar-xp')).toHaveCount(0);
     expect(errors).toEqual([]);
   });
 });

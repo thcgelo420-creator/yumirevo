@@ -270,7 +270,7 @@ build plan and the agreed decisions are in `moodboard/v7-crane/BUILD.md`.
 > `[x]`/`[~]`/`[ ]` states. The top bar, on 2, 3 and 4, is a plain Linux bar
 > in i3bar's shape: `mimei` and bare workspace numbers, the current one in
 > reverse video; this workspace's windows as words, the one in front
-> underlined; i3status-style readouts split by hairlines. There is no accent
+> underlined; on the right only the clock. There is no accent
 > colour on 2 and 3; the lamp tint only marks focus. Every decorative glyph is
 > `aria-hidden`, and every control keeps a readable name. The desk and settings
 > are otherwise unchanged. The full table is in `moodboard/v11-mist/BUILD.md`; where it

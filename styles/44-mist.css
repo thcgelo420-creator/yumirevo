@@ -303,12 +303,7 @@ body[data-ws='3'] .man-doc h1::before, body[data-ws='3'] .man-doc h2 { margin-le
 #bar .bar-task .bs.done:not(.focus) .bt-num::after { content: ' ✓' / ''; }
 
 #bar .bar-mods > * { padding: 0 12px; border-right: 1px solid var(--line); }
-#bar .bar-mod, #bar .bar-mod :is(.v, .u, .t), #bar .bar-clock { font: 400 12.5px/1 var(--c-mono); letter-spacing: 0; text-transform: none; }
-#bar .bar-mod { gap: 1ch; color: var(--fg-3); }
-#bar .bar-mod .v, #bar .bar-mod.net.off .t, #bar .bar-clock { color: var(--fg); }
-#bar .bar-mod .u, #bar .bar-mod .t { color: var(--fg-3); }
-#bar .bar-mod.net { display: inline-flex; width: auto; }
-#bar .bar-clock { margin: 0; font-variant-numeric: tabular-nums; }
+#bar .bar-clock { margin: 0; font: 400 12.5px/1 var(--c-mono); letter-spacing: 0; text-transform: none; font-variant-numeric: tabular-nums; color: var(--fg); }
 #bar .mod.launch, #bar .mod.apps { width: 38px; height: var(--bar-h); border: 0; border-radius: 0; background: none; color: var(--fg-3); }
 #bar .mod.launch:hover, #bar .mod.apps:hover { color: var(--fg); background: var(--surface-2); border: 0; }
 

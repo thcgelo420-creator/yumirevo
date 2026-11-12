@@ -17,7 +17,6 @@ import {
   activeWs, focusedId, goWorkspace, hideWindow, isFocused, onWM, windowDef, windowsHere, windowsOn,
 } from '../core/wm.js';
 import { summon } from '../core/keys.js';
-import { progressSummary } from '../core/state.js';
 import { sound } from '../core/sound.js';
 import { onPaint, escAttr } from './window.js';
 import { openLauncher } from './launcher.js';
@@ -139,18 +138,6 @@ function fitLent() {
   t.classList.toggle('fit-2', fit === 'fit-2');
 }
 
-function paintStatus() {
-  if (!els.cps) return;
-  const sum = progressSummary();
-  els.cps.querySelector('.v').textContent = `${sum.cps}/${sum.totalCps}`;
-  if (els.net) {
-    const on = navigator.onLine;
-    els.net.classList.toggle('off', !on);
-    els.net.querySelector('.t').textContent = on ? 'online' : 'offline';
-    els.net.title = `Network ${on ? 'online' : 'offline'}`;
-  }
-}
-
 export function paintBar() {
   if (!els.ws) return;
   const now = activeWs();
@@ -170,7 +157,6 @@ export function paintBar() {
   const active = WS.find(w => w.n === now);
   els.ws.dataset.active = active ? active.name : 'desk';
   paintWins();
-  paintStatus();
   paintClock();
 }
 
@@ -178,8 +164,6 @@ export function initBar() {
   els = {
     ws: document.getElementById('workspaces'),
     task: document.getElementById('bar-task'),
-    cps: document.getElementById('bar-cps'),
-    net: document.getElementById('bar-net'),
     clock: document.getElementById('bar-clock'),
   };
   if (!els.ws) return;
@@ -188,8 +172,6 @@ export function initBar() {
   document.getElementById('mod-launch').onclick = () => openLauncher();
   document.getElementById('mod-apps').onclick = () => openLauncher('windows');
 
-  addEventListener('online', paintStatus);
-  addEventListener('offline', paintStatus);
   /* A new width changes what fits. */
   addEventListener('resize', () => { if (els.task && els.task.classList.contains('lent')) fitLent(); }, { passive: true });
   clockTimer = setInterval(paintClock, 10000);

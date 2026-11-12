@@ -39,4 +39,4 @@ Crops the user picked: **a1** fog, **h3** ring roads, **i4** LED columns,
 8. Workspace 3 **opens with all three** windows: manual, Terminal, Files.
 9. **Drop the etched 未明** from the manual; its strip and drops went with it.
 10. The **top bar** "cleaner and minimal, just like Linux": an i3-style bar
-    wherever it shows (2, 3 and 4).
+    wherever it shows (2, 3 and 4); then **fewer readouts**: only the clock.

@@ -51,7 +51,7 @@ of this round that also shows on settings.
 | --- | --- | --- |
 | Left | `mimei` in bold mono, then `1 2 3 4`, the workspace you are on in reverse video. The logo image is hidden but kept in the DOM (the scene swap sets its source) | `bar.js`, `44-mist.css` |
 | Middle | This workspace's windows (`manual terminal files`), or the lesson's steps on 2: plain words, the one in front underlined, open ones brighter than closed. No pills, dots or gliding lamp (removed from `bar.js`) | `bar.js`, `44-mist.css` |
-| Right | `0/210 checkpoints │ online │ 15:21 │`, then search and apps, i3status-style | `index.html`, `44-mist.css` |
+| Right | Just the clock, `15:21 │`, then search and apps. The checkpoint count and network readout were dropped at the user's request (progress lives in the lesson's session bar and the goals window) | `index.html`, `bar.js`, `44-mist.css` |
 | Surface | A flat, near-opaque bar: no blur, no border, one 12.5px mono size, lowercase, no tracking. Under 620px the name steps aside | `44-mist.css` |
 
 ## Assets and tools
