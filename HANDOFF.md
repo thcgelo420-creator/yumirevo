@@ -10,7 +10,7 @@
   code, and each colour means one thing (cyan read, yellow do, violet
   predict, pink build, mint reached, amber you). Ice is daylight. It is built
   on the cab's glass and the study's structure, which are still below.
-  **It landed ahead of its tests** (§9).
+  **It landed ahead of most of its tests** (§9).
 - Workspaces 3 and 4 are **the cab** (`moodboard/v9-cab/BUILD.md`): the
   manual, the terminal, the files and settings on panes of glass over the
   desk's city, out of focus, in tonight's scene. Night and Late are dark,
@@ -209,11 +209,14 @@ first, update second.
 
 Current status:
 
-- 231 functional tests in 17 specs, run on Linux Chromium without a GPU
-  (see §9). The 6 visual tests need the Mac for their baselines.
+- 236 functional tests in 17 specs. Since the district, six of the specs
+  have been run, on Linux Chromium without a GPU (§9). The 6 visual tests
+  need the Mac for their baselines.
 - `lint_css`: clean. `lint_lessons`: `ok`, no `warn:` lines.
-- `tools/browsercheck.py`: all 41 checks across 9 cases pass (run here
-  through a stand-in for the Mac's Chrome).
+- `tools/browsercheck.py` (through a stand-in for the Mac's Chrome): 40 of
+  41 checks across 9 cases pass after the district. The one that fails,
+  `lesson: the course rail is beside it`, looks for `.st-rail`, which the
+  study replaced with the outline in v10; `tools/probe.html` still asks.
 
 ### Playwright quirks
 
@@ -222,6 +225,11 @@ Current status:
   `chromium.launch({ channel: 'chrome' })`.
 - Config: `playwright.config.js`, 2 workers, 1 retry, viewport 1600×1000,
   autostarts a python http.server on 8928.
+- Where there is no system Chrome, a second config can import this one and
+  set `launchOptions.executablePath`. The import arrives wrapped
+  (`{ default: config }`): spread the wrapper and every setting falls back
+  to Playwright's own, quietly (1280×720, 30 s, one worker). Unwrap it, and
+  check that the test list says `[desktop]`.
 - Visual shots: `?noboot&fx=0`, reduced motion, the bar clock fixed, the
   desk pinned with `?time=23:47`, the desk's rain and snow canvases masked.
 - Under heavy CPU load a few timing tests (the LCP budget, the longest
@@ -612,6 +620,27 @@ terminal and the files stacked beside it in a 490px column.
   motion, the menu, Night/Ice, `?time=`, motion = effects, COMPLETE once, the
   move to MIMEI, tonight's time, the plain-button fallback, the six sizes,
   and the shell's own classes kept off the desk.
+- **v11, the district: what was run.** `wm.spec.js` (24) is on the deck:
+  the cases about a row of columns open one with `openRow(page)` (one
+  `Alt+Shift+M` from the deck), the rows case is the press after that, and
+  five new cases cover the deck's shape, the manual alone, the walk through
+  the three layouts, the side column's order and a drop that hands over the
+  lead; `ossuary.wm.mode()` reports the layout. After the district, on
+  Chrome 157 without a GPU (2 CPUs, no retry): `wm` (24), `shell` (12),
+  `man` (8) and `a11y` (14) pass at 1600×1000; `lesson` (22) and `reading`
+  (18) pass at 1280×720 and were not run at 1600×1000. On that box four
+  long `a11y` cases run past the config's 45 s with two workers and pass
+  alone with `--timeout=180000`; `shell`'s stack-mode case missed once
+  under load and passes alone.
+- **v11, a fix the specs asked for.** `the study passes` and `the one look
+  passes` failed before the district too: axe's label-in-name rule, on the
+  outline's steps (the number was text inside a button named `Step 2: …`).
+  The number is drawn by CSS from `data-n` now, and both cases run to the
+  end again, the study's in Night and in Ice.
+- **v11, not run since:** `course`, `critique-bugs`, `desk`, `followup`,
+  `goals`, `look`, `perf`, `review`, `strangers`, `tabs`, `wallpaper` and
+  `visual`. Some were red before the district (the next bullet), so a
+  failure there has to be read before it is blamed.
 - **v10, still to do: the specs that reach for the climb.** In this sandbox
   the first 73 of 223 tests gave 21 failures: 13 in `course.spec.js`, 5 in
   `critique-bugs.spec.js` and 3 more, none yet checked against the study.
@@ -707,6 +736,12 @@ When changing the desk:
   to the system's Japanese face, or to boxes where there is none.
 - **A saved workspace 3 is moved to the deck once.** `state.deckMig` marks
   it; a learner who dragged the split or chose rows keeps what they had.
+- **The outline's step numbers are drawn, not written** (`.ro-step .n`,
+  from `data-n`). As text they were part of the button's visible label and
+  broke axe's label-in-name rule. Read a step's number from `data-step`.
+- **One warm dot in the bar.** The word in front hides its own dot while
+  the gliding lamp is out (`.has-lamp`), on every workspace; without that
+  there are two dots until the lamp arrives.
 - **The hosted Preview serves on port 3000** through `.hoplite/settings.json`
   (`HOST=0.0.0.0 NO_OPEN=1 ./serve.sh 3000`). Locally nothing changes:
   `./serve.sh` is still `localhost:8925`.
@@ -715,8 +750,9 @@ When changing the desk:
 
 ## 11. Suggested next steps
 
-1. **Bring the specs up to the district and the study** (§9), then on the Mac
-   run `npx playwright test`, write and review the visual baselines (§3;
+1. **Bring the rest of the specs up to the district and the study** (§9),
+   then on the Mac run `npx playwright test`, write and review the visual
+   baselines (§3;
    `ws2-lesson` is the big screen now; `ws3-man` is the sign wall;
    `ws4-settings` and `launcher` are the cab with a lit edge), then commit.
 2. Live with the district for a few evenings. Is full neon restful enough

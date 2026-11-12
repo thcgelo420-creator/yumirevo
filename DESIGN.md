@@ -645,8 +645,9 @@ this file all say `localhost:8925`; Playwright's own server is on 8928.
 
 Everything below is expected green before a change lands. There is no CI:
 these are the CI. The district (v11) is the exception on record: it landed
-ahead of its specs, at the owner's word, and HANDOFF §9 lists what has to be
-moved before the suite is green again.
+ahead of its specs, at the owner's word. The window manager's spec has been
+moved to the deck since; HANDOFF §9 says what was run after the district
+and what was not.
 
 ```
 npx playwright test

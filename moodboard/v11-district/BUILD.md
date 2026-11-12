@@ -93,10 +93,13 @@ dark at Night and white in Ice (6.8:1 and 5:1 or better).
     rearranged (`state.deckMig`);
   - an edge of light for each window: the manual pink into violet, the
     terminal mint into cyan, the files cyan into violet.
-- **Two fixes found on the way** (`src/ui/bar.js`, `44-neon.css`): the bar's
-  lent step names no longer run over the workspaces and the readouts (the
-  fit is measured on the full words every time), and its lamp dot lands on
-  the right word on workspaces 3 and 4.
+- **Four fixes found on the way** (`src/ui/bar.js`, `src/ui/study.js`,
+  `44-neon.css`, `38-study.css`): the bar's lent step names no longer run
+  over the workspaces and the readouts (the fit is measured on the full
+  words every time); its lamp dot lands on the right word on workspaces 3
+  and 4, and is the only warm dot there while it glides; and the outline's
+  step numbers are drawn by CSS, so a step's button is named by the words
+  on it (axe's label-in-name rule failed on the study before this round).
 
 ## Geometry
 
@@ -127,7 +130,8 @@ dark at Night and white in Ice (6.8:1 and 5:1 or better).
 ## Stills (1440×900, fx 3, a save with 5 of 210 checkpoints)
 
 - `screen-night`, `screen-night-step`, `screen-night-drawer`: workspace 2 at
-  the top of a lesson, at a *do* step, and with the scripts out.
+  the top of a lesson, further down where a *predict* step ends and a *do*
+  step begins, and with the scripts out.
 - `screen-ice`: the same lesson in Ice.
 - `screen-night-1920`: workspace 2 at 1920×1080.
 - `wall-night`: the manual alone, two columns.
@@ -136,8 +140,10 @@ dark at Night and white in Ice (6.8:1 and 5:1 or better).
 
 ## Not done, on purpose
 
-- **The specs.** This round landed ahead of its tests, at the owner's word.
-  `HANDOFF.md` §9 lists what to move.
+- **Most of the specs.** This round landed ahead of its tests, at the
+  owner's word. `wm.spec.js` was moved to the deck afterwards and the specs
+  nearest the two workspaces were run; `HANDOFF.md` §9 says which, and what
+  is left.
 - **Workspace 4.** Settings has the lit edge and nothing else.
 - **The launcher** still has its own glass, as after v10.
 
