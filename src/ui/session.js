@@ -56,10 +56,12 @@ function notifyQuest() {
 export const stepHere = () => (current ? qHere : null);
 
 /* ── the body of one lesson ───────────────────────────────────────────────── */
+const slugOf = s => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+/** The kicker reads like opening the lesson in a shell; a screen reader hears the stop and its unit instead. */
 function kickerFor(l) {
   const grp = GROUPS.find(g => g.id === l.g);
-  return `<p class="kicker"><span>stop ${l.n}</span><span class="s">·</span>
-    <span class="p">${grp ? grp.label.toLowerCase() : 'the line'}</span></p>`;
+  const unit = grp ? `unit-${grp.id.slice(1).padStart(2, '0')}-${grp.label.toLowerCase().replace(/\s+/g, '-')}/` : '';
+  return `<p class="kicker"><span class="sr-only">Stop ${l.n}, ${grp ? grp.label.toLowerCase() : 'the line'}</span><span class="cmd" aria-hidden="true"><span class="d">$</span> cat ~/roblox-luau/${unit}${l.n}-${slugOf(l.title)}.md</span></p>`;
 }
 
 function paintUnbuilt(l) {
@@ -323,7 +325,7 @@ function stepHeads(frag) {
     const sh = document.createElement('div');
     sh.className = 'st-sh';
     sh.setAttribute('aria-hidden', 'true');
-    sh.innerHTML = `<span class="w">step</span><b>${p2(+s.dataset.step)}</b><span class="kd">${s.dataset.kind || 'read'}</span><i class="ok"></i>`;
+    sh.innerHTML = `<span class="d">$</span> cd <b>${p2(+s.dataset.step)}-${slugOf(h2.textContent)}</b><span class="kd"># ${s.dataset.kind || 'read'}</span><i class="ok"></i>`;
     h2.before(sh);
   });
 }

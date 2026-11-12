@@ -88,3 +88,51 @@ body[data-ws='3'] .man-etch {
   -webkit-mask: url('../assets/glass/drops.webp') 0 0 / 150px 640px repeat-y;
   mask: url('../assets/glass/drops.webp') 0 0 / 150px 640px repeat-y;
 }
+
+/* ── the shell: the lesson pane reads like a session ─────────────────────── */
+/* the outline is `tree` output; one mono voice, the branches quiet, the step you are reading lit */
+#study .ro-list { padding-top: 14px; font: 400 12.5px/1.6 var(--c-mono); }
+#study .ro-cmd { padding: 0 12px 6px 18px; color: var(--fg); white-space: pre; }
+#study .ro-cmd .d, #study .st-sh .d, #study .doc .kicker .d { color: var(--faint); }
+#study .ro-title, #study .ro-step, #study .ro-cp {
+  display: flex; align-items: baseline; gap: 0; white-space: pre; overflow: hidden;
+  font: 400 12.5px/1.6 var(--c-mono); text-align: left;
+}
+#study .ro-title { padding: 2px 12px 2px 18px; }
+#study .ro-title .n { flex: none; font: inherit; letter-spacing: 0; color: var(--fg); margin-right: 1ch; }
+#study .ro-title .t { min-width: 0; overflow: hidden; text-overflow: ellipsis; font: inherit; color: var(--dim); text-transform: lowercase; }
+#study .ro-steps { margin: 0; padding: 0; border-top: 0; }
+#study .ro-step { padding: 2px 12px 2px 18px; color: var(--dim); }
+#study .ro-cp { padding: 1px 12px 1px 18px; color: var(--faint); }
+#study .ro-step .g, #study .ro-cp .g { flex: none; color: var(--faint); opacity: .7; }
+#study .ro-step .n { flex: none; font: inherit; letter-spacing: 0; margin-right: 1ch; color: inherit; }
+#study .ro-step .t, #study .ro-cp .t { min-width: 0; overflow: hidden; text-overflow: ellipsis; font: inherit; text-transform: lowercase; }
+#study .ro-cp .m { flex: none; width: auto; height: auto; border: 0; border-radius: 0; background: none; margin-right: 1ch; }
+#study .ro-cp.done, #study .ro-cp.done .m { color: var(--fg); background: none; }
+#study .ro-step[aria-current] { color: var(--fg); }
+#study .ro-step[aria-current] .n { color: var(--fg); }
+#study .ro-s.cleared > .ro-step .n::after { content: ' ✓' / ''; }
+#study .ro-sum { margin: 12px 0 0; padding: 0 12px 14px 18px; color: var(--faint); white-space: normal; }
+#study .ro-lamp { border-left-width: 2px; border-radius: 0; }
+
+/* the title and each step open with a prompt */
+#study .doc .kicker { letter-spacing: 0; text-transform: none; font: 400 13px/1.5 var(--c-mono); color: var(--dim); overflow-wrap: anywhere; }
+#study .doc .kicker .cmd::after { content: ''; display: inline-block; width: .6em; height: 1.1em; margin-left: 2px; vertical-align: -.2em; background: var(--fg); opacity: .85; }
+#study .st-sh { gap: 0; letter-spacing: 0; text-transform: none; font: 400 13px/1.4 var(--c-mono); color: var(--dim); white-space: pre; }
+
+#study .st-sh b { font-weight: 400; color: var(--fg); }
+#study .st-sh .kd { margin-left: 2ch; color: var(--faint); }
+#study .st-sh .kd::before { content: none; }
+#study .st-sh::after { margin-left: 16px; }
+
+/* the session bar along the pane's foot, tmux-style */
+#study .rd-session {
+  flex: none; display: flex; align-items: center; gap: 14px; height: 26px; padding: 0 12px; overflow: hidden; white-space: nowrap;
+  font: 500 12px/1 var(--c-mono); color: var(--dim);
+  background: rgba(var(--lamp-rgb), .07); border-top: 1px solid var(--line-2);
+}
+#study .rd-session .s { color: var(--fg); }
+#study .rd-session .w.on { padding: 4px 6px; background: var(--fg); color: var(--pane-solid, #071116); }
+#study .rd-session .fill { flex: 1; }
+#study .rd-session .f { min-width: 0; overflow: hidden; text-overflow: ellipsis; color: var(--fg); }
+@media (max-width: 900px) { #study .rd-session .w:not(.on) { display: none; } }

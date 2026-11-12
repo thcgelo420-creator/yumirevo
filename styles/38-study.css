@@ -594,7 +594,8 @@ body:not([data-ws='2']) #study { display: none; }
 #study .wb-x:hover { color: var(--fg); border-color: var(--line-hi); }
 
 /* ── the bar's middle on the study: this lesson's steps, lent by study.js ── */
-.bar-task.lent { position: relative; }
+/* every mode, not only the lent words: the lamp dot is placed against this box on workspaces 3 and 4 too */
+.bar-task { position: relative; }
 .bar-task .bs .bt-num { font: 500 11px/1 var(--c-mono); letter-spacing: .08em; }
 .bar-task .bs .bt-name { white-space: nowrap; }
 .bar-task .bs.done .bt-dot { opacity: .45; }

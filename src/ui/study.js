@@ -70,8 +70,10 @@ function skeleton() {
         <nav class="rd-outline" aria-label="Steps and checkpoints">
           <div class="ro-list">
             <i class="ro-lamp" aria-hidden="true"></i>
+            <div class="ro-cmd" aria-hidden="true"><span class="d">$</span> tree</div>
             <button type="button" class="ro-title" data-step="0" tabindex="-1"><span class="n"></span><span class="t"></span></button>
             <ol class="ro-steps"></ol>
+            <p class="ro-sum" aria-hidden="true"></p>
           </div>
           <div class="ro-foot">
             <div class="ro-tonight" role="img"><span class="k"></span><b></b><span class="bar"><i></i></span></div>
@@ -84,6 +86,7 @@ function skeleton() {
         </nav>
         <div class="st-scroll" id="st-scroll" tabindex="0" role="document" aria-label="Lesson"><div class="doc"></div></div>
       </div>
+      <footer class="rd-session" aria-hidden="true"></footer>
     </div>
     <aside class="rd-bench st-bench glass" id="rd-bench" aria-label="Scripts" inert>
       <header class="wb-head">
@@ -251,15 +254,21 @@ function paintOutline() {
   if (key !== outlineKey) {
     outlineKey = key;
     const held = heldOutline();
-    els.title.querySelector('.n').textContent = l ? l.n : '';
+    els.title.querySelector('.n').textContent = l ? `${l.n}/` : '';
     els.title.querySelector('.t').textContent = l ? l.title : '';
     els.title.title = l ? `${l.n} ${l.title}: back to the top` : '';
     els.title.hidden = !l;
-    els.steps.innerHTML = steps.map(s => `
+    /* drawn as `tree`: the glyphs are aria-hidden, and each button is named by what it shows (plus a quiet state) */
+    els.steps.innerHTML = steps.map((s, si) => {
+      const last = si === steps.length - 1;
+      const stem = last ? '    ' : '│   ';
+      return `
       <li class="ro-s${s.cleared ? ' cleared' : ''}" data-step="${s.n}">
-        <button type="button" class="ro-step" data-step="${s.n}" tabindex="-1" aria-label="Step ${s.n}: ${esc(s.title)}${s.optional ? ', optional' : ''}${s.cleared ? ', done' : ''}"><span class="n">${p2(s.n)}</span><span class="t">${esc(s.title)}</span><i class="ok" aria-hidden="true"></i></button>
-        ${s.cps.length ? `<ul class="ro-cps">${s.cps.map(c => `<li><button type="button" class="ro-cp${c.done ? ' done' : ''}" data-goal="${c.goal}" tabindex="-1" aria-label="Checkpoint ${c.i}: ${esc(c.title)}${c.done ? ', reached' : ''}"><i class="m" aria-hidden="true"></i><span class="t">${esc(c.title)}</span></button></li>`).join('')}</ul>` : ''}
-      </li>`).join('');
+        <button type="button" class="ro-step" data-step="${s.n}" tabindex="-1"><span class="g" aria-hidden="true">${last ? '└── ' : '├── '}</span><span class="n">${p2(s.n)}</span><span class="t">${esc(s.title)}</span><span class="sr-only">${s.optional ? ', optional' : ''}${s.cleared ? ', done' : ''}</span></button>
+        ${s.cps.length ? `<ul class="ro-cps">${s.cps.map((c, ci) => `<li><button type="button" class="ro-cp${c.done ? ' done' : ''}" data-goal="${c.goal}" tabindex="-1"><span class="g" aria-hidden="true">${stem}${ci === s.cps.length - 1 ? '└── ' : '├── '}</span><span class="m" aria-hidden="true">${c.done ? '[x]' : '[ ]'}</span><span class="sr-only">Checkpoint ${c.i}: </span><span class="t">${esc(c.title)}</span><span class="sr-only">${c.done ? ', reached' : ''}</span></button></li>`).join('')}</ul>` : ''}
+      </li>`;
+    }).join('');
+    els.treeFoot.textContent = l ? `${steps.length} ${steps.length === 1 ? 'step' : 'steps'}, ${N} ${N === 1 ? 'checkpoint' : 'checkpoints'}, ${have} reached` : '';
     if (held) {
       const again = els.outline.querySelector(held);
       if (again) again.focus({ preventScroll: true });
@@ -275,7 +284,15 @@ function paintOutline() {
   roveHome();
   paintNav(l);
   placeLamp();
+  paintSession(l, here, steps.length, have, N);
   repaintBarMiddle();
+}
+
+/** The session bar at the foot of the pane, tmux-style: the workspaces as windows, then this lesson and where you are in it. */
+function paintSession(l, here, total, have, N) {
+  if (!els.session) return;
+  const wins = ['desk', 'lessons', 'manual', 'settings'].map((w, i) => `<span class="w${i === 1 ? ' on' : ''}">${i + 1}:${w}${i === 1 ? '*' : ''}</span>`).join('');
+  els.session.innerHTML = `<span class="s">[mimei]</span>${wins}<span class="fill"></span>${l ? `<span class="f">"${esc(l.n)} ${esc(l.title)}"</span><span>${here ? `step ${p2(here)}/${p2(total)}` : 'top'}</span>${N ? `<span>${have}/${N}</span>` : ''}` : ''}`;
 }
 
 /** A selector that finds the focused control in the outline again once it has repainted. */
@@ -494,6 +511,7 @@ export function mountStudy(el) {
     outline: q('.rd-outline'), list: q('.ro-list'), lamp: q('.ro-lamp'), title: q('.ro-title'), steps: q('.ro-steps'),
     tonight: q('.ro-tonight'), tk: q('.ro-tonight .k'), tn: q('.ro-tonight b'), tbar: q('.ro-tonight .bar i'),
     prev: q('.ro-prev'), next: q('.ro-next'), course: q('.ro-course'),
+    treeFoot: q('.ro-sum'), session: q('.rd-session'),
   };
 
   const bench = {

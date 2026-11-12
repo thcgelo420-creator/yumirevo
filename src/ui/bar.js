@@ -136,6 +136,8 @@ function fitLent() {
   if (!bs.length) { t.classList.remove('fit-1', 'fit-2'); return; }
   const room = t.clientWidth;
   if (!room) return;
+  /* measure with every name shown: a name an earlier fit hid measures 0, and would pass for room to spare */
+  t.classList.remove('fit-1', 'fit-2');
   const parts = bs.map(b => ({ here: b.classList.contains('focus'), num: b.querySelector('.bt-num').scrollWidth, name: b.querySelector('.bt-name').scrollWidth }));
   const GAP = 4, DOT = 13, NAME = 8;
   const need = (pad, named, cap) => parts.reduce((a, p) => a + pad + DOT + p.num + (named(p) ? NAME + Math.min(cap, p.name) : 0), 0) + GAP * (parts.length - 1);
