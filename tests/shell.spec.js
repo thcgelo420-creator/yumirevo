@@ -191,8 +191,8 @@ test.describe('the shell', () => {
     const tty = page.locator('#bar-task .bw[data-win="tty"]');
     const files = page.locator('#bar-task .bw[data-win="files"]');
 
-    await expect(tty).not.toHaveClass(/open/);
-    await expect(files).not.toHaveClass(/open/);
+    await expect(tty).toHaveClass(/open/);            // workspace 3 opens with all three
+    await expect(files).toHaveClass(/open/);
 
     await tty.click();
     await expect(page.locator('#win-tty')).toBeVisible();

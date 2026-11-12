@@ -36,6 +36,7 @@ from hue.
 | Manual head | `LUAU-VARIABLES(2)   MIMEI manual · variables   1/11`: the page name on the left as man prints it; the shelf count stays on the right (tests read it) | `man.js` |
 | Manual body | `NAME` and section heads flush left in bold mono caps; text indented under them (7ch, 3ch under 900px, none under 560px) | `44-mist.css` |
 | Manual foot | less(1)'s prompt in reverse video: `Manual page luau-variables(2)`, then `line: top` | `man.js`, `44-mist.css` |
+| Opening layout | Workspace 3 opens with all three: manual left, Terminal and Files stacked right. Existing saves get the two added once (`state.mistStack`); closing them later sticks | `wm.js` |
 | Etched edge | 未明 and water drops on a frosted strip down the manual's right side; hidden under 640px | `man.js`, `assets/glass/*` |
 | Tables | Column output: bold heads, dashed rule, no box | `44-mist.css` |
 | Files | `▸ unit-02-variables/`, then `[ ] 2.1-your-first-variable.md`; `[x]` done, `[~]` started, `[-]` not written, `#` reference. File names are `aria-hidden`; each row reads its title and state | `files.js` |

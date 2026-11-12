@@ -350,8 +350,10 @@ Sharp edges for the next agent:
   `aria-label` with the full title (label-in-name, `course.spec.js`); the
   visible slug is `.s`, the title `.t.sr-only`. Shell punctuation that tests
   read around (`#` before a step's kind, `/` after the stop number) is drawn in
-  CSS. `Alt+Shift+M` cycles main → rows → columns. The one test edit is a
-  tiebreak in `wm.spec.js`'s swap test, because the stack shares an x.
+  CSS. `Alt+Shift+M` cycles main → rows → columns. Test edits: a tiebreak in
+  `wm.spec.js`'s swap test (the stack shares an x), and two tests that assumed
+  workspace 3 opens with the manual alone (`wm.spec.js` Alt+Q, `shell.spec.js`
+  bar) — it now opens with the manual, Terminal and Files (user's choice).
 - **Walls** are 1600px at a per-recipe quality to stay inside the 64 KB budget
   (`perf.spec.js`). Perf tests are timing-sensitive; on a slow sandbox run
   them with `--workers=1`.

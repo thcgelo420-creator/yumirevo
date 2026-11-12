@@ -115,9 +115,12 @@ test.describe('the window manager', () => {
 
   test('Alt+Q closes the focused window and the seat says it is empty', async ({ page, errors }) => {
     await boot(page);
-    await key(page, 'Alt+Digit3');                 // workspace 3 opens the manual
-    await expectTiled(page, ['man']);
-    await key(page, 'Alt+KeyQ');
+    await key(page, 'Alt+Digit3');                 // workspace 3 opens the manual, the terminal and files
+    await expectTiled(page, ['man', 'tty', 'files']);
+    for (let i = 0; i < 3; i++) {
+      await key(page, 'Alt+KeyQ');
+      await expect(page.locator('#seat .win:not(.hidden)')).toHaveCount(2 - i);
+    }
     /* the close animation keeps the frame in the DOM for a moment, so wait for
        it to leave rather than sampling once (workspace 1 keeps its dashboard,
        and any tools opened there stay in the DOM, hidden) */

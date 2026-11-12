@@ -46,7 +46,7 @@ export const windowIds = () => [...registry.keys()];
 const DEFAULT_LAYOUT = {
   1: { order: [] },
   2: { order: [] },                          // the study is a fixed layout (ui/study.js), not tiles
-  3: { order: ['man'], mode: 'main' },       // the manual leads; the terminal and files stack beside it
+  3: { order: ['man', 'tty', 'files'], mode: 'main' },   // the manual leads; the terminal and files stack beside it
   4: { order: ['settings'] },
 };
 /* the gap is read off the seat, so a workspace can breathe wider than the rest */
@@ -61,6 +61,16 @@ const MAIN_SPLIT = .6;                          // in main mode, the first windo
   if (w && !state.mistMain) {
     if (!w.mode || w.mode === 'columns') w.mode = 'main';
     state.mistMain = true;
+    save();
+  }
+  /* and the stack is there from the start: once, put the terminal and files beside the manual
+     (a learner who closes them later keeps them closed) */
+  if (w && Array.isArray(w.order) && !state.mistStack) {
+    for (const id of ['tty', 'files']) {
+      if (!w.order.includes(id)) w.order.push(id);
+      if (Array.isArray(w.hidden)) w.hidden = w.hidden.filter(x => x !== id);
+    }
+    state.mistStack = true;
     save();
   }
 }
