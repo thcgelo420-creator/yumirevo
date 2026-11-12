@@ -1,0 +1,75 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   MIMEI · 44 MIST · THE VIEW AND THE ETCHED GLASS (workspaces 2 and 3)
+   Loaded after 43-glass. Workspaces 2 and 3 look out over the desk's city in mist: the wall is the
+   view itself, sharp (assets/walls/city-*.webp, made by tools/assets.py with tools/mist.py), and the
+   panes in front of it are dark glass tinted by the fog. The one ornament is the glass itself: a
+   frosted edge on the reading pane with the 未明 mark cut into it and rain on the outside
+   (assets/glass/, made by tools/glass.py). Nothing coloured, nothing glowing; the words sit on calm,
+   even glass. Workspace 4 keeps the soft city: the view is fenced to 2 and 3.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── the fog's glass: tokens for 2 and 3 ───────────────────────────────── */
+body[data-ws='2'], body[data-ws='3'] {
+  --pane: rgba(6, 15, 19, .84);
+  --pane-glass: rgba(6, 15, 19, .8);
+  --pane-solid: #071116;
+  --glass-edge: rgba(200, 236, 238, .12);
+  --mist-line: rgba(196, 228, 230, .12);
+  --etch: rgba(214, 238, 240, .42);
+  --etch-frost: rgba(214, 238, 240, .045);
+  --drops: rgba(226, 244, 246, .5);
+  --shadow: 0 30px 80px -24px rgba(1, 6, 9, .78);
+}
+:root[data-scene='late'] body[data-ws='2'], :root[data-scene='late'] body[data-ws='3'] {
+  --pane: rgba(4, 11, 14, .8);
+  --pane-glass: rgba(4, 11, 14, .74);
+  --etch: rgba(200, 226, 228, .34);
+}
+:root[data-scene='ice'] body[data-ws='2'], :root[data-scene='ice'] body[data-ws='3'] {
+  --pane: rgba(238, 243, 242, .84);
+  --pane-glass: rgba(238, 243, 242, .78);
+  --pane-solid: #eef3f2;
+  --glass-edge: rgba(255, 255, 255, .9);
+  --mist-line: rgba(30, 52, 56, .12);
+  --etch: rgba(40, 70, 76, .3);
+  --etch-frost: rgba(255, 255, 255, .34);
+  --drops: rgba(60, 90, 96, .38);
+  --shadow: 0 26px 64px -30px rgba(40, 62, 66, .4);
+}
+
+/* ── the view: sharp, a light veil only at the top and the foot ───────────── */
+body[data-ws='2'] .wall-veil, body[data-ws='3'] .wall-veil {
+  background: linear-gradient(180deg, rgba(3, 9, 12, .42) 0%, rgba(3, 9, 12, 0) 22%, rgba(3, 9, 12, 0) 78%, rgba(3, 9, 12, .38) 100%);
+}
+:root[data-scene='ice'] body[data-ws='2'] .wall-veil, :root[data-scene='ice'] body[data-ws='3'] .wall-veil {
+  background: linear-gradient(180deg, rgba(236, 241, 240, .4) 0%, rgba(236, 241, 240, 0) 24%, rgba(236, 241, 240, 0) 80%, rgba(236, 241, 240, .3) 100%);
+}
+/* settings stays as it was: the same city, out of focus */
+body[data-ws='4'] #wall-img, body[data-ws='4'] .wall-lqip { filter: blur(10px) saturate(.9); transform: scale(1.04); }
+
+/* ── the panes: an even edge, no lamp glow beyond the hairline ───────────── */
+body[data-ws='2'] #study .rd-read, body[data-ws='2'] #study .rd-bench,
+body[data-ws='3'] .win { border-color: var(--mist-line); }
+
+/* ── the etched edge: a strip of frosted glass down the pane's right side ── */
+#study .rd-body { margin-right: var(--etch-w, 0px); }
+#study .rd-etch {
+  position: absolute; right: 0; top: 46px; bottom: 0; width: var(--etch-w, 0px); overflow: hidden; pointer-events: none;
+  border-left: 1px solid var(--mist-line);
+  background: linear-gradient(90deg, transparent, var(--etch-frost) 40%), var(--glass-grain);
+  background-size: 100% 100%, 160px 160px;
+}
+#study.no-etch .rd-etch { display: none; }
+#study .rd-etch-mark, #study .rd-drops { position: absolute; display: block; }
+#study .rd-etch-mark {
+  left: 50%; top: 34px; width: calc(var(--etch-w, 120px) * .76); height: calc(var(--etch-w, 120px) * 1.68); transform: translateX(-50%);
+  background: var(--etch);
+  -webkit-mask: url('../assets/glass/etch.webp') center top / contain no-repeat;
+  mask: url('../assets/glass/etch.webp') center top / contain no-repeat;
+}
+#study .rd-drops {
+  inset: 0;
+  background: var(--drops);
+  -webkit-mask: url('../assets/glass/drops.webp') 0 0 / 150px 640px repeat-y;
+  mask: url('../assets/glass/drops.webp') 0 0 / 150px 640px repeat-y;
+}

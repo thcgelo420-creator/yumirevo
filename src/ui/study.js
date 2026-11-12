@@ -84,6 +84,7 @@ function skeleton() {
         </nav>
         <div class="st-scroll" id="st-scroll" tabindex="0" role="document" aria-label="Lesson"><div class="doc"></div></div>
       </div>
+      <div class="rd-etch" aria-hidden="true"><i class="rd-etch-mark"></i><i class="rd-drops"></i></div>
     </div>
     <aside class="rd-bench st-bench glass" id="rd-bench" aria-label="Scripts" inert>
       <header class="wb-head">
@@ -175,22 +176,24 @@ function setDrawer(on, { save: keep = true, focus = false } = {}) {
   holeLater();
 }
 
-/* ── the layout: the pane in the middle, the drawer beside it (or over it, on a narrow screen) ── */
+/* ── the layout: a window seat. The pane sits at the left and the city stays open on the right,
+   where the drawer comes in beside it; on a narrow screen the drawer comes over the page ── */
 function layout() {
   if (!root) return;
   const sw = root.clientWidth, sh = root.clientHeight;
   if (!sw || !sh) return;
   const g = sw < 900 ? 10 : 14;
   const bw = Math.round(clamp(sw * .28, 360, 440));
-  let mode = 'side', pw = Math.min(1040, sw - 3 * g - bw);
+  const lm = Math.round(clamp(sw * .016, g, 28));     // the pane's distance from the left edge
+  let mode = 'side', pw = Math.min(1040, sw - lm - 2 * g - bw);
   if (pw < 760) { mode = 'over'; pw = Math.min(1040, sw - 2 * g); }
   pw = Math.round(pw);
-  const px = Math.round((sw - pw) / 2);
-  const group = pw + g + bw;
-  const pxOpen = mode === 'side' ? Math.round(Math.max(g, (sw - group) / 2)) : px;
-  const bx = mode === 'side' ? pxOpen + pw + g : sw - g - Math.min(bw, sw - 2 * g);
+  const px = mode === 'side' ? lm : Math.round((sw - pw) / 2);
+  const pxOpen = px;
+  const bx = mode === 'side' ? px + pw + g : sw - g - Math.min(bw, sw - 2 * g);
   const outline = pw >= 720;
-  Object.assign(geo, { sw, sh, g, pw, bw: Math.min(bw, sw - 2 * g), px, pxOpen, bx, mode, outline });
+  const etch = pw >= 960 ? 120 : pw >= 800 ? 88 : 0;  // the frosted edge with the mark in it
+  Object.assign(geo, { sw, sh, g, pw, bw: Math.min(bw, sw - 2 * g), px, pxOpen, bx, mode, outline, etch });
   const s = root.style;
   s.setProperty('--g', `${g}px`);
   s.setProperty('--pw', `${pw}px`);
@@ -199,8 +202,10 @@ function layout() {
   s.setProperty('--px-open', `${pxOpen}px`);
   s.setProperty('--bx', `${bx}px`);
   s.setProperty('--ow', `${pw >= 940 ? 236 : 204}px`);
+  s.setProperty('--etch-w', `${etch}px`);
   root.classList.toggle('bench-over', mode === 'over');
   root.classList.toggle('no-outline', !outline);
+  root.classList.toggle('no-etch', !etch);
   hole();
   placeLamp(true);
 }

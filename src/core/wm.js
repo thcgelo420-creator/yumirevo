@@ -46,12 +46,24 @@ export const windowIds = () => [...registry.keys()];
 const DEFAULT_LAYOUT = {
   1: { order: [] },
   2: { order: [] },                          // the study is a fixed layout (ui/study.js), not tiles
-  3: { order: ['man'] },
+  3: { order: ['man'], mode: 'main' },       // the manual leads; the terminal and files stack beside it
   4: { order: ['settings'] },
 };
 /* the gap is read off the seat, so a workspace can breathe wider than the rest */
 const GAP = () => parseFloat(getComputedStyle(seat || document.documentElement).getPropertyValue('--gap')) || 10;
 const FOLD_W = 44;                              // a folded rail: just its label, on its side
+const MAIN_SPLIT = .6;                          // in main mode, the first window's share of the width
+
+/* The mist round: workspace 3 moves from three even columns to the manual with a stack beside it.
+   Once, for a save that is still in plain columns; Alt+Shift+M and the menu still change it. */
+{
+  const w = state.layout && state.layout[3];
+  if (w && !state.mistMain) {
+    if (!w.mode || w.mode === 'columns') w.mode = 'main';
+    state.mistMain = true;
+    save();
+  }
+}
 
 /* Workspace 1 is the desk: the city, full screen, with no windows on it.
    Terminal and Files live on workspace 3 with the manual; the launcher and the
@@ -401,6 +413,11 @@ export function resizeFocused(dir) {
   const ids = w.order.filter(id => !w.hidden.includes(id));
   if (ids.length < 2) return;
   const k = .12;
+  if (w.mode === 'main') {                     // the first window grows; any other grows by shrinking it
+    const lead = ids.find(id => !w.float[id]);
+    w.split = clamp((w.split || MAIN_SPLIT) + (focused === lead ? dir : -dir) * .05, .35, .78);
+    save(); layout(); emit(); return;
+  }
   w.weights[focused] = clamp((w.weights[focused] || 1) + dir * k, .4, 6);
   save(); layout(); emit();
 }
@@ -432,7 +449,7 @@ export function toggleMonocle(id = focused) {
 
 export function setLayoutMode(mode) {
   const w = cur();
-  w.mode = ['columns', 'rows'].includes(mode) ? mode : 'columns';
+  w.mode = ['columns', 'rows', 'main'].includes(mode) ? mode : 'columns';
   w.monocle = null;
   save(); layout(); emit();
   log('dim', `[ ~ ] layout: ${w.mode}`);
@@ -575,7 +592,20 @@ function geometry() {
   }
   for (const el of seat.querySelectorAll('.win')) el.classList.remove('monocle');
 
-  if (w.mode === 'rows') {
+  if (w.mode === 'main' && tiled.length > 1) {
+    // the first window takes the left, the rest stack in a column on the right
+    const [lead, ...rest] = tiled;
+    const lw = Math.round((total - g) * (w.split || MAIN_SPLIT));
+    place(winEl(lead), g, g, lw, height);
+    const weights = rest.map(id => w.weights[id] || 1);
+    const sum = weights.reduce((a, b) => a + b, 0) || 1;
+    let y = g;
+    rest.forEach((id, i) => {
+      const h = Math.max(120, (height - g * (rest.length - 1)) * weights[i] / sum);
+      place(winEl(id), g + lw + g, y, total - lw - g, h);
+      y += h + g;
+    });
+  } else if (w.mode === 'rows') {
     const weights = tiled.map(id => w.weights[id] || 1);
     const sum = weights.reduce((a, b) => a + b, 0) || 1;
     let y = g;
@@ -600,7 +630,7 @@ function geometry() {
   }
   for (const id of list) {
     const el = winEl(id);
-    if (el) el.classList.toggle('folded', w.mode !== 'rows' && !w.float[id] && w.fold.includes(id) && tiled.length > 1);
+    if (el) el.classList.toggle('folded', w.mode === 'columns' && !w.float[id] && w.fold.includes(id) && tiled.length > 1);
   }
 
   for (const id of floats) {
@@ -782,7 +812,8 @@ function openMenu(id, x, y) {
     <button role="menuitem" data-act="float">${isFloat ? 'Tile it again' : 'Float it'} <kbd>alt F</kbd></button>
     <button role="menuitem" data-act="hide">Hide window <kbd>alt Z</kbd></button>
     <hr>
-    <button role="menuitem" data-act="cols">Columns layout <kbd>alt ⇧ M</kbd></button>
+    <button role="menuitem" data-act="main">Main and stack <kbd>alt ⇧ M</kbd></button>
+    <button role="menuitem" data-act="cols">Columns layout</button>
     <button role="menuitem" data-act="rows">Rows layout</button>
     <hr>
     <button role="menuitem" data-act="ws2">Move to 2 · lessons</button>
@@ -799,6 +830,7 @@ function openMenu(id, x, y) {
     if (act === 'max') toggleMonocle(id);
     else if (act === 'float') toggleFloat(id);
     else if (act === 'hide') hideWindow(id);
+    else if (act === 'main') setLayoutMode('main');
     else if (act === 'cols') setLayoutMode('columns');
     else if (act === 'rows') setLayoutMode('rows');
     else if (act === 'close') closeWindow(id);

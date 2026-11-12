@@ -60,11 +60,13 @@ SOFT_W = 768            # a soft wall is out of focus anyway: small, blurred, a 
 #   fit "cover" (default) or "top" for tall art worth seeing from the top
 #   anim/fps  keep the motion, thinned to at most fps (writes a still too)
 #   soft  out of focus: SOFT_W wide, Gaussian blur of this radius (px at SOFT_W)
+#   mist  the view, sharp: tools/mist.py grades the plate and lays fog through it (recipe name)
 PICKS = [
-    # The cab sits in front of the desk's city, out of focus: one wall per scene (src/ui/cab.js picks it).
-    ("city-night", "assets/crane/city-night.webp", "the city at night, out of focus", dict(soft=5)),
-    ("city-late", "assets/crane/city-late.webp", "the city late at night, out of focus", dict(soft=5)),
-    ("city-ice", "assets/crane/city-ice.webp", "the city in ice, out of focus", dict(soft=5)),
+    # Workspaces 2–4 look out over the desk's city in mist: one wall per scene (src/ui/cab.js picks it).
+    # Night and Late are the Late plate, the city in low cloud; Ice is the snow plate as a fog day.
+    ("city-night", "assets/crane/city-late.webp", "the city in mist at night", dict(mist="night")),
+    ("city-late", "assets/crane/city-late.webp", "the city in mist, late", dict(mist="late")),
+    ("city-ice", "assets/crane/city-ice.webp", "the city on a day of fog", dict(mist="ice")),
 ]
 
 
@@ -158,6 +160,10 @@ def build(force: bool) -> int:
                                        allow_mixed=True)
                         # what a reduced-motion visitor sees: the first frame, still
                         frames[0].convert("RGB").save(still_out, "WEBP", quality=70, method=6)
+                elif flags.get("mist"):
+                    from mist import mist
+                    anim = False
+                    mist(raw, flags["mist"]).save(out, "WEBP", quality=70, method=6)
                 elif flags.get("soft"):
                     anim = False
                     still = raw.convert("RGB")
