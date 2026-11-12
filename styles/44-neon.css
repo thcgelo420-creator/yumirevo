@@ -33,7 +33,7 @@
   --nx-mint: #4dffb4;     --nx-mint-rgb: 77, 255, 180;
   --nx-red: #ff6b7d;      --nx-red-rgb: 255, 107, 125;
   --nx-ink: #05070c;                      /* words set on a lit sign */
-  --nx-glow: 1;                           /* how far the light spills: 0 in Ice's daylight */
+  --nx-glow: .55;                          /* how far the light spills: 0 in Ice's daylight */
 
   /* the iridescent column: cyan through violet and pink to the lamp's amber */
   --nx-iri: linear-gradient(180deg, #45f0ff 0%, #6f8bff 26%, #b089ff 48%, #ff4fc3 74%, #ffb46b 100%);
@@ -70,7 +70,7 @@
   --nx-mint: #087a4c;     --nx-mint-rgb: 8, 122, 76;
   --nx-red: #d42a3c;      --nx-red-rgb: 212, 42, 60;
   --nx-ink: #ffffff;
-  --nx-glow: .35;
+  --nx-glow: .2;
   --nx-iri: linear-gradient(180deg, #0b62e6 0%, #4a52e8 26%, #6b3fe0 48%, #d6006f 76%, #f0652a 100%);
   --nx-iri-h: linear-gradient(90deg, #0b62e6 0%, #4a52e8 26%, #6b3fe0 48%, #d6006f 76%, #f0652a 100%);
   --nx-edge: linear-gradient(135deg, rgba(11, 98, 230, .9), rgba(107, 63, 224, .6) 36%, rgba(214, 0, 111, .9) 72%, rgba(240, 101, 42, .8));
