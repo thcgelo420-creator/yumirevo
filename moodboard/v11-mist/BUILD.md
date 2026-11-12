@@ -42,17 +42,20 @@ from hue.
 | Inspector | `$ stat 2.1-your-first-variable.md`, title, `ready · 10 min · 3 checkpoints`, a `$ open ↵` command button | `files.js` |
 | Terminal | Already a shell; labels lowercased | `44-mist.css` |
 
-## The top bar (workspaces 2, 3 and 4)
+## The top bar (workspaces 2, 3 and 4) and the panel along the foot (3 and 4)
 
 Asked for "cleaner and minimal, just like Linux": an i3bar. It is the one part
-of this round that also shows on settings.
+of this round that also shows on settings. Then "less dark", and the window
+words out of the top bar: they moved to a panel along the foot, as on a
+two-panel Linux desktop, in the lessons' session-bar voice.
 
 | Part | Treatment | Where |
 | --- | --- | --- |
 | Left | `mimei` in bold mono, then `1 2 3 4`, the workspace you are on in reverse video. The logo image is hidden but kept in the DOM (the scene swap sets its source) | `bar.js`, `44-mist.css` |
-| Middle | This workspace's windows (`manual terminal files`), or the lesson's steps on 2: plain words, the one in front underlined, open ones brighter than closed. No pills, dots or gliding lamp (removed from `bar.js`) | `bar.js`, `44-mist.css` |
+| Middle | Empty. The lesson's steps were dropped from the bar (the outline and the session bar carry them); the window words moved to the panel | `bar.js`, `study.js` |
 | Right | Just the clock, `15:21 │`, then search and apps. The checkpoint count and network readout were dropped at the user's request (progress lives in the lesson's session bar and the goals window) | `index.html`, `bar.js`, `44-mist.css` |
-| Surface | A flat, near-opaque bar: no blur, no border, one 12.5px mono size, lowercase, no tracking. Under 620px the name steps aside | `44-mist.css` |
+| Surface | Smoked glass, `--mist-bar` (about rgb 48 62 69 on screen at night, up from an almost black 8 11 14), blurred when effects allow, a hairline under it; pale glass in Ice. One 12.5px mono size, lowercase, no tracking. Under 620px the name steps aside | `44-mist.css` |
+| Panel | `#panel` along the foot on 3 and 4: `manual* terminal files`, the window in front in reverse video with tmux's `*` (a kept slot, so no word moves), open ones bright, put-away ones quieter. Same glass as the bar, 26px; the seat gives up that height (`--panel-h`) so nothing tiles under it. Hidden on the lessons (their own session bar) and under 620px (the apps menu, as before) | `index.html`, `bar.js`, `44-mist.css` |
 
 ## Assets and tools
 

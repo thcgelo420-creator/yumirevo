@@ -282,24 +282,25 @@ test.describe('the desk says what its keys do (quick wins 1 and 2)', () => {
 test.describe('the stop in hand is named where you look (quick win 3)', () => {
   const task = page => page.locator('#bar-task');
   const head = page => page.locator('#study .rd-n');
+  const session = page => page.locator('#study .rd-session');
 
-  test('on workspace 2 the pane\'s head names the open stop and follows [ and ]; the bar\'s middle is its steps', async ({ page, errors }) => {
+  test('on workspace 2 the pane\'s head and its session bar name the open stop and follow [ and ]', async ({ page, errors }) => {
     await boot(page, { hash: '#/2.1' });
     expect(await activeWs(page)).toBe(2);
     await expect(head(page)).toHaveText('2.1');
-    /* the cab's slim bar stays on the study, and its middle is this lesson's steps, as words */
+    /* the slim bar stays on the study; the stop is named at the pane's head and in its session bar */
     await expect(page.locator('#bar')).toBeVisible();
-    await expect(task(page).locator('.bs')).toHaveCount((await study(page)).outline.steps);
+    await expect(session(page)).toContainText('"2.1 ');
     await key(page, ']');
     await expect(page.locator('#study .kicker')).toContainText('2.2');
     await expect(head(page)).toHaveText('2.2');
-    await expect(task(page).locator('.bs')).toHaveCount((await study(page)).outline.steps);
+    await expect(session(page)).toContainText('"2.2 ');
     await key(page, '[');
     await expect(head(page)).toHaveText('2.1');
-    // on the manual its middle names the window in front
+    // on the manual the panel along the foot names the window in front
     await key(page, 'Alt+Digit3');
     await expect(task(page)).toBeVisible();
-    await expect(task(page)).toContainText('manual');
+    await expect(task(page).locator('.bw.focus')).toHaveText('manual');
     expect(errors).toEqual([]);
   });
 
@@ -349,19 +350,21 @@ for (const [zone, instant, today, before] of [
 
 test.describe('the bar does not move when its label changes (cold-load layout shift)', () => {
   /* The centre cell used to be as wide as its text, so a stop name that arrived after first paint pushed the bar's
-     columns about; perf.spec read it as a cumulative layout shift of 0.0505 (limit 0.05) on a cold #/2.1. */
-  const boxes = page => page.evaluate(() => ['.bar-l', '.bar-c', '#bar-task', '.bar-r'].map(s => {
-    const r = document.querySelector('#bar ' + s).getBoundingClientRect();
+     columns about; perf.spec read it as a cumulative layout shift of 0.0505 (limit 0.05) on a cold #/2.1. The windows'
+     words now live on the panel along the foot, each with a kept slot for tmux's `*`, so focus moving moves nothing. */
+  const boxes = page => page.evaluate(() => ['#bar .bar-l', '#bar .bar-r', '#bar-task',
+    ...[...document.querySelectorAll('#bar-task .bw')].map(b => `#bar-task .bw[data-win="${b.dataset.win}"]`)].map(s => {
+    const r = document.querySelector(s).getBoundingClientRect();
     return `${s} x${Math.round(r.x)} w${Math.round(r.width)}`;
   }));
 
-  test('the lamp moving from one window to another lays the bar out the same', async ({ page, errors }) => {
+  test('focus moving from one window to another lays the bar and the panel out the same', async ({ page, errors }) => {
     await boot(page, { hash: '#/2.1' });
-    await key(page, 'Alt+Digit3');                                   // the bar is on the manual and settings
+    await key(page, 'Alt+Digit3');                                   // the panel is on the manual and settings
     await expect(page.locator('#bar-task .bw.focus')).toHaveText('manual');
     const short = await boxes(page);
     await page.evaluate(() => window.ossuary.wm.open('tty'));
-    await expect(page.locator('#bar-task .bw.focus')).toHaveText('terminal');   // the lamp moves; the words stay put
+    await expect(page.locator('#bar-task .bw.focus')).toHaveText('terminal');   // the focus moves; the words stay put
     await page.evaluate(() => window.ossuary.wm.flush());
     expect(await boxes(page)).toEqual(short);
     expect(errors).toEqual([]);

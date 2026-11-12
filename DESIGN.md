@@ -268,9 +268,11 @@ build plan and the agreed decisions are in `moodboard/v7-crane/BUILD.md`.
 > colour or cards. Workspace 3's manual is a man page (flush-left bold
 > sections, indented text, less(1)'s prompt), and Files is `ls` with
 > `[x]`/`[~]`/`[ ]` states. The top bar, on 2, 3 and 4, is a plain Linux bar
-> in i3bar's shape: `mimei` and bare workspace numbers, the current one in
-> reverse video; this workspace's windows as words, the one in front
-> underlined; on the right only the clock. There is no accent
+> in i3bar's shape on smoked glass: `mimei` and bare workspace numbers, the
+> current one in reverse video, and on the right only the clock. This
+> workspace's windows are words on a panel along the foot (3 and 4), the one
+> in front in reverse video with tmux's `*`; the lessons keep their own
+> session bar there instead. There is no accent
 > colour on 2 and 3; the lamp tint only marks focus. Every decorative glyph is
 > `aria-hidden`, and every control keeps a readable name. The desk and settings
 > are otherwise unchanged. The full table is in `moodboard/v11-mist/BUILD.md`; where it

@@ -142,32 +142,35 @@ for (const [w, h] of [[1280, 800], [1366, 768], [1440, 900], [1600, 1000], [1920
     await expect(page.locator('#win-man .man-head .m')).toBeVisible();
     await fine(page, '#win-man .win-bar', 'manual title bar');
     await fine(page, '#bar', 'bar on the manual');
+    await fine(page, '#panel', 'panel on the manual');
     expect(errors).toEqual([]);
   });
 }
 
-/* the bar's centre label (the bar lives on the manual and settings; the lessons own the screen): every window
-   name it shows is not cut and clears the items on both sides */
+/* the panel along the foot (the manual and settings; the lessons have their own session bar): every window name it
+   shows is whole, on screen, and below the windows */
 for (const [w, h] of SIZES) {
-  test(`bar label at ${w}×${h}: each window name fits and clears both sides`, async ({ page, errors }) => {
+  test(`panel at ${w}×${h}: each window name is whole, on screen and below the windows`, async ({ page, errors }) => {
     await page.setViewportSize({ width: w, height: h });
     await boot(page, { hash: '#/2.1' });
     for (const [id, name] of [['tty', 'terminal'], ['files', 'files'], ['man', 'manual'], ['settings', 'settings']]) {
       await page.evaluate(id => window.ossuary.wm.open(id), id);
-      await expect(page.locator('#bar')).toBeVisible();
+      await expect(page.locator('#panel')).toBeVisible();
       await expect(page.locator('#bar-task')).toContainText(name);
+      await page.evaluate(() => window.ossuary.wm.flush());
       const r = await page.evaluate(() => {
-        const box = e => e.getBoundingClientRect(), shown = e => [...e.children].filter(k => box(k).width > 0);
-        const nm = document.querySelector('#bar .bt-name'), t = box(document.getElementById('bar-task'));
+        const box = e => e.getBoundingClientRect();
+        const names = [...document.querySelectorAll('#bar-task .bt-name')];
+        const t = box(document.getElementById('bar-task'));
         return {
-          cut: nm.scrollWidth - nm.clientWidth, left: t.left, right: t.right,
-          lRight: Math.max(...shown(document.querySelector('#bar .bar-l')).map(k => box(k).right)),
-          rLeft: Math.min(...shown(document.querySelector('#bar .bar-r')).map(k => box(k).left)),
+          cut: Math.max(...names.map(n => n.scrollWidth - n.clientWidth)), left: t.left, right: t.right, top: t.top,
+          vw: innerWidth, seatBottom: box(document.getElementById('seat')).bottom,
         };
       });
-      expect(r.cut, `${name}: label overflow in px`).toBeLessThanOrEqual(0);
-      expect(r.left, `${name}: label starts right of the left items`).toBeGreaterThan(r.lRight);
-      expect(r.right, `${name}: label ends left of the right items`).toBeLessThan(r.rLeft);
+      expect(r.cut, `${name}: a name overflows by px`).toBeLessThanOrEqual(0);
+      expect(r.left, `${name}: the words start on screen`).toBeGreaterThanOrEqual(0);
+      expect(r.right, `${name}: the words end on screen`).toBeLessThanOrEqual(r.vw);
+      expect(r.top, `${name}: the panel sits below the windows`).toBeGreaterThanOrEqual(r.seatBottom - 1);
     }
     expect(errors).toEqual([]);
   });

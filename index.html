@@ -111,10 +111,6 @@
     <nav id="workspaces" aria-label="Workspaces"></nav>
   </div>
 
-  <div class="bar-c">
-    <nav class="bar-task" id="bar-task" aria-label="Windows on this workspace"></nav>
-  </div>
-
   <div class="bar-r">
     <div class="bar-mods">
       <time class="bar-clock" id="bar-clock" title="Local time">--:--</time>
@@ -128,12 +124,17 @@
   </div>
 </header>
 
-<!-- ══ shell: the seat (the bar names this workspace's windows) ══════════ -->
+<!-- ══ shell: the seat ══════════════════════════════════════════════════ -->
 <div id="shell">
   <main id="seat" aria-label="Desktop">
     <div id="desk"></div>
     <div id="study" hidden></div>
   </main>
+</div>
+
+<!-- ══ the panel along the foot: this workspace's windows (3 and 4; the lessons have their own session bar) ══ -->
+<div id="panel">
+  <nav class="bar-task" id="bar-task" aria-label="Windows on this workspace"></nav>
 </div>
 
 <!-- lesson bodies land here at boot, pulled out of content/*.md -->

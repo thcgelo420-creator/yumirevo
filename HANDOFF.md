@@ -334,10 +334,17 @@ Sharp edges for the next agent:
 - **One stylesheet.** `styles/44-mist.css` loads last and is scoped to
   `body[data-ws='2']`, `body[data-ws='3']` and `#study`. Keep it that way; the
   desk and settings are fenced off and the user must approve changes there.
-  The one exception is the top bar (`#bar`, the last block of the file), which
+  The one exception is the top bar (`#bar`, near the end of the file), which
   shows on 2, 3 and 4: the user asked for a plain Linux bar wherever it shows.
-  `bar.js` no longer draws the dots or the gliding lamp; the logo image stays
-  in the DOM, hidden (`wallpaper.spec.js` reads its source).
+  `bar.js` no longer draws the dots or the gliding lamp, and no longer takes
+  words lent by a workspace (`lendBarMiddle` is gone; the lessons' steps live
+  in the outline and the session bar). The logo image stays in the DOM,
+  hidden (`wallpaper.spec.js` reads its source).
+- **The panel** (`#panel`, the last block of `44-mist.css`) holds
+  `#bar-task`, the window words, along the foot of 3 and 4. `--panel-h`
+  shortens `#shell` there so the seat (and every tiled window) ends above it;
+  `wm.js` re-tiles through its ResizeObserver. It is hidden on 2 and under
+  620px, where `--panel-h` is 0.
 - **Layout.** `study.js` `layout()` makes the pane full width (`--pw`); with
   the scripts drawer out it shrinks to `--pw-open` and the drawer takes the
   right side, or the drawer comes over the page when the pane would drop under

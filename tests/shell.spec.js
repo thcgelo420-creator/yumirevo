@@ -18,12 +18,12 @@ test.describe('the shell', () => {
     await expect(page.locator('#win-files')).toHaveCount(0);
     expect(await wmRects(page)).toEqual([]);
 
-    // the lessons have the study, under the cab's slim bar: its middle is this lesson's steps
+    // the lessons have the study, under the slim bar; the windows' panel steps aside for the lesson's own session bar
     await key(page, 'Alt+Digit2');
     await expect(page.locator('#study')).toBeVisible();
     await expect(page.locator('#bar')).toBeVisible();
-    await expect(page.locator('#bar-task')).toHaveClass(/\blent\b/);
-    await expect(page.locator('#bar-task .bs').first()).toBeVisible();
+    await expect(page.locator('#panel')).toBeHidden();
+    await expect(page.locator('#study .rd-session')).toBeVisible();
 
     // the bar is on the manual and settings
     await key(page, 'Alt+Digit3');
@@ -163,10 +163,10 @@ test.describe('the shell', () => {
     expect(await wmRects(page)).toEqual([]);
     await expect(page.locator('#study .kicker')).toContainText('1.0');
 
-    // on the lessons the bar stays: it says where you are, its middle is the lesson's steps, and it walks on
+    // on the lessons the bar stays and says where you are; the foot is the lesson's session bar, not the panel
     await expect(page.locator('#bar')).toBeVisible();
     await expect(page.locator('#workspaces')).toHaveAttribute('data-active', 'lessons');
-    await expect(page.locator('#bar-task .bs').first()).toBeVisible();
+    await expect(page.locator('#bar-task')).toBeHidden();
     await page.locator('#workspaces .ws[data-ws="4"]').click();
     expect(await activeWs(page)).toBe(4);
     await expect(page.locator('#workspaces')).toHaveAttribute('data-active', 'settings');
@@ -267,7 +267,7 @@ test.describe('the shell', () => {
     await page.locator('#cr-menu .ws [data-ws="3"]').click();
     expect(await activeWs(page)).toBe(3);
 
-    /* the bar is the way around: one slim line, this workspace's windows by name */
+    /* the bar is the way around, one slim line; this workspace's windows are named on the panel at the foot */
     await expect(page.locator('#bar')).toBeVisible();
     await expect(page.locator('#bar-task .bw')).toHaveText(['manual', 'terminal', 'files']);
     const barBox = await page.locator('#bar').evaluate(el => {
@@ -287,7 +287,7 @@ test.describe('the shell', () => {
     await page.waitForTimeout(200);
     await key(page, 'Alt+KeyQ');
     await expect(page.locator('#win-tty')).toBeHidden();
-    /* at phone width the bar keeps the workspaces and the apps menu; the words step aside */
+    /* at phone width the panel steps aside; the bar keeps the workspaces and the apps menu */
     await expect(page.locator('#bar-task')).toBeHidden();
     await expect(page.locator('#mod-apps')).toBeVisible();
     await page.locator('#mod-apps').click();

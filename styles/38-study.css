@@ -593,15 +593,6 @@ body:not([data-ws='2']) #study { display: none; }
 }
 #study .wb-x:hover { color: var(--fg); border-color: var(--line-hi); }
 
-/* ── the bar's middle on the study: this lesson's steps, lent by study.js ── */
-.bar-task .bs .bt-num { font: 500 11px/1 var(--c-mono); letter-spacing: .08em; }
-.bar-task .bs .bt-name { white-space: nowrap; }
-.bar-task .bs.done:not(.focus) { color: var(--fg-3); }
-/* too many words: only the lit one keeps its name, then numbers only */
-.bar-task.fit-1 .bs:not(.focus) .bt-name, .bar-task.fit-2 .bs .bt-name { display: none; }
-.bar-task.fit-1 .bs.focus .bt-name { max-width: 220px; overflow: hidden; text-overflow: ellipsis; }
-.bar-task.fit-2 .bs { padding-left: 8px; padding-right: 8px; }
-
 /* ── the whole course, searchable (/) ────────────────────────────────────── */
 #study .st-course {
   position: absolute; inset: 0; z-index: 7; display: flex; justify-content: center; align-items: flex-start;

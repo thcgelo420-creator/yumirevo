@@ -34,7 +34,6 @@ import {
 } from './session.js';
 import { onCourseOverlay, paintCourseInto, unfoldUnit } from './course.js';
 import { deskNow, motionNow, reducedOS, sceneNow } from './desktop.js';
-import { lendBarMiddle, repaintBarMiddle } from './bar.js';
 import { Margins } from './margins.js';
 
 const p2 = n => String(n).padStart(2, '0');
@@ -287,7 +286,6 @@ function paintOutline() {
   paintNav(l);
   placeLamp();
   paintSession(l, here, steps.length, have, N);
-  repaintBarMiddle();
 }
 
 /** The session bar at the foot of the pane, tmux-style: the workspaces as windows, then this lesson and where you are in it. */
@@ -387,20 +385,6 @@ function paintNav(l) {
   side(els.prev, i > 0 ? seq[i - 1] : null, -1);
   side(els.next, i >= 0 && i < seq.length - 1 ? seq[i + 1] : null, 1);
 }
-
-/* ── the bar's middle: the same steps, as words ─────────────────────────── */
-const barWords = {
-  label: 'Steps in this lesson',
-  key: () => `${currentLessonId()}|${outlineKey}|${stepHere()}`,
-  items: () => {
-    const here = stepHere();
-    return stepsOf().map(s => ({
-      id: String(s.n), num: p2(s.n), name: s.title, here: s.n === here, done: s.cleared,
-      title: `Step ${s.n}: ${s.title}${s.cleared ? ' (done)' : ''}`,
-    }));
-  },
-  go: id => { goStep(+id); },
-};
 
 /* ── the course overlay ───────────────────────────────────────────────────── */
 function openCourse() {
@@ -554,7 +538,6 @@ export function mountStudy(el) {
   els.doc.addEventListener('study:correct', () => lightUp());
   els.doc.addEventListener('study:desk', () => { sound.event({ type: 'ui' }); goWorkspace(1); });
 
-  lendBarMiddle(2, barWords);
   onQuest(() => paintOutline());
   onPaint(() => { paintOutline(); paintTonight(); });
   onNights(() => paintTonight());

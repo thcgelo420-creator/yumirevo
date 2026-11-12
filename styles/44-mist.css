@@ -265,16 +265,21 @@ body[data-ws='3'] .man-doc h1::before, body[data-ws='3'] .man-doc h2 { margin-le
 }
 
 /* ── the top bar, wherever it shows (2, 3 and 4): a plain Linux bar, i3bar's shape ──
-   left, the name and the workspaces as bare numbers, the one you are on in reverse video; middle, this
-   workspace's words, the one in front underlined; right, i3status's readouts split by hairlines.
-   One mono size, lowercase, no tracking: no mark, no pills, no dots. */
-#bar {
-  padding: 0; gap: 0; border-bottom: 0;
-  background: rgba(7, 9, 12, .92);
-  -webkit-backdrop-filter: none; backdrop-filter: none;
-  font: 400 12.5px/1 var(--c-mono); letter-spacing: 0; color: var(--fg-3);
+   left, the name and the workspaces as bare numbers, the one you are on in reverse video; right, the clock
+   and the two controls. One mono size, lowercase, no tracking: no mark, no pills, no dots. Smoked glass, not
+   black, so the city's light comes through; the panel along the foot is the same glass. */
+:root { --mist-bar: rgba(62, 76, 82, .62); }
+:root[data-scene='late'] { --mist-bar: rgba(52, 64, 70, .64); }
+:root[data-scene='ice'] { --mist-bar: rgba(248, 250, 251, .72); }
+
+body #bar, body.stack #bar { grid-template-columns: minmax(0, 1fr) auto; }
+body #bar {
+  padding: 0; gap: 0; border-bottom: 1px solid var(--line-2);
+  background: var(--mist-bar);
+  -webkit-backdrop-filter: blur(calc(var(--glass-blur, 0px) * .875)) saturate(1.05);
+  backdrop-filter: blur(calc(var(--glass-blur, 0px) * .875)) saturate(1.05);
+  font: 400 12.5px/1 var(--c-mono); letter-spacing: 0; color: var(--fg-2);
 }
-:root[data-scene='ice'] #bar { background: rgba(236, 240, 242, .94); }
 #bar :focus-visible { outline-offset: -2px; }
 #bar .bar-l, #bar .bar-r, #bar .bar-mods, #workspaces { gap: 0; }
 
@@ -283,29 +288,54 @@ body[data-ws='3'] .man-doc h1::before, body[data-ws='3'] .man-doc h2 { margin-le
 #bar .brand .brand-name { display: inline; margin: 0; font: 700 12.5px/1 var(--c-mono); letter-spacing: 0; text-transform: lowercase; color: var(--fg); }
 
 #bar .ws { min-width: 32px; height: var(--bar-h); padding: 0 11px; gap: 0; justify-content: center; border-radius: 0; }
-#bar .ws .num { font: 400 12.5px/1 var(--c-mono); letter-spacing: 0; color: var(--fg-3); }
+#bar .ws .num { font: 400 12.5px/1 var(--c-mono); letter-spacing: 0; color: var(--fg-2); }
 #bar .ws:hover { background: var(--surface-2); }
 #bar .ws:hover .num, body.mod-down #bar .ws .num { color: var(--fg); }
 #bar .ws[aria-current="page"] { background: var(--fg); }
 #bar .ws[aria-current="page"] .num, body.mod-down #bar .ws[aria-current="page"] .num { color: var(--ink); font-weight: 700; }
 #bar .ws[aria-current="page"]::after { content: none; }
 
-#bar .bar-task { gap: 0; font: 400 12.5px/1 var(--c-mono); letter-spacing: 0; }
-#bar .bar-task .bw {
-  height: var(--bar-h); padding: 0 12px; gap: 1ch; border: 0; border-radius: 0; background: none; box-shadow: none;
-  font: 400 12.5px/1 var(--c-mono); letter-spacing: 0; text-transform: none; color: var(--fg-4);
-}
-#bar .bar-task .bw.open, #bar .bar-task .bs { color: var(--fg-2); }
-#bar .bar-task .bw:hover { color: var(--fg); background: var(--surface-2); }
-#bar .bar-task .bw.focus { color: var(--fg); background: none; box-shadow: inset 0 -2px 0 var(--fg); }
-#bar .bar-task .bw.focus:hover { background: var(--surface-2); }
-#bar .bar-task .bs .bt-num { font: inherit; letter-spacing: 0; }
-#bar .bar-task .bs.done:not(.focus) .bt-num::after { content: ' ✓' / ''; }
-
 #bar .bar-mods > * { padding: 0 12px; border-right: 1px solid var(--line); }
 #bar .bar-clock { margin: 0; font: 400 12.5px/1 var(--c-mono); letter-spacing: 0; text-transform: none; font-variant-numeric: tabular-nums; color: var(--fg); }
-#bar .mod.launch, #bar .mod.apps { width: 38px; height: var(--bar-h); border: 0; border-radius: 0; background: none; color: var(--fg-3); }
+#bar .mod.launch, #bar .mod.apps { width: 38px; height: var(--bar-h); border: 0; border-radius: 0; background: none; color: var(--fg-2); }
 #bar .mod.launch:hover, #bar .mod.apps:hover { color: var(--fg); background: var(--surface-2); border: 0; }
 
-@media (max-width: 1080px) { #bar .ws { min-width: 28px; padding: 0 9px; } #bar .bar-task .bw { padding: 0 9px; } }
+@media (max-width: 1080px) { #bar .ws { min-width: 28px; padding: 0 9px; } }
 @media (max-width: 620px) { #bar .brand { display: none; } #bar .bar-mods > * { padding: 0 8px; } }
+
+/* ── the panel along the foot (3 and 4): this workspace's windows, in the lessons' session-bar voice ──
+   the window in front in reverse video with tmux's `*`; open ones bright, put-away ones quieter. The seat gives up
+   the panel's height, so no window tiles under it. Phones keep the old way: the apps menu. */
+#panel { display: none; }
+body[data-ws='3'], body[data-ws='4'] { --panel-h: 26px; }
+body #shell { height: calc(100dvh - var(--bar-h) - var(--panel-h, 0px)); }
+body[data-ws='3'] #panel, body[data-ws='4'] #panel {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--z-bar);
+  display: flex; align-items: center; height: var(--panel-h); padding: 0 8px;
+  border-top: 1px solid var(--line-2); background: var(--mist-bar);
+  -webkit-backdrop-filter: blur(calc(var(--glass-blur, 0px) * .875)) saturate(1.05);
+  backdrop-filter: blur(calc(var(--glass-blur, 0px) * .875)) saturate(1.05);
+  font: 400 12.5px/1 var(--c-mono); color: var(--fg-2);
+}
+#panel .bar-task {
+  display: flex; align-items: center; gap: 4px; width: auto; max-width: none; overflow: visible;
+  justify-content: flex-start; font: inherit; letter-spacing: 0; text-transform: none; color: inherit;
+}
+#panel .bar-task .bw {
+  display: inline-flex; align-items: center; height: 20px; padding: 0 6px; gap: 0; margin: 0;
+  border: 0; border-radius: 0; background: none; box-shadow: none; cursor: pointer;
+  font: inherit; letter-spacing: 0; text-transform: none; color: var(--fg-2);
+}
+#panel .bar-task .bw.open { color: var(--fg); }
+#panel .bar-task .bw::after { content: '\00a0' / ''; }   /* the flag's slot, kept so no word moves when focus does */
+#panel .bar-task .bw.focus { background: var(--fg); color: var(--ink); }
+#panel .bar-task .bw.focus::after { content: '*' / ''; }
+#panel .bar-task .bw:not(.focus):hover { background: var(--surface-2); color: var(--fg); }
+#panel .bar-task .bw:focus-visible { outline: 1px solid var(--fg); outline-offset: 1px; }
+#panel .bar-task .bt-name { overflow: visible; }
+body.peek #panel { opacity: 0; pointer-events: none; transition: opacity var(--t-slow) var(--ez); }
+@media (max-width: 620px) {
+  body[data-ws='3'], body[data-ws='4'] { --panel-h: 0px; }
+  body[data-ws='3'] #panel, body[data-ws='4'] #panel { display: none; }
+}
+@media print { #panel { display: none; } }
