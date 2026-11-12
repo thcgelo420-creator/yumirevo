@@ -40,5 +40,5 @@ Crops the user picked: **a1** fog, **h3** ring roads, **i4** LED columns,
 9. **Drop the etched 未明** from the manual; its strip and drops went with it.
 10. The **top bar** "cleaner and minimal, just like Linux": an i3-style bar
     wherever it shows (2, 3 and 4); then **fewer readouts**: only the clock.
-11. The bar **less dark** (smoked glass), and the window words **out of the
+11. The bar **less dark** (tried, then back to the dark one), and the window words **out of the
     top bar**: a panel along the foot of 3 and 4.

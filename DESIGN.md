@@ -268,7 +268,7 @@ build plan and the agreed decisions are in `moodboard/v7-crane/BUILD.md`.
 > colour or cards. Workspace 3's manual is a man page (flush-left bold
 > sections, indented text, less(1)'s prompt), and Files is `ls` with
 > `[x]`/`[~]`/`[ ]` states. The top bar, on 2, 3 and 4, is a plain Linux bar
-> in i3bar's shape on smoked glass: `mimei` and bare workspace numbers, the
+> in i3bar's shape on near-black: `mimei` and bare workspace numbers, the
 > current one in reverse video, and on the right only the clock. This
 > workspace's windows are words on a panel along the foot (3 and 4), the one
 > in front in reverse video with tmux's `*`; the lessons keep their own

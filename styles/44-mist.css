@@ -266,18 +266,16 @@ body[data-ws='3'] .man-doc h1::before, body[data-ws='3'] .man-doc h2 { margin-le
 
 /* ── the top bar, wherever it shows (2, 3 and 4): a plain Linux bar, i3bar's shape ──
    left, the name and the workspaces as bare numbers, the one you are on in reverse video; right, the clock
-   and the two controls. One mono size, lowercase, no tracking: no mark, no pills, no dots. Smoked glass, not
-   black, so the city's light comes through; the panel along the foot is the same glass. */
-:root { --mist-bar: rgba(62, 76, 82, .62); }
-:root[data-scene='late'] { --mist-bar: rgba(52, 64, 70, .64); }
-:root[data-scene='ice'] { --mist-bar: rgba(248, 250, 251, .72); }
+   and the two controls. One mono size, lowercase, no tracking: no mark, no pills, no dots. The near-black bar the user
+   chose over a lighter smoked glass; the panel along the foot is the same. */
+:root { --mist-bar: rgba(7, 9, 12, .92); }
+:root[data-scene='late'] { --mist-bar: rgba(7, 9, 12, .92); }
+:root[data-scene='ice'] { --mist-bar: rgba(236, 240, 242, .94); }
 
 body #bar, body.stack #bar { grid-template-columns: minmax(0, 1fr) auto; }
 body #bar {
-  padding: 0; gap: 0; border-bottom: 1px solid var(--line-2);
+  padding: 0; gap: 0; border-bottom: 0;
   background: var(--mist-bar);
-  -webkit-backdrop-filter: blur(calc(var(--glass-blur, 0px) * .875)) saturate(1.05);
-  backdrop-filter: blur(calc(var(--glass-blur, 0px) * .875)) saturate(1.05);
   font: 400 12.5px/1 var(--c-mono); letter-spacing: 0; color: var(--fg-2);
 }
 #bar :focus-visible { outline-offset: -2px; }
@@ -313,8 +311,6 @@ body[data-ws='3'] #panel, body[data-ws='4'] #panel {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--z-bar);
   display: flex; align-items: center; height: var(--panel-h); padding: 0 8px;
   border-top: 1px solid var(--line-2); background: var(--mist-bar);
-  -webkit-backdrop-filter: blur(calc(var(--glass-blur, 0px) * .875)) saturate(1.05);
-  backdrop-filter: blur(calc(var(--glass-blur, 0px) * .875)) saturate(1.05);
   font: 400 12.5px/1 var(--c-mono); color: var(--fg-2);
 }
 #panel .bar-task {
