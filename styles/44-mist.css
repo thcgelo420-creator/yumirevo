@@ -105,8 +105,9 @@ body[data-ws='3'] .man-etch {
 #study .ro-step { padding: 2px 12px 2px 18px; color: var(--dim); }
 #study .ro-cp { padding: 1px 12px 1px 18px; color: var(--faint); }
 #study .ro-step .g, #study .ro-cp .g { flex: none; color: var(--faint); opacity: .7; }
-#study .ro-step .n { flex: none; font: inherit; letter-spacing: 0; margin-right: 1ch; color: inherit; }
-#study .ro-step .t, #study .ro-cp .t { min-width: 0; overflow: hidden; text-overflow: ellipsis; font: inherit; text-transform: lowercase; }
+#study .ro-step .n { flex: none; font: inherit; letter-spacing: 0; color: inherit; }
+#study .ro-step .t, #study .ro-cp .t { min-width: 0; overflow: hidden; text-overflow: ellipsis; font: inherit; }
+#study .ro-cp .t { text-transform: lowercase; }
 #study .ro-cp .m { flex: none; width: auto; height: auto; border: 0; border-radius: 0; background: none; margin-right: 1ch; }
 #study .ro-cp.done, #study .ro-cp.done .m { color: var(--fg); background: none; }
 #study .ro-step[aria-current] { color: var(--fg); }
@@ -136,3 +137,81 @@ body[data-ws='3'] .man-etch {
 #study .rd-session .fill { flex: 1; }
 #study .rd-session .f { min-width: 0; overflow: hidden; text-overflow: ellipsis; color: var(--fg); }
 @media (max-width: 900px) { #study .rd-session .w:not(.on) { display: none; } }
+
+/* ── the pane spans the screen; with the scripts out (beside it) it gives the drawer the right side ── */
+#study .rd-read { transition: transform .46s var(--slide), width .46s var(--slide); }
+#study.bench-out:not(.bench-over) .rd-read { width: var(--pw-open, 960px); }
+#study .doc { max-width: 780px; }
+
+/* ── the lesson's parts, in the shell's voice: each its own form, no colour ── */
+/* heads read like a terminal: lowercase mono, no tracking */
+#study .code-head, #study .out-head, #study .probe-h, #study .runbook-h, #study .solution > summary,
+#study .key-idea .ki-lbl, #study .recap .rc-lbl, #study .runbook-foot {
+  letter-spacing: 0; text-transform: none; font: 400 12.5px/1.3 var(--c-mono);
+}
+
+/* a script is a buffer: square, a brighter left edge, its file name in the head */
+#study .code { border-radius: 0; border-left: 2px solid var(--line-hi); }
+#study .code-head { gap: 0; padding: 8px 14px 7px; }
+#study .code-head .lang { color: var(--faint); letter-spacing: 0; }
+#study .code-head .lang::after { content: ' ›'; }
+#study .code-head .cap { margin-left: 1ch; color: var(--fg); }
+#study .code-head .copy { padding: 3px 6px; border: 0; border-radius: 0; letter-spacing: 0; text-transform: none; font: 400 12.5px/1 var(--c-mono); }
+#study .code-head .copy::before { content: '['; } #study .code-head .copy::after { content: ']'; }
+#study .code-head .copy.did { border: 0; }
+
+/* Studio's Output is stdout: no box, a darker strip, a › on every line */
+#study .out { border-radius: 0; border-left: 2px solid var(--line-2); background: rgba(0, 0, 0, .28); }
+:root[data-scene='ice'] #study .out { background: rgba(24, 40, 44, .05); }
+#study figure.code + .out { border-left-color: var(--line-hi); }
+#study .out-head { padding: 8px 16px 0 14px; }
+#study .out-head .k { color: var(--fg); }
+#study .out-head .k + .sub::before { content: '› '; color: var(--faint); }
+#study .out-head .sp + .sub { letter-spacing: 0; }
+#study .out-head .sp + .sub::before { content: '# '; }
+#study .out pre { padding: 4px 16px 12px 14px; color: var(--text); }
+#study .out .ln::before, #study .out .er::before { content: '› '; color: var(--faint); }
+#study .out .er::before { display: inline; width: auto; height: auto; margin: 0; border: 0; transform: none; content: '! '; color: var(--fg); }
+
+/* a runbook is a checklist you work through in Studio: [ ] and [x], no card */
+#study .runbook { border: 0; border-left: 2px solid var(--line); border-radius: 0; padding: 4px 0 6px 18px; background: none; }
+#study .runbook.done { border-left-color: var(--fg); }
+#study .runbook-h .k::before { content: '$ '; color: var(--faint); }
+#study .runbook-h .sub::before { content: '# '; }
+#study .runbook .t { margin: 6px 0 10px; }
+#study .checks li { font-size: 15.5px; }
+#study .checks li { grid-template-columns: 4ch minmax(0, 1fr); }
+#study .checks li .m { width: auto; height: auto; margin-top: 2px; border: 0; border-radius: 0; background: none; box-shadow: none; font: 400 13px/1.6 var(--c-mono); color: var(--dim); white-space: pre; }
+#study .checks li .m::before { content: '[ ]'; white-space: pre; }
+#study .checks li[aria-checked='true'] .m { background: none; box-shadow: none; color: var(--fg); }
+#study .checks li[aria-checked='true'] .m::before { content: '[x]'; }
+#study .checks li[aria-checked='true'] .m::after { content: none; }
+#study .runbook-foot .meter { border-radius: 0; }
+
+/* a probe is a question left open: a dashed frame, answers lettered a) b) c) */
+#study .probe { border: 1px dashed var(--line-hi); border-radius: 0; background: none; }
+#study .probe-h .k::before { content: '? '; color: var(--fg); }
+#study .probe-h .from::before { content: '# '; }
+#study .probe .opts { counter-reset: opt; }
+#study .probe .opts button { counter-increment: opt; border-radius: 0; font-family: var(--c-mono); }
+#study .probe .opts button::before { content: counter(opt, lower-alpha) ')'; width: auto; height: auto; border: 0; border-radius: 0; background: none; box-shadow: none; margin-right: 1ch; color: var(--faint); }
+#study .probe .opts button.right { box-shadow: none; }
+#study .probe .opts button.right::before { content: counter(opt, lower-alpha) ') ✓'; background: none; box-shadow: none; color: var(--fg); }
+#study .probe .opts button.wrong::before { content: counter(opt, lower-alpha) ') ✗'; background: none; color: var(--dim); }
+#study .probe .again { font-family: var(--c-mono); text-transform: none; letter-spacing: 0; }
+
+/* a solution is folded behind the command that shows it */
+#study .solution { border-style: solid; border-color: var(--line-2); border-radius: 0; }
+#study .solution > summary::before { content: '▸'; width: 1ch; color: var(--faint); }
+#study .solution[open] > summary::before { content: '▾'; }
+#study .solution > summary .k::before { content: '$ '; color: var(--faint); }
+#study .solution > summary > span:not(.k)::before { content: '# '; font-family: var(--c-mono); color: var(--faint); }
+
+/* key ideas and recaps are comments in the margin of the code */
+#study .key-idea .ki-lbl::before, #study .recap .rc-lbl::before { content: '# '; }
+#study .key-idea, #study .recap { border-left-width: 2px; }
+#study .doc blockquote, #study .doc .done-when { border-radius: 0; border-style: dashed; }
+#study .doc blockquote::before { content: '$ test -f done  # done when'; letter-spacing: 0; text-transform: none; font: 400 12.5px/1.3 var(--c-mono); }
+#study .st-end .st-k { letter-spacing: 0; text-transform: none; font: 400 12.5px/1.4 var(--c-mono); }
+#study .st-end .st-k::before { content: '-- '; }
+#study .st-end .st-k::after { content: ' --'; }

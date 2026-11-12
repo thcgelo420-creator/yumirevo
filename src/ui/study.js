@@ -38,6 +38,8 @@ import { lendBarMiddle, repaintBarMiddle } from './bar.js';
 import { Margins } from './margins.js';
 
 const p2 = n => String(n).padStart(2, '0');
+/* a step's directory name in the outline's tree: the same rule session.js uses for its prompts */
+const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const booting = () => document.body.classList.contains('booting');
 const still = () => motionNow() === 'still' || reducedOS();
@@ -178,30 +180,30 @@ function setDrawer(on, { save: keep = true, focus = false } = {}) {
   holeLater();
 }
 
-/* ── the layout: the pane in the middle, the drawer beside it (or over it, on a narrow screen) ── */
+/* ── the layout: the pane spans the screen, the city behind its glass; the scripts drawer takes the right
+   side when it is out (the pane gives it room), or comes over the page on a narrow screen ── */
 function layout() {
   if (!root) return;
   const sw = root.clientWidth, sh = root.clientHeight;
   if (!sw || !sh) return;
   const g = sw < 900 ? 10 : 14;
   const bw = Math.round(clamp(sw * .28, 360, 440));
-  let mode = 'side', pw = Math.min(1040, sw - 3 * g - bw);
-  if (pw < 760) { mode = 'over'; pw = Math.min(1040, sw - 2 * g); }
-  pw = Math.round(pw);
-  const px = Math.round((sw - pw) / 2);
-  const group = pw + g + bw;
-  const pxOpen = mode === 'side' ? Math.round(Math.max(g, (sw - group) / 2)) : px;
-  const bx = mode === 'side' ? pxOpen + pw + g : sw - g - Math.min(bw, sw - 2 * g);
+  const pw = sw - 2 * g;
+  const mode = pw - g - bw < 760 ? 'over' : 'side';
+  const pwOpen = mode === 'side' ? pw - g - bw : pw;
+  const px = g, pxOpen = g;
+  const bx = mode === 'side' ? g + pwOpen + g : sw - g - Math.min(bw, sw - 2 * g);
   const outline = pw >= 720;
-  Object.assign(geo, { sw, sh, g, pw, bw: Math.min(bw, sw - 2 * g), px, pxOpen, bx, mode, outline });
+  Object.assign(geo, { sw, sh, g, pw, pwOpen, bw: Math.min(bw, sw - 2 * g), px, pxOpen, bx, mode, outline });
   const s = root.style;
   s.setProperty('--g', `${g}px`);
   s.setProperty('--pw', `${pw}px`);
+  s.setProperty('--pw-open', `${pwOpen}px`);
   s.setProperty('--bench-w', `${geo.bw}px`);   // not --bw: that is the border width every rule shares (00-tokens.css)
   s.setProperty('--px', `${px}px`);
   s.setProperty('--px-open', `${pxOpen}px`);
   s.setProperty('--bx', `${bx}px`);
-  s.setProperty('--ow', `${pw >= 940 ? 236 : 204}px`);
+  s.setProperty('--ow', `${pw >= 940 ? 260 : 220}px`);
   root.classList.toggle('bench-over', mode === 'over');
   root.classList.toggle('no-outline', !outline);
   hole();
@@ -211,8 +213,8 @@ function layout() {
 /** The weather keeps out of the panes: the reading pane, and the drawer when it is out. */
 function hole() {
   if (!margins || !geo.sw) return;
-  const x0 = drawer ? Math.min(geo.pxOpen, geo.bx) : geo.px;
-  const x1 = drawer ? Math.max(geo.pxOpen + geo.pw, geo.bx + geo.bw) : geo.px + geo.pw;
+  const x0 = geo.px;
+  const x1 = drawer ? Math.max(geo.pxOpen + geo.pwOpen, geo.bx + geo.bw) : geo.px + geo.pw;
   margins.layout({ vw: geo.sw, vh: geo.sh, hole: { x0, y0: geo.g, x1, y1: geo.sh - geo.g }, feather: 36 });
 }
 let holeTimer = 0;
@@ -264,7 +266,7 @@ function paintOutline() {
       const stem = last ? '    ' : '│   ';
       return `
       <li class="ro-s${s.cleared ? ' cleared' : ''}" data-step="${s.n}">
-        <button type="button" class="ro-step" data-step="${s.n}" tabindex="-1"><span class="g" aria-hidden="true">${last ? '└── ' : '├── '}</span><span class="n">${p2(s.n)}</span><span class="t">${esc(s.title)}</span><span class="sr-only">${s.optional ? ', optional' : ''}${s.cleared ? ', done' : ''}</span></button>
+        <button type="button" class="ro-step" data-step="${s.n}" tabindex="-1"><span class="g" aria-hidden="true">${last ? '└── ' : '├── '}</span><span class="n">${p2(s.n)}</span><span class="t">-${esc(slug(s.title))}</span><span class="sr-only">: ${esc(s.title)}${s.optional ? ', optional' : ''}${s.cleared ? ', done' : ''}</span></button>
         ${s.cps.length ? `<ul class="ro-cps">${s.cps.map((c, ci) => `<li><button type="button" class="ro-cp${c.done ? ' done' : ''}" data-goal="${c.goal}" tabindex="-1"><span class="g" aria-hidden="true">${stem}${ci === s.cps.length - 1 ? '└── ' : '├── '}</span><span class="m" aria-hidden="true">${c.done ? '[x]' : '[ ]'}</span><span class="sr-only">Checkpoint ${c.i}: </span><span class="t">${esc(c.title)}</span><span class="sr-only">${c.done ? ', reached' : ''}</span></button></li>`).join('')}</ul>` : ''}
       </li>`;
     }).join('');
@@ -594,7 +596,7 @@ export const studyReport = () => {
     },
     scene: sceneNow(),
     motion: still() ? 'still' : motionNow(),
-    geo: { pw: geo.pw, bw: geo.bw, px: geo.px, pxOpen: geo.pxOpen, bx: geo.bx, g: geo.g, mode: geo.mode },
+    geo: { pw: geo.pw, pwOpen: geo.pwOpen, bw: geo.bw, px: geo.px, pxOpen: geo.pxOpen, bx: geo.bx, g: geo.g, mode: geo.mode },
     weather: margins ? margins.report() : null,
   };
 };
