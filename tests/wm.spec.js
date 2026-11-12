@@ -222,7 +222,7 @@ test.describe('the window manager', () => {
 
   test('dropping one window on another swaps their places', async ({ page, errors }) => {
     await openThree(page);
-    const list = (await wmRects(page)).sort((a, b) => a.x - b.x);
+    const list = (await wmRects(page)).sort((a, b) => a.x - b.x || a.y - b.y);   // main-and-stack: the stack shares an x
     const [left, right] = list;
     const target = await page.locator(`.win[data-win="${right.id}"]`).boundingBox();
     const bar = await page.locator(`.win[data-win="${left.id}"] .win-bar`).boundingBox();
@@ -233,7 +233,7 @@ test.describe('the window manager', () => {
     await page.mouse.up();
     await page.evaluate(() => window.ossuary.wm.flush());
 
-    const after = (await wmRects(page)).sort((a, b) => a.x - b.x);
+    const after = (await wmRects(page)).sort((a, b) => a.x - b.x || a.y - b.y);
     expect(after[0].id).toBe(right.id);
     expect(after[1].id).toBe(left.id);
     await expectTiled(page);

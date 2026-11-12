@@ -10,13 +10,13 @@ from __future__ import annotations
 import numpy as np
 from PIL import Image, ImageFilter
 
-MIST_W = 1920
+MIST_W = 1600   # with the per-recipe quality below, a wall stays inside the 64 KB budget (tests/perf.spec.js)
 
 RECIPES = {
     #        tint dark → light (duotone)          keep of the plate's own colour, brightness, fog colour, fog alpha, glows
-    "night": dict(dark=(4, 12, 16), light=(196, 226, 224), keep=.42, gain=1.06, fog=(168, 204, 205), fog_a=.56, glows=True, vignette=.58),
-    "late": dict(dark=(2, 8, 11), light=(150, 188, 190), keep=.38, gain=.86, fog=(132, 170, 174), fog_a=.6, glows=True, vignette=.66),
-    "ice": dict(dark=(78, 92, 94), light=(236, 240, 238), keep=.3, gain=1.0, fog=(222, 228, 226), fog_a=.62, glows=False, vignette=0),
+    "night": dict(dark=(4, 12, 16), light=(196, 226, 224), keep=.42, gain=1.06, fog=(168, 204, 205), fog_a=.56, glows=True, vignette=.58, q=50),
+    "late": dict(dark=(2, 8, 11), light=(150, 188, 190), keep=.38, gain=.86, fog=(132, 170, 174), fog_a=.6, glows=True, vignette=.66, q=50),
+    "ice": dict(dark=(78, 92, 94), light=(236, 240, 238), keep=.3, gain=1.0, fog=(222, 228, 226), fog_a=.62, glows=False, vignette=0, q=40),
 }
 
 

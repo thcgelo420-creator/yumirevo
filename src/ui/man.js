@@ -100,12 +100,13 @@ function render() {
 
 function paintFoot() {
   if (!footEl) return;
-  const list = sheets();
-  const i = Math.max(0, list.findIndex(s => s.id === sheet));
+  const l = sheet ? lessonById(sheet) : null;
+  const sec = l ? sectionOf(l) : { name: 'LUAU', unit: '1' };
+  /* less(1)'s prompt: the page by its man name (the head keeps the count) */
   footEl.innerHTML = `
     <button class="btn ghost" id="man-prev" title="Previous sheet">◀</button>
     <button class="btn ghost" id="man-next" title="Next sheet">▶</button>
-    <span class="seg">man ${i + 1}/${list.length}</span>
+    <span class="seg pg">Manual page ${sec.name.toLowerCase()}(${sec.unit})</span>
     <span class="fill"></span>
     <span class="seg" id="man-pos">top</span>
     <span class="seg"><kbd>q</kbd> close</span>`;

@@ -14,6 +14,15 @@ designs from what is in it, not from its own taste.
   and saying "redesign from moodboard/v4-vaporwave". Old folders stay as history.
 - `current/` holds the images the present "night line" design was built from.
 
+## v11-mist (Nov 2026): the latest round, workspaces 2 and 3
+
+The city behind fogged glass, and everything on the glass speaks like a shell:
+the lesson is a `cat`, its steps are `cd`s, the outline is `tree`, the bar is
+tmux; the manual is a real man page with less(1)'s prompt, and Files is `ls`.
+No accent colour on 2 and 3. The desk and settings keep the cab look. The
+references are listed in `v11-mist/BRIEF.md` and are not shipped; what was
+built is in `v11-mist/BUILD.md`.
+
 ## The current design (night line, Oct 2026)
 
 A riced Linux desktop on a late-night train.

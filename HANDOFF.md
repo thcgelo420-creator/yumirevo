@@ -325,6 +325,42 @@ Read `DESIGN.md` for anything visual; this summary is not enough.
 
 ## 6. What just shipped: the study (and the cab and the crane desk before it)
 
+### The mist round (workspaces 2 and 3), on `hoplite/mist-glass`
+
+The newest layer, and not merged. The brief, the user's choices in order, and
+the part-by-part table are in `moodboard/v11-mist/BRIEF.md` and `BUILD.md`.
+Sharp edges for the next agent:
+
+- **One stylesheet.** `styles/44-mist.css` loads last and is scoped to
+  `body[data-ws='2']`, `body[data-ws='3']` and `#study`. Keep it that way; the
+  desk and settings are fenced off and the user must approve changes there.
+- **Layout.** `study.js` `layout()` makes the pane full width (`--pw`); with
+  the scripts drawer out it shrinks to `--pw-open` and the drawer takes the
+  right side, or the drawer comes over the page when the pane would drop under
+  760px. The weather's hole follows the pane.
+- **Shell text is real data.** Slugs come from step and lesson titles (the
+  same rule in `study.js`, `session.js` and `files.js`); never hand-write them.
+  Visible slugs and tree glyphs are `aria-hidden`, and the full title is in a
+  `.sr-only` span, so screen readers hear words, not dashes.
+- **Manual.** The head keeps `NAME(SECTION)` left and the shelf count right
+  (`tests/man.spec.js` reads `.r`); the less-style footer (`.seg.pg`) names the
+  page. The indent is a custom property (`--mi`) stepped down by container
+  queries on `.man`.
+- **Tests that moved with the design.** The outline buttons carry an
+  `aria-label` with the full title (label-in-name, `course.spec.js`); the
+  visible slug is `.s`, the title `.t.sr-only`. Shell punctuation that tests
+  read around (`#` before a step's kind, `/` after the stop number) is drawn in
+  CSS. `Alt+Shift+M` cycles main → rows → columns. The one test edit is a
+  tiebreak in `wm.spec.js`'s swap test, because the stack shares an x.
+- **Walls** are 1600px at a per-recipe quality to stay inside the 64 KB budget
+  (`perf.spec.js`). Perf tests are timing-sensitive; on a slow sandbox run
+  them with `--workers=1`.
+- **Walls.** `tools/mist.py` regenerates the fog walls from the project's own
+  plates. The user's reference images must never ship.
+- **Playwright** needs Chrome at `/opt/google/chrome/chrome` (`channel:
+  'chrome'`). In a sandbox where Chrome lives elsewhere, symlink it there. A
+  timed-out run can leave `http.server` on 8928 holding the port; kill it.
+
 ### The study (workspace 2)
 
 What it does is in DESIGN.md §5; why, in `moodboard/v10-study/BUILD.md`. How

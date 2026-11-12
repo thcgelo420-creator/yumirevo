@@ -161,9 +161,9 @@ def build(force: bool) -> int:
                         # what a reduced-motion visitor sees: the first frame, still
                         frames[0].convert("RGB").save(still_out, "WEBP", quality=70, method=6)
                 elif flags.get("mist"):
-                    from mist import mist
+                    from mist import mist, RECIPES
                     anim = False
-                    mist(raw, flags["mist"]).save(out, "WEBP", quality=70, method=6)
+                    mist(raw, flags["mist"]).save(out, "WEBP", quality=RECIPES[flags["mist"]]["q"], method=6)
                 elif flags.get("soft"):
                     anim = False
                     still = raw.convert("RGB")

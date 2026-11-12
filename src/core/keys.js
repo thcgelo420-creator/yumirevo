@@ -138,7 +138,7 @@ function onKey(e) {
       case 'KeyL': case 'ArrowRight': e.preventDefault(); e.shiftKey ? reorderFocused(1) : focusNext(1); return;
       case 'KeyK': case 'ArrowUp':    e.preventDefault(); e.shiftKey ? resizeFocused(1) : focusNext(-1); return;
       case 'KeyJ': case 'ArrowDown':  e.preventDefault(); e.shiftKey ? resizeFocused(-1) : focusNext(1); return;
-      case 'KeyM': e.preventDefault(); if (e.shiftKey) setLayoutMode({ main: 'columns', columns: 'rows', rows: 'main' }[layoutMode()] || 'main'); else toggleMonocle(); return;
+      case 'KeyM': e.preventDefault(); if (e.shiftKey) setLayoutMode({ main: 'rows', rows: 'columns', columns: 'main' }[layoutMode()] || 'main'); else toggleMonocle(); return;
       case 'KeyF': e.preventDefault(); if (e.shiftKey) commands.fx && commands.fx(); else toggleFloat(); return;
       case 'KeyZ': e.preventDefault(); focusedId() && hideWindow(focusedId()); return;
       case 'KeyQ': e.preventDefault(); focusedId() && closeWindow(focusedId()); return;

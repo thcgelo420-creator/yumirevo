@@ -100,13 +100,14 @@ body[data-ws='3'] .man-etch {
 }
 #study .ro-title { padding: 2px 12px 2px 18px; }
 #study .ro-title .n { flex: none; font: inherit; letter-spacing: 0; color: var(--fg); margin-right: 1ch; }
+#study .ro-title .n:not(:empty)::after { content: "/" / ""; }
 #study .ro-title .t { min-width: 0; overflow: hidden; text-overflow: ellipsis; font: inherit; color: var(--dim); text-transform: lowercase; }
 #study .ro-steps { margin: 0; padding: 0; border-top: 0; }
 #study .ro-step { padding: 2px 12px 2px 18px; color: var(--dim); }
 #study .ro-cp { padding: 1px 12px 1px 18px; color: var(--faint); }
 #study .ro-step .g, #study .ro-cp .g { flex: none; color: var(--faint); opacity: .7; }
 #study .ro-step .n { flex: none; font: inherit; letter-spacing: 0; color: inherit; }
-#study .ro-step .t, #study .ro-cp .t { min-width: 0; overflow: hidden; text-overflow: ellipsis; font: inherit; }
+#study .ro-step .s, #study .ro-cp .t { min-width: 0; overflow: hidden; text-overflow: ellipsis; font: inherit; }
 #study .ro-cp .t { text-transform: lowercase; }
 #study .ro-cp .m { flex: none; width: auto; height: auto; border: 0; border-radius: 0; background: none; margin-right: 1ch; }
 #study .ro-cp.done, #study .ro-cp.done .m { color: var(--fg); background: none; }
@@ -123,7 +124,7 @@ body[data-ws='3'] .man-etch {
 
 #study .st-sh b { font-weight: 400; color: var(--fg); }
 #study .st-sh .kd { margin-left: 2ch; color: var(--faint); }
-#study .st-sh .kd::before { content: none; }
+#study .st-sh .kd::before { content: '# '; margin: 0; }
 #study .st-sh::after { margin-left: 16px; }
 
 /* the session bar along the pane's foot, tmux-style */
@@ -215,3 +216,81 @@ body[data-ws='3'] .man-etch {
 #study .st-end .st-k { letter-spacing: 0; text-transform: none; font: 400 12.5px/1.4 var(--c-mono); }
 #study .st-end .st-k::before { content: '-- '; }
 #study .st-end .st-k::after { content: ' --'; }
+
+/* ── workspace 3 in the shell's voice: window titles as terminal titles ── */
+body[data-ws='3'] .win-t, body[data-ws='3'] .win-t .nm { font: 400 12.5px/1.2 var(--c-mono); letter-spacing: 0; }
+
+/* the manual is a man page: sections flush left in bold caps, their text indented under them,
+   and the pager's status line at the foot */
+body[data-ws='3'] .man-head, body[data-ws='3'] .man-head :is(.l, .m, .r) { font: 400 12.5px/1.2 var(--c-mono); letter-spacing: 0; }
+body[data-ws='3'] .man-head .m { text-transform: none; }
+body[data-ws='3'] .man-doc { padding-left: 7ch; }
+body[data-ws='3'] .man-doc h1::before {
+  content: 'NAME'; display: block; margin: 0 0 14px -7ch;
+  font: 700 13px/1.2 var(--c-mono); letter-spacing: 0; color: var(--fg);
+}
+body[data-ws='3'] .man-doc h2 { margin-left: -7ch; letter-spacing: 0; text-transform: uppercase; font: 700 13px/1.3 var(--c-mono); color: var(--fg); }
+body[data-ws='3'] .man-doc h2::before, body[data-ws='3'] .man-doc h2::after { content: none; }
+body[data-ws='3'] .man-doc h3 { font-family: var(--c-mono); letter-spacing: 0; text-transform: none; }
+
+/* scripts are buffers, as in the lesson */
+body[data-ws='3'] .man-doc .code { border-radius: 0; border: 1px solid var(--line-2); border-left: 2px solid var(--line); }
+body[data-ws='3'] .man-doc .code-head, body[data-ws='3'] .man-doc .code-head .lang { letter-spacing: 0; text-transform: none; font: 400 12.5px/1.3 var(--c-mono); }
+body[data-ws='3'] .man-doc .code-head .lang::after { content: ' ›'; }
+body[data-ws='3'] .man-doc .code-head .copy { border: 0; border-radius: 0; letter-spacing: 0; text-transform: none; font: 400 12.5px/1 var(--c-mono); }
+body[data-ws='3'] .man-doc .code-head .copy::before { content: '['; }
+body[data-ws='3'] .man-doc .code-head .copy::after { content: ']'; }
+
+/* tables read as column output: no box, a dashed rule under the heads */
+body[data-ws='3'] .man-doc table, body[data-ws='3'] .man-doc .tbl { border: 0; border-radius: 0; background: none; }
+body[data-ws='3'] .man-doc th { letter-spacing: 0; text-transform: none; font: 700 12.5px/1.3 var(--c-mono); color: var(--fg); border-bottom: 1px dashed var(--line); }
+body[data-ws='3'] .man-doc td { border-bottom: 0; }
+body[data-ws='3'] .man-doc :is(td, th):first-child { padding-left: 0; }
+body[data-ws='3'] .man-doc blockquote { border-radius: 0; border-style: dashed; }
+body[data-ws='3'] .man-doc blockquote::before { letter-spacing: 0; text-transform: none; font-family: var(--c-mono); }
+
+/* the foot is less(1)'s prompt: the page in reverse video */
+body[data-ws='3'] #win-man .win-foot, body[data-ws='3'] #win-man .win-foot .seg { font: 400 12.5px/1.2 var(--c-mono); letter-spacing: 0; text-transform: none; }
+body[data-ws='3'] #win-man .win-foot .seg.pg { padding: 3px 6px; background: var(--fg); color: var(--ink); }
+body[data-ws='3'] #win-man .win-foot #man-pos::before { content: 'line: '; }
+
+/* Terminal: lowercase labels, as a shell prints them */
+body[data-ws='3'] .tty-next-line .tn-k { letter-spacing: 0; text-transform: lowercase; }
+
+/* Files is ls: a ▸ on the open directory, files named as files, state as [x] [~] [ ] [-] */
+body[data-ws='3'] .fm-dir-name::before { content: '  '; white-space: pre; }
+body[data-ws='3'] .fm-dir.here .fm-dir-name::before { content: '▸ '; }
+body[data-ws='3'] .fm-file { grid-template-columns: 3ch minmax(0, 1fr); gap: 1ch; border-radius: 0; font: 400 13px/1.35 var(--c-mono); }
+body[data-ws='3'] .fm-file.selected { background: var(--surface-2); box-shadow: inset 2px 0 0 var(--fg); }
+body[data-ws='3'] .fm-file .fm-dot { flex: none; width: auto; height: auto; border-radius: 0; background: none; box-shadow: none; font: 400 13px/1 var(--c-mono); color: var(--fg-3); }
+body[data-ws='3'] .fm-dot::before { content: '[ ]'; white-space: pre; }
+body[data-ws='3'] .fm-file.done .fm-dot { background: none; color: var(--fg); }
+body[data-ws='3'] .fm-file.done .fm-dot::before { content: '[x]'; }
+body[data-ws='3'] .fm-file.doing .fm-dot::before { content: '[~]'; }
+body[data-ws='3'] .fm-file.soon .fm-dot::before { content: '[-]'; }
+body[data-ws='3'] .fm-file.tool .fm-dot::before { content: ' # '; }
+body[data-ws='3'] .fm-n { display: none; }
+body[data-ws='3'] .fi-cmd { margin: 0 0 8px; font: 400 12.5px/1.3 var(--c-mono); color: var(--fg-3); }
+body[data-ws='3'] .fi-meta, body[data-ws='3'] .fi-state { letter-spacing: 0; text-transform: none; font: 400 12.5px/1.4 var(--c-mono); }
+body[data-ws='3'] .fi-meta > span + span::before { content: '· '; color: var(--fg-4); }
+body[data-ws='3'] .fi-open { margin-top: 10px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 0; font: 400 13px/1.2 var(--c-mono); }
+body[data-ws='3'] .fi-open:hover:not(:disabled) { border-color: var(--fg); text-decoration: none; }
+body[data-ws='3'] .fi-open::before { content: '$ '; color: var(--fg-3); }
+
+/* the man page's indent narrows with its window; on a phone the head and prompt keep to one line */
+body[data-ws='3'] .man-doc { --mi: 7ch; padding-left: var(--mi); }
+body[data-ws='3'] .man-doc h1::before, body[data-ws='3'] .man-doc h2 { margin-left: calc(-1 * var(--mi)); }
+@container (max-width: 900px) { body[data-ws='3'] .man-doc { --mi: 3ch; } }
+@container (max-width: 560px) {
+  body[data-ws='3'] .man-doc { --mi: 0ch; }
+  body[data-ws='3'] .man-head .r, body[data-ws='3'] #win-man .win-foot #man-pos { display: none; }
+  body[data-ws='3'] #win-man .win-foot .seg.pg { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
+
+/* the lesson's facts line, as a comment under the title */
+#study .doc .qh-meta { letter-spacing: 0; text-transform: none; font: 400 12.5px/1.4 var(--c-mono); }
+#study .doc .qh-meta::before { content: '# '; }
+@media (max-width: 560px) {
+  body[data-ws='3'] #win-man .win-foot #man-pos { display: none; }
+  body[data-ws='3'] #win-man .win-foot .seg.pg { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}

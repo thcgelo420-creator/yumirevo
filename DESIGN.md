@@ -259,6 +259,20 @@ build plan and the agreed decisions are in `moodboard/v7-crane/BUILD.md`.
 
 ## 5. Lessons, manual, goals, settings
 
+> **The mist round (v11, `styles/44-mist.css`) restyles workspaces 2 and 3 on
+> top of what follows.** The city sits behind fogged glass and everything on
+> the glass speaks like a shell. The lesson pane spans the screen and reads as
+> a `cat` with `cd` step heads; its outline is `tree` with real step slugs; a
+> tmux status line sits at the bottom. Scripts, Output, runbooks, probes and
+> solutions use shell punctuation (`$`, `#`, `›`, `[ ]`, `a)`) instead of
+> colour or cards. Workspace 3's manual is a man page (flush-left bold
+> sections, indented text, less(1)'s prompt) with the etched 未明 on its glass
+> edge, and Files is `ls` with `[x]`/`[~]`/`[ ]` states. There is no accent
+> colour on 2 and 3; the lamp tint only marks focus. Every decorative glyph is
+> `aria-hidden`, and every control keeps a readable name. The desk and settings
+> are unchanged. The full table is in `moodboard/v11-mist/BUILD.md`; where it
+> and the text below disagree about 2 and 3, the table wins.
+
 - **Workspace 2 is the study** (`src/ui/study.js`, `src/ui/session.js`,
   `src/ui/margins.js`, `styles/38-study.css` and `37-lesson.css`; the
   decisions are in `moodboard/v10-study/BUILD.md`). Late at night in the

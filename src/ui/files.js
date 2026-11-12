@@ -27,6 +27,8 @@ const stateLabel = l => ({
   done: 'finished', doing: 'in progress', open: 'ready', soon: 'not written', tool: 'reference',
 }[stateOf(l)]);
 const stopsOf = g => courseList().filter(l => l.g === g.id);
+/* a stop as a file in its unit's directory: `2.1-your-first-variable.md`; references keep their name */
+const fileOf = l => `${l.kind === 'tool' ? '' : `${l.n}-`}${l.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}.md`;
 const dirOf = g => `unit-${g.id.slice(1).padStart(2, '0')}-${g.label.toLowerCase().replace(/\s+/g, '-')}/`;
 
 let root = null, unitsEl = null, filesEl = null, inspectEl = null;
@@ -119,6 +121,7 @@ function renderInspector() {
   ].filter(Boolean).join('');
 
   inspectEl.innerHTML = `
+    <div class="fi-cmd" aria-hidden="true">$ stat ${esc(fileOf(l))}</div>
     <div class="fi-title"><span class="fi-n">${l.kind === 'tool' ? 'ref' : l.n}</span><b>${esc(l.title)}</b></div>
     <div class="fi-meta">${meta}</div>
     <button type="button" class="fi-open"${st === 'soon' ? ' disabled' : ''}
@@ -157,10 +160,10 @@ function paint() {
     const sel = l.id === selectedId;
     return `<button type="button" class="fm-file ${st}${cur ? ' current' : ''}${sel ? ' selected' : ''}" data-id="${l.id}"
         role="option" aria-selected="${sel}" tabindex="-1"
-        title="${st === 'soon' ? 'not written yet' : `select ${esc(l.title)}`}">
+        title="${esc(fileOf(l))}: ${esc(l.title)}${st === 'soon' ? ' (not written yet)' : ''}">
       <span class="fm-dot" aria-hidden="true"></span>
       <span class="fm-n">${l.kind === 'tool' ? 'ref' : l.n}</span>
-      <span class="fm-name">${esc(l.title)}</span>
+      <span class="fm-name" aria-hidden="true">${esc(fileOf(l))}</span><span class="sr-only">${esc(l.title)}, ${stateLabel(l)}</span>
     </button>`;
   }).join('');
 

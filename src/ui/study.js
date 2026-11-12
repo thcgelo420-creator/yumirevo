@@ -256,7 +256,7 @@ function paintOutline() {
   if (key !== outlineKey) {
     outlineKey = key;
     const held = heldOutline();
-    els.title.querySelector('.n').textContent = l ? `${l.n}/` : '';
+    els.title.querySelector('.n').textContent = l ? l.n : '';
     els.title.querySelector('.t').textContent = l ? l.title : '';
     els.title.title = l ? `${l.n} ${l.title}: back to the top` : '';
     els.title.hidden = !l;
@@ -266,8 +266,8 @@ function paintOutline() {
       const stem = last ? '    ' : '│   ';
       return `
       <li class="ro-s${s.cleared ? ' cleared' : ''}" data-step="${s.n}">
-        <button type="button" class="ro-step" data-step="${s.n}" tabindex="-1"><span class="g" aria-hidden="true">${last ? '└── ' : '├── '}</span><span class="n">${p2(s.n)}</span><span class="t">-${esc(slug(s.title))}</span><span class="sr-only">: ${esc(s.title)}${s.optional ? ', optional' : ''}${s.cleared ? ', done' : ''}</span></button>
-        ${s.cps.length ? `<ul class="ro-cps">${s.cps.map((c, ci) => `<li><button type="button" class="ro-cp${c.done ? ' done' : ''}" data-goal="${c.goal}" tabindex="-1"><span class="g" aria-hidden="true">${stem}${ci === s.cps.length - 1 ? '└── ' : '├── '}</span><span class="m" aria-hidden="true">${c.done ? '[x]' : '[ ]'}</span><span class="sr-only">Checkpoint ${c.i}: </span><span class="t">${esc(c.title)}</span><span class="sr-only">${c.done ? ', reached' : ''}</span></button></li>`).join('')}</ul>` : ''}
+        <button type="button" class="ro-step" data-step="${s.n}" tabindex="-1" title="${esc(s.title)}" aria-label="${p2(s.n)} ${esc(s.title)}${s.optional ? ', optional' : ''}${s.cleared ? ', done' : ''}"><span class="g" aria-hidden="true">${last ? '└── ' : '├── '}</span><span class="n">${p2(s.n)}</span><span class="s" aria-hidden="true">-${esc(slug(s.title))}</span><span class="t sr-only">${esc(s.title)}</span></button>
+        ${s.cps.length ? `<ul class="ro-cps">${s.cps.map((c, ci) => `<li><button type="button" class="ro-cp${c.done ? ' done' : ''}" data-goal="${c.goal}" tabindex="-1" title="${esc(c.title)}" aria-label="Checkpoint ${c.i}: ${esc(c.title)}${c.done ? ', reached' : ''}"><span class="g" aria-hidden="true">${stem}${ci === s.cps.length - 1 ? '└── ' : '├── '}</span><span class="m" aria-hidden="true">${c.done ? '[x]' : '[ ]'}</span><span class="t">${esc(c.title)}</span></button></li>`).join('')}</ul>` : ''}
       </li>`;
     }).join('');
     els.treeFoot.textContent = l ? `${steps.length} ${steps.length === 1 ? 'step' : 'steps'}, ${N} ${N === 1 ? 'checkpoint' : 'checkpoints'}, ${have} reached` : '';
