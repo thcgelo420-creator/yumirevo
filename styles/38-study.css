@@ -594,22 +594,13 @@ body:not([data-ws='2']) #study { display: none; }
 #study .wb-x:hover { color: var(--fg); border-color: var(--line-hi); }
 
 /* ── the bar's middle on the study: this lesson's steps, lent by study.js ── */
-/* every mode, not only the lent words: the lamp dot is placed against this box on workspaces 3 and 4 too */
-.bar-task { position: relative; }
 .bar-task .bs .bt-num { font: 500 11px/1 var(--c-mono); letter-spacing: .08em; }
 .bar-task .bs .bt-name { white-space: nowrap; }
-.bar-task .bs.done .bt-dot { opacity: .45; }
 .bar-task .bs.done:not(.focus) { color: var(--fg-3); }
 /* too many words: only the lit one keeps its name, then numbers only */
 .bar-task.fit-1 .bs:not(.focus) .bt-name, .bar-task.fit-2 .bs .bt-name { display: none; }
 .bar-task.fit-1 .bs.focus .bt-name { max-width: 220px; overflow: hidden; text-overflow: ellipsis; }
 .bar-task.fit-2 .bs { padding-left: 8px; padding-right: 8px; }
-/* one warm dot glides to the lit word (bar.js moves it) */
-.bar-task .bt-lamp {
-  position: absolute; left: 0; top: 0; width: 5px; height: 5px; border-radius: 50%;
-  background: var(--lamp); box-shadow: var(--lamp-glow); opacity: 0; pointer-events: none;
-}
-.bar-task.has-lamp .bs.focus .bt-dot { opacity: 0; }
 
 /* ── the whole course, searchable (/) ────────────────────────────────────── */
 #study .st-course {

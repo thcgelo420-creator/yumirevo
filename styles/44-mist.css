@@ -1,11 +1,12 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   MIMEI · 44 MIST · THE VIEW AND THE ETCHED GLASS (workspaces 2 and 3)
+   MIMEI · 44 MIST · THE VIEW, THE SHELL AND THE TOP BAR (workspaces 2 and 3; the bar on 2, 3 and 4)
    Loaded after 43-glass. Workspaces 2 and 3 look out over the desk's city in mist: the wall is the
    view itself, sharp (assets/walls/city-*.webp, made by tools/assets.py with tools/mist.py), and the
    panes in front of it are dark glass tinted by the fog. No accent colour on the panes: what is
-   current or in front is marked in the fog's own white, never in amber. The manual's pane carries
-   the one ornament, the glass itself: a frosted edge with the 未明 mark cut into it and rain on the
-   outside (assets/glass/, made by tools/glass.py). Workspace 4 keeps the soft city.
+   current or in front is marked in the fog's own white, never in amber. Everything on the glass
+   speaks like a shell. The top bar, at the end of this file, is the one rule set here that reaches
+   workspace 4: the user asked for it to be a plain Linux bar wherever it shows. Workspace 4 keeps
+   the soft city.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ── the fog's glass: tokens for 2 and 3 ───────────────────────────────── */
@@ -15,9 +16,6 @@ body[data-ws='2'], body[data-ws='3'] {
   --pane-solid: #071116;
   --glass-edge: rgba(200, 236, 238, .12);
   --mist-line: rgba(196, 228, 230, .12);
-  --etch: rgba(214, 238, 240, .42);
-  --etch-frost: rgba(214, 238, 240, .045);
-  --drops: rgba(226, 244, 246, .5);
   --shadow: 0 30px 80px -24px rgba(1, 6, 9, .78);
   /* the "lamp" is the fog's white now: same markers, no warm colour, no glow */
   --lamp: #dcecee;
@@ -28,7 +26,6 @@ body[data-ws='2'], body[data-ws='3'] {
 :root[data-scene='late'] body[data-ws='2'], :root[data-scene='late'] body[data-ws='3'] {
   --pane: rgba(4, 11, 14, .86);
   --pane-glass: rgba(4, 11, 14, .82);
-  --etch: rgba(200, 226, 228, .34);
 }
 :root[data-scene='ice'] body[data-ws='2'], :root[data-scene='ice'] body[data-ws='3'] {
   --pane: rgba(238, 243, 242, .86);
@@ -36,9 +33,6 @@ body[data-ws='2'], body[data-ws='3'] {
   --pane-solid: #eef3f2;
   --glass-edge: rgba(255, 255, 255, .9);
   --mist-line: rgba(30, 52, 56, .12);
-  --etch: rgba(40, 70, 76, .3);
-  --etch-frost: rgba(255, 255, 255, .34);
-  --drops: rgba(60, 90, 96, .38);
   --shadow: 0 26px 64px -30px rgba(40, 62, 66, .4);
   --lamp: #24363b;
   --lamp-rgb: 36, 54, 59;
@@ -63,31 +57,6 @@ body[data-ws='3'] .win:focus-visible { outline-color: rgba(var(--lamp-rgb), .8);
 /* the outline's marker on the step you are reading: a white bar, no wash of colour */
 body[data-ws='2'] #study .ro-lamp { background: linear-gradient(90deg, rgba(var(--lamp-rgb), .08), rgba(var(--lamp-rgb), 0) 70%); box-shadow: none; }
 body[data-ws='2'] #study .ro-step[aria-current] .n, body[data-ws='2'] #study .ro-title[aria-current] .n { color: var(--fg); }
-
-/* ── the manual's etched edge: a strip of frosted glass down its right side ── */
-.man-row { flex: 1; min-height: 0; display: flex; }
-.man-row .man-body { flex: 1; min-width: 0; }
-.man-etch { display: none; }
-body[data-ws='3'] .man-etch {
-  position: relative; display: block; flex: none; width: 112px; overflow: hidden; pointer-events: none;
-  border-left: 1px solid var(--mist-line);
-  background: linear-gradient(90deg, transparent, var(--etch-frost) 40%), var(--glass-grain);
-  background-size: 100% 100%, 160px 160px;
-}
-@container (max-width: 640px) { body[data-ws='3'] .man-etch { display: none; } }
-.man-etch .etch-mark, .man-etch .etch-drops { position: absolute; display: block; }
-.man-etch .etch-mark {
-  left: 50%; top: 30px; width: 86px; height: 190px; transform: translateX(-50%);
-  background: var(--etch);
-  -webkit-mask: url('../assets/glass/etch.webp') center top / contain no-repeat;
-  mask: url('../assets/glass/etch.webp') center top / contain no-repeat;
-}
-.man-etch .etch-drops {
-  inset: 0;
-  background: var(--drops);
-  -webkit-mask: url('../assets/glass/drops.webp') 0 0 / 150px 640px repeat-y;
-  mask: url('../assets/glass/drops.webp') 0 0 / 150px 640px repeat-y;
-}
 
 /* ── the shell: the lesson pane reads like a session ─────────────────────── */
 /* the outline is `tree` output; one mono voice, the branches quiet, the step you are reading lit */
@@ -294,3 +263,54 @@ body[data-ws='3'] .man-doc h1::before, body[data-ws='3'] .man-doc h2 { margin-le
   body[data-ws='3'] #win-man .win-foot #man-pos { display: none; }
   body[data-ws='3'] #win-man .win-foot .seg.pg { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 }
+
+/* ── the top bar, wherever it shows (2, 3 and 4): a plain Linux bar, i3bar's shape ──
+   left, the name and the workspaces as bare numbers, the one you are on in reverse video; middle, this
+   workspace's words, the one in front underlined; right, i3status's readouts split by hairlines.
+   One mono size, lowercase, no tracking: no mark, no pills, no dots. */
+#bar {
+  padding: 0; gap: 0; border-bottom: 0;
+  background: rgba(7, 9, 12, .92);
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+  font: 400 12.5px/1 var(--c-mono); letter-spacing: 0; color: var(--fg-3);
+}
+:root[data-scene='ice'] #bar { background: rgba(236, 240, 242, .94); }
+#bar :focus-visible { outline-offset: -2px; }
+#bar .bar-l, #bar .bar-r, #bar .bar-mods, #workspaces { gap: 0; }
+
+#bar .brand { height: var(--bar-h); padding: 0 14px; gap: 0; }
+#bar .brand .ob-mark { display: none; }
+#bar .brand .brand-name { display: inline; margin: 0; font: 700 12.5px/1 var(--c-mono); letter-spacing: 0; text-transform: lowercase; color: var(--fg); }
+
+#bar .ws { min-width: 32px; height: var(--bar-h); padding: 0 11px; gap: 0; justify-content: center; border-radius: 0; }
+#bar .ws .num { font: 400 12.5px/1 var(--c-mono); letter-spacing: 0; color: var(--fg-3); }
+#bar .ws:hover { background: var(--surface-2); }
+#bar .ws:hover .num, body.mod-down #bar .ws .num { color: var(--fg); }
+#bar .ws[aria-current="page"] { background: var(--fg); }
+#bar .ws[aria-current="page"] .num, body.mod-down #bar .ws[aria-current="page"] .num { color: var(--ink); font-weight: 700; }
+#bar .ws[aria-current="page"]::after { content: none; }
+
+#bar .bar-task { gap: 0; font: 400 12.5px/1 var(--c-mono); letter-spacing: 0; }
+#bar .bar-task .bw {
+  height: var(--bar-h); padding: 0 12px; gap: 1ch; border: 0; border-radius: 0; background: none; box-shadow: none;
+  font: 400 12.5px/1 var(--c-mono); letter-spacing: 0; text-transform: none; color: var(--fg-4);
+}
+#bar .bar-task .bw.open, #bar .bar-task .bs { color: var(--fg-2); }
+#bar .bar-task .bw:hover { color: var(--fg); background: var(--surface-2); }
+#bar .bar-task .bw.focus { color: var(--fg); background: none; box-shadow: inset 0 -2px 0 var(--fg); }
+#bar .bar-task .bw.focus:hover { background: var(--surface-2); }
+#bar .bar-task .bs .bt-num { font: inherit; letter-spacing: 0; }
+#bar .bar-task .bs.done:not(.focus) .bt-num::after { content: ' ✓' / ''; }
+
+#bar .bar-mods > * { padding: 0 12px; border-right: 1px solid var(--line); }
+#bar .bar-mod, #bar .bar-mod :is(.v, .u, .t), #bar .bar-clock { font: 400 12.5px/1 var(--c-mono); letter-spacing: 0; text-transform: none; }
+#bar .bar-mod { gap: 1ch; color: var(--fg-3); }
+#bar .bar-mod .v, #bar .bar-mod.net.off .t, #bar .bar-clock { color: var(--fg); }
+#bar .bar-mod .u, #bar .bar-mod .t { color: var(--fg-3); }
+#bar .bar-mod.net { display: inline-flex; width: auto; }
+#bar .bar-clock { margin: 0; font-variant-numeric: tabular-nums; }
+#bar .mod.launch, #bar .mod.apps { width: 38px; height: var(--bar-h); border: 0; border-radius: 0; background: none; color: var(--fg-3); }
+#bar .mod.launch:hover, #bar .mod.apps:hover { color: var(--fg); background: var(--surface-2); border: 0; }
+
+@media (max-width: 1080px) { #bar .ws { min-width: 28px; padding: 0 9px; } #bar .bar-task .bw { padding: 0 9px; } }
+@media (max-width: 620px) { #bar .brand { display: none; } #bar .bar-mods > * { padding: 0 8px; } }

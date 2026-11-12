@@ -266,11 +266,14 @@ build plan and the agreed decisions are in `moodboard/v7-crane/BUILD.md`.
 > tmux status line sits at the bottom. Scripts, Output, runbooks, probes and
 > solutions use shell punctuation (`$`, `#`, `›`, `[ ]`, `a)`) instead of
 > colour or cards. Workspace 3's manual is a man page (flush-left bold
-> sections, indented text, less(1)'s prompt) with the etched 未明 on its glass
-> edge, and Files is `ls` with `[x]`/`[~]`/`[ ]` states. There is no accent
+> sections, indented text, less(1)'s prompt), and Files is `ls` with
+> `[x]`/`[~]`/`[ ]` states. The top bar, on 2, 3 and 4, is a plain Linux bar
+> in i3bar's shape: `mimei` and bare workspace numbers, the current one in
+> reverse video; this workspace's windows as words, the one in front
+> underlined; i3status-style readouts split by hairlines. There is no accent
 > colour on 2 and 3; the lamp tint only marks focus. Every decorative glyph is
 > `aria-hidden`, and every control keeps a readable name. The desk and settings
-> are unchanged. The full table is in `moodboard/v11-mist/BUILD.md`; where it
+> are otherwise unchanged. The full table is in `moodboard/v11-mist/BUILD.md`; where it
 > and the text below disagree about 2 and 3, the table wins.
 
 - **Workspace 2 is the study** (`src/ui/study.js`, `src/ui/session.js`,

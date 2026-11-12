@@ -136,15 +136,7 @@ export const manWindow = defineWindow({
     docEl = document.createElement('div');
     docEl.className = 'man-doc';
     bodyEl.appendChild(docEl);
-    /* the etched edge: the 未明 mark frosted into the glass, rain outside it (44-mist.css) */
-    const etch = document.createElement('div');
-    etch.className = 'man-etch';
-    etch.setAttribute('aria-hidden', 'true');
-    etch.innerHTML = '<i class="etch-mark"></i><i class="etch-drops"></i>';
-    const row = document.createElement('div');
-    row.className = 'man-row';
-    row.append(bodyEl, etch);
-    root.append(headEl, row);
+    root.append(headEl, bodyEl);
     body.appendChild(root);
 
     footEl = winApi.foot;

@@ -1,17 +1,16 @@
 /* ════════════════════════════════════════════════════════════════════════════
    MIMEI · UI/BAR
-   The cab's bar (workspaces 2, 3 and 4; the desk has its own menu). One slim
-   line in the desk's voice: the mark, MIMEI and the four workspaces as
-   numbers on the left, this workspace's words in the middle, the live
-   readouts and the two global controls on the right.
+   The top bar (workspaces 2, 3 and 4; the desk has its own menu), drawn as a
+   plain Linux bar in 44-mist.css: the name and the four workspaces as bare
+   numbers on the left, this workspace's words in the middle, the readouts and
+   the two global controls on the right.
 
    The middle does what the rail used to: every window that lives here is a
-   word. The one in front has the lamp (the warm edge on its pane says the
-   same); clicking it puts it away, clicking any other brings it forward. A
-   workspace can lend the middle its own words instead (lendBarMiddle): the
-   study shows the open lesson's steps there, the lamp on the one you are
-   reading. When the words do not all fit, only the lit one keeps its name.
-   The lamp glides from word to word (at once on Still).
+   word. The one in front is underlined; clicking it puts it away, clicking
+   any other brings it forward. A workspace can lend the middle its own words
+   instead (lendBarMiddle): the study shows the open lesson's steps there, the
+   one you are reading underlined. When the words do not all fit, only the
+   current one keeps its name.
    ════════════════════════════════════════════════════════════════════════════ */
 
 import {
@@ -29,7 +28,6 @@ const WS = [
   { n: 3, name: 'manual', title: 'The manual, the terminal and the files' },
   { n: 4, name: 'settings', title: 'Settings' },
 ];
-const p2 = n => String(n).padStart(2, '0');
 
 /* the windows each workspace keeps, in the bar's order; anything else moved here joins after them */
 const HOME = { 3: ['man', 'tty', 'files'], 4: ['settings'] };
@@ -49,7 +47,6 @@ export function lendBarMiddle(ws, words) {
 /** The lender's words changed (the step being read, a step cleared). */
 export function repaintBarMiddle() { if (els.task) paintWins(); }
 
-const stillNow = () => document.documentElement.dataset.fx === '0' || matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 function clockText() {
   return new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
@@ -65,7 +62,7 @@ function paintClock() {
   });
 }
 
-/** The middle: this workspace's windows, the one in front with the lamp (or the words a workspace lent it). */
+/** The middle: this workspace's windows, the one in front underlined (or the words a workspace lent it). */
 function paintWins() {
   if (!els.task) return;
   const n = activeWs();
@@ -84,7 +81,7 @@ function paintWins() {
     const def = windowDef(id), f = isFocused(id), on = shown.includes(id);
     const tip = f ? `${def.title}: in front, click to put it away (Alt+Z)` : on ? `${def.title}: bring it forward` : `${def.title}: open it`;
     return `<button type="button" class="bw${f ? ' focus' : ''}${on ? ' open' : ''}" data-win="${id}"
-        aria-pressed="${f}" title="${escAttr(tip)}"><i class="bt-dot" aria-hidden="true"></i><span class="bt-name">${escAttr(word(id))}</span></button>`;
+        aria-pressed="${f}" title="${escAttr(tip)}"><span class="bt-name">${escAttr(word(id))}</span></button>`;
   }).join('');
   els.task.querySelectorAll('.bw').forEach(b => b.onclick = () => {
     sound.click();
@@ -95,10 +92,9 @@ function paintWins() {
   });
   /* a repaint under the keyboard keeps the cursor on the same word */
   if (had) { const b = els.task.querySelector(`.bw[data-win="${had}"]`); if (b) b.focus({ preventScroll: true }); }
-  glide();
 }
 
-/** Draw lent words afresh for a new lesson; otherwise move the lamp in place. */
+/** Draw lent words afresh for a new lesson; otherwise mark the current one in place. */
 function paintLent(n, own) {
   const t = els.task;
   const key = `${n}|lent|${own.key()}`;
@@ -106,14 +102,12 @@ function paintLent(n, own) {
   t.dataset.key = key;
   const items = own.items();
   const struct = items.map(it => `${it.id}:${it.name}`).join('|');
-  let fresh = false;
   if (!t.classList.contains('lent')) { t.classList.add('lent'); t.dataset.struct = '-'; }
   t.setAttribute('aria-label', own.label);
   if (t.dataset.struct !== struct) {
-    fresh = true;
     t.dataset.struct = struct;
     const had = t.contains(document.activeElement) ? document.activeElement.dataset.id : null;
-    t.innerHTML = items.map(it => `<button type="button" class="bw bs" data-id="${escAttr(it.id)}"><i class="bt-dot" aria-hidden="true"></i><span class="bt-num">${escAttr(it.num)}</span><span class="bt-name">${escAttr(it.name)}</span></button>`).join('');
+    t.innerHTML = items.map(it => `<button type="button" class="bw bs" data-id="${escAttr(it.id)}"><span class="bt-num">${escAttr(it.num)}</span><span class="bt-name">${escAttr(it.name)}</span></button>`).join('');
     t.querySelectorAll('.bs').forEach(b => b.onclick = () => { sound.click(); own.go(b.dataset.id); });
     if (had) { const b = t.querySelector(`.bs[data-id="${had}"]`); if (b) b.focus({ preventScroll: true }); }
   }
@@ -127,7 +121,6 @@ function paintLent(n, own) {
     if (b.title !== it.title) b.title = it.title;
   });
   fitLent();
-  glide(fresh);
 }
 
 /** Fit full names, then only the current name, then compact words. */
@@ -139,43 +132,11 @@ function fitLent() {
   /* measure with every name shown: a name an earlier fit hid measures 0, and would pass for room to spare */
   t.classList.remove('fit-1', 'fit-2');
   const parts = bs.map(b => ({ here: b.classList.contains('focus'), num: b.querySelector('.bt-num').scrollWidth, name: b.querySelector('.bt-name').scrollWidth }));
-  const GAP = 4, DOT = 13, NAME = 8;
-  const need = (pad, named, cap) => parts.reduce((a, p) => a + pad + DOT + p.num + (named(p) ? NAME + Math.min(cap, p.name) : 0), 0) + GAP * (parts.length - 1);
+  const GAP = 4, NAME = 8;
+  const need = (pad, named, cap) => parts.reduce((a, p) => a + pad + p.num + (named(p) ? NAME + Math.min(cap, p.name) : 0), 0) + GAP * (parts.length - 1);
   const fit = need(24, () => true, 1e4) <= room ? '' : need(24, p => p.here, 220) <= room ? 'fit-1' : 'fit-2';
   t.classList.toggle('fit-1', fit === 'fit-1');
   t.classList.toggle('fit-2', fit === 'fit-2');
-}
-
-/* One warm dot glides to the lit word. */
-let lampX = null, lampY = 0, lampRaf = 0, lampUntil = 0;
-function glide(jump = false) {
-  const t = els.task;
-  if (!t) return;
-  if (!els.lamp) {
-    els.lamp = document.createElement('i');
-    els.lamp.className = 'bt-lamp';
-    els.lamp.setAttribute('aria-hidden', 'true');
-  }
-  if (els.lamp.parentElement !== t) t.appendChild(els.lamp);
-  if (jump) lampX = null;
-  lampUntil = performance.now() + 900;
-  if (!lampRaf) lampRaf = requestAnimationFrame(lampStep);
-}
-function lampStep() {
-  lampRaf = 0;
-  const t = els.task, lamp = els.lamp;
-  if (!t || !lamp) return;
-  const dot = t.querySelector('.bw.focus .bt-dot');
-  if (!dot || !t.clientWidth) {
-    t.classList.remove('has-lamp'); lamp.style.opacity = '0'; lampX = null; return;
-  }
-  const tr = t.getBoundingClientRect(), r = dot.getBoundingClientRect();
-  const x = r.left - tr.left + r.width / 2 - 2.5, y = r.top - tr.top + r.height / 2 - 2.5;
-  if (lampX === null || stillNow()) { lampX = x; lampY = y; } else { lampX += (x - lampX) * .2; lampY += (y - lampY) * .2; }
-  lamp.style.transform = `translate(${lampX.toFixed(2)}px, ${lampY.toFixed(2)}px)`;
-  lamp.style.opacity = '1';
-  t.classList.add('has-lamp');
-  if (Math.abs(x - lampX) > .25 || performance.now() < lampUntil) lampRaf = requestAnimationFrame(lampStep);
 }
 
 function paintStatus() {
@@ -185,8 +146,7 @@ function paintStatus() {
   if (els.net) {
     const on = navigator.onLine;
     els.net.classList.toggle('off', !on);
-    els.net.querySelector('.sr-only').textContent = on ? 'online' : 'offline';
-    els.net.setAttribute('aria-label', `Network ${on ? 'online' : 'offline'}`);
+    els.net.querySelector('.t').textContent = on ? 'online' : 'offline';
     els.net.title = `Network ${on ? 'online' : 'offline'}`;
   }
 }
@@ -200,7 +160,7 @@ export function paintBar() {
     els.ws.innerHTML = WS.map(w => {
       const here = now === w.n;
       return `<button class="ws" data-ws="${w.n}" title="${w.title} (Alt+${w.n})"
-          ${here ? 'aria-current="page"' : ''}><span class="num" aria-hidden="true">${p2(w.n)}</span><small class="ws-name${here ? '' : ' sr-only'}">${w.name}</small></button>`;
+          ${here ? 'aria-current="page"' : ''}><span class="num" aria-hidden="true">${w.n}</span><small class="ws-name sr-only">${w.name}</small></button>`;
     }).join('');
     els.ws.querySelectorAll('.ws').forEach(b => b.onclick = () => {
       sound.click();
@@ -230,8 +190,8 @@ export function initBar() {
 
   addEventListener('online', paintStatus);
   addEventListener('offline', paintStatus);
-  /* A new width changes what fits and where the lamp sits. */
-  addEventListener('resize', () => { if (els.task && els.task.classList.contains('lent')) fitLent(); glide(true); }, { passive: true });
+  /* A new width changes what fits. */
+  addEventListener('resize', () => { if (els.task && els.task.classList.contains('lent')) fitLent(); }, { passive: true });
   clockTimer = setInterval(paintClock, 10000);
 
   onWM(paintBar);

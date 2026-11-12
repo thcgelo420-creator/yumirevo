@@ -42,7 +42,7 @@ test.describe('the shell', () => {
       name: el.querySelector('.ws-name').textContent,
       current: el.getAttribute('aria-current'),
     })));
-    expect(workspaces.map(w => w.n)).toEqual(['01', '02', '03', '04']);
+    expect(workspaces.map(w => w.n)).toEqual(['1', '2', '3', '4']);   // bare numbers, as an i3 bar shows them
     expect(workspaces.map(w => w.name)).toEqual(['desk', 'lessons', 'manual', 'settings']);
     expect(workspaces[2].current).toBe('page');
     await expect(page.locator('#workspaces')).toHaveAttribute('data-active', 'manual');

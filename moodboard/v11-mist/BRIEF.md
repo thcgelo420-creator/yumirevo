@@ -27,10 +27,16 @@ Crops the user picked: **a1** fog, **h3** ring roads, **i4** LED columns,
 
 1. The lesson pane stays **centred**, then (stage 4) **spans the full width**
    with the scripts drawer taking the right side when it is out.
-2. The etched 未明 lives on the **manual's** glass edge, not on workspace 2.
+2. The etched 未明 lives on the **manual's** glass edge, not on workspace 2 (later dropped, 9).
 3. **No amber or orange** on workspaces 2 and 3.
 4. Of three lesson treatments, **B (shell and tree)** for the lesson and
    **C (tmux session bar)** at the bottom.
 5. **Real slugs** in the outline tree (`01-a-box-with-a-name-on-it`).
 6. The lesson's parts (scripts, Output, runbooks, probes, solutions) in the
    same shell voice; then workspace 3 in it too.
+7. Overnight, a free hand to finish workspace 3: the manual as a man page,
+   Files as `ls`.
+8. Workspace 3 **opens with all three** windows: manual, Terminal, Files.
+9. **Drop the etched 未明** from the manual; its strip and drops went with it.
+10. The **top bar** "cleaner and minimal, just like Linux": an i3-style bar
+    wherever it shows (2, 3 and 4).

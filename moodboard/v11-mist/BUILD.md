@@ -37,17 +37,28 @@ from hue.
 | Manual body | `NAME` and section heads flush left in bold mono caps; text indented under them (7ch, 3ch under 900px, none under 560px) | `44-mist.css` |
 | Manual foot | less(1)'s prompt in reverse video: `Manual page luau-variables(2)`, then `line: top` | `man.js`, `44-mist.css` |
 | Opening layout | Workspace 3 opens with all three: manual left, Terminal and Files stacked right. Existing saves get the two added once (`state.mistStack`); closing them later sticks | `wm.js` |
-| Etched edge | 未明 and water drops on a frosted strip down the manual's right side; hidden under 640px | `man.js`, `assets/glass/*` |
 | Tables | Column output: bold heads, dashed rule, no box | `44-mist.css` |
 | Files | `▸ unit-02-variables/`, then `[ ] 2.1-your-first-variable.md`; `[x]` done, `[~]` started, `[-]` not written, `#` reference. File names are `aria-hidden`; each row reads its title and state | `files.js` |
 | Inspector | `$ stat 2.1-your-first-variable.md`, title, `ready · 10 min · 3 checkpoints`, a `$ open ↵` command button | `files.js` |
 | Terminal | Already a shell; labels lowercased | `44-mist.css` |
 
+## The top bar (workspaces 2, 3 and 4)
+
+Asked for "cleaner and minimal, just like Linux": an i3bar. It is the one part
+of this round that also shows on settings.
+
+| Part | Treatment | Where |
+| --- | --- | --- |
+| Left | `mimei` in bold mono, then `1 2 3 4`, the workspace you are on in reverse video. The logo image is hidden but kept in the DOM (the scene swap sets its source) | `bar.js`, `44-mist.css` |
+| Middle | This workspace's windows (`manual terminal files`), or the lesson's steps on 2: plain words, the one in front underlined, open ones brighter than closed. No pills, dots or gliding lamp (removed from `bar.js`) | `bar.js`, `44-mist.css` |
+| Right | `0/210 checkpoints │ online │ 15:21 │`, then search and apps, i3status-style | `index.html`, `44-mist.css` |
+| Surface | A flat, near-opaque bar: no blur, no border, one 12.5px mono size, lowercase, no tracking. Under 620px the name steps aside | `44-mist.css` |
+
 ## Assets and tools
 
 - `tools/mist.py` builds the fog walls (`assets/walls/*`) from the project's
-  own city plates; `tools/glass.py` builds `assets/glass/etch.webp` and
-  `drops.webp`. `tools/assets.py` runs both.
+  own city plates; `tools/assets.py` runs it. The etched edge, its assets and
+  `tools/glass.py` were removed when the user dropped the 未明 from the manual.
 
 ## Checked
 
