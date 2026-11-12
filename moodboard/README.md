@@ -79,11 +79,13 @@ says what was built.
 Write what you want here: what to keep, what to drop, what feels wrong.
 
 - District decisions (11 Nov 2026): full neon on workspaces 2 and 3; the
-  lesson is the district's big screen with LED columns of real checkpoints in
-  the margins; workspace 3 is a cheatsheet wall beside Studio, the terminal
+  lesson is the district's big screen, lights of real checkpoints on its
+  billboard; workspace 3 is a cheatsheet wall beside Studio, the terminal
   and files stacked to one side; Ice is Mirror's Edge daylight. The rule that
   keeps it readable: light belongs to signs, prose stays white, each colour
-  means one thing, amber is still the lamp.
+  means one thing, amber is still the lamp. After the first look (12 Nov
+  2026) the neon was turned down, the margin's signs were taken out and the
+  manual was given more air.
 - Lunar decisions so far: HUD-style top bar (option E, no bar strip) with
   workspaces, streak, clock and date, Night/Ice toggle and settings, all as live
   widgets; the bar changes per workspace; subtle motion; skull mark in the

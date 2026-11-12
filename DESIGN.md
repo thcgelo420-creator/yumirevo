@@ -65,9 +65,9 @@ still marks *you*, everywhere. (Inside, the look is still called `ossuary`:
   - **amber**: the lamp, you (the step you are on, the window in front, the
     caret). Nothing else is amber.
   - The iridescent run (`--nx-iri`: cyan, violet, pink, amber) is progress:
-    the LED columns, the bars that fill.
+    the checkpoint lights, the bars that fill.
   - Words set on a lit sign are `--nx-ink`. Every coloured word clears 4.5:1
-    on the pane. `--nx-glow` scales how far light spills (1 at Night, .35 in
+    on the pane. `--nx-glow` scales how far light spills (.55 at Night, .2 in
     Ice).
   - In Ice the same names hold daylight values: electric blue, magenta,
     violet, teal for *do* (yellow cannot be read on white), green, red.
@@ -119,7 +119,7 @@ still marks *you*, everywhere. (Inside, the look is still called `ossuary`:
   - **IBM Plex Mono** for code, the terminal, counts and the small capitals
     (11px, tracked wide) that head sections and label things.
   - **Sora** for signs: the billboards' titles, step headings, window names
-    and the numerals on the LED columns. Never for running prose.
+    and the numerals on the signs. Never for running prose.
   - **M PLUS Rounded 1c** for the Japanese on the street signs, cut down by
     `tools/signfont.py` to the glyphs in `src/data/signs.js` (about 12KB), so
     the signs are the same on every machine. A sign face is fetched only
@@ -159,8 +159,7 @@ still marks *you*, everywhere. (Inside, the look is still called `ossuary`:
     still under reduced motion or fx 0.
   - The district moves a little, at fx 2 and 3 only: four of the wall's
     screens breathe, a band of light crosses the billboard every nine
-    seconds, a street sign flickers now and then, and the margin's signs
-    power on when you arrive. A checkpoint reached while you watch flashes
+    seconds, and a street sign flickers now and then. A checkpoint reached while you watch flashes
     its segment (every level but fx 0). At fx 0 and 1, and under reduced
     motion, all of it holds.
 
@@ -333,7 +332,7 @@ build plan and the agreed decisions are in `moodboard/v7-crane/BUILD.md`.
   for its light; the decisions are in `moodboard/v11-district/BUILD.md`, and
   the structure's in `moodboard/v10-study/BUILD.md`). You leap off the crane
   and land in front of it: one lesson at a time on one big pane of glass with
-  a lit edge, signs standing either side. The slim bar stays. In the code it
+  a lit edge, the margins left to the city. The slim bar stays. In the code it
   is still "the study".
   - **The picture.** The reading pane in the middle with one ring of
     iridescent light just inside its edge and a glow that spills on the city;
@@ -363,18 +362,9 @@ build plan and the agreed decisions are in `moodboard/v7-crane/BUILD.md`.
     `Correct.` or `Not quite.` and says why. The lesson ends with **the end
     card** (`.st-end`). `[` and `]` walk the line to the previous and the
     next lesson.
-  - **The margins' signs** (`src/ui/district.js`, `.dc-signs`): the space
-    either side of the pane holds a stack of signs, and every number on them
-    is real. Left: the unit (its number and name), its street sign, an **LED
-    column** with one segment for each of this lesson's checkpoints, lit
-    from the bottom as they are reached, and the step you are reading in its
-    kind's colour. Right: tonight's study time against the goal, a column of
-    the course's twelve units (each filled as far as its checkpoints are
-    reached, the lamp beside the unit you are in) with `9/210` under it, the
-    未明 sign, and the lesson after this one. They are `aria-hidden` and take
-    no keys: the outline, the pane's head and the bar say all of it. They
-    stand down when the scripts drawer is out or a margin is under 150px
-    (below about 1160px wide).
+  - **The margins hold no signs.** The space either side of the pane is
+    left to the city and the weather. The wall's signs sit behind the pane
+    (`src/ui/district.js`, §2).
   - **The scripts** (`S`, or the button in the pane's head): a drawer slides
     out on the right with this step's script, what it prints and the
     runbook, which folds when it would squeeze the code. It has a cyan edge.
@@ -391,18 +381,19 @@ build plan and the agreed decisions are in `moodboard/v7-crane/BUILD.md`.
     and stops.
   - **The course overlay** (`/`) lists every unit and stop, with search.
   - **Progress is checkpoints.** No XP and no ranks anywhere on screen. The
-    outline, the billboard, the pane's head and the lesson's column light
-    this lesson's; the goals window (`9 / 210`), settings, the bar and the
-    course's column count the course's.
+    outline, the billboard and the pane's head light
+    this lesson's; the goals window (`9 / 210`), settings and the bar
+    count the course's.
 - **Manual** (workspace 3, `src/ui/man.js`, `styles/46-signwall.css`): **the
   sign wall**, a cheatsheet to glance at beside Studio. It keeps the man-page
   frame: the header line (`LUAU-VARIABLES(2)`, `MIMEI manual`, the page
   count) and the window's footer (`◀ ▶`, `man 1/11`, `top`, `q close`).
   - **The board.** The sheet's title is a billboard across the top with the
     unit's street sign; under it, one **card** for each heading
-    (`.man-card`), in the four sign colours in turn. A pane 1000px wide or
-    more sets the cards in two columns, 1640px in three, so a sheet is
-    scanned, not scrolled. A narrow card sets its code the tight way: a note
+    (`.man-card`), in the four sign colours in turn. The text is 16.5px/1.72,
+    with room inside and between the cards. A pane 1180px wide or more sets
+    the cards in two columns, 1980px in three, so a sheet is scanned, not
+    scrolled. A narrow card sets its code the tight way: a note
     after a line of code drops under that line instead of breaking beside it.
   - **The index** (`.man-index`, from 880px): every sheet in the course by
     unit, the one you are on marked with the lamp, then this sheet's headings
@@ -466,11 +457,11 @@ build plan and the agreed decisions are in `moodboard/v7-crane/BUILD.md`.
   tab stop for the whole outline (the arrows, Home and End walk it). The
   scripts drawer is `inert` while it is away, and nothing in the margins
   ever covers a focused control.
-- The district's signs are for the eye only. The margins' stacks, the wall's
+- The district's signs are for the eye only. The wall's
   signs, the lights in the billboard and in the pane's head, and every street
   sign are `aria-hidden` (the street signs are also `lang="ja"`); the same
   counts are in the outline, in `checkpoint 2 of 3` and in the bar. Nothing
-  in the margins takes a key or covers a control.
+  on the wall takes a key or covers a control.
 - Colour is never the only carrier. A step's kind is also its word (`READ`,
   `DO`, `PREDICT`, `BUILD`), a reached checkpoint says so in its name, a
   right answer says `Correct.`. Every sign colour clears 4.5:1 as text on
@@ -553,11 +544,11 @@ always wins.
   desk.
 - The district costs no picture and no canvas. The wall's signs are fifteen
   small elements blurred once by CSS (they never move; four of them fade at
-  fx 2 and 3), the margins' stacks are DOM painted only when a number
-  changes (`district.js` keys its paint), and every glow is a static shadow.
-  The two sign faces are 34KB (Sora) and 12KB (the street signs), fetched
-  only when a sign is on screen; the desk never asks for them. The first
-  load gains three stylesheets (about 57KB before compression).
+  fx 2 and 3), `district.js` puts them in place once, and every glow is a
+  static shadow. The two sign faces are 34KB (Sora) and 12KB (the street
+  signs), fetched only when a sign is on screen; the desk never asks for
+  them. The first load gains three stylesheets (about 48KB before
+  compression).
 - A cold `#/2.1` costs one task of about 165ms on the 2-CPU Linux box with
   no GPU (it was about 275ms): the lesson is drawn once, not twice (openLesson
   holds `openFirstSession` off while it switches to the study), the weather's
@@ -588,7 +579,7 @@ src/ui/*.js           bar, cab (the scene and the wall on 3–4), window (kit + 
                       session (the lesson itself: body, place, scripts, ticks),
                       margins (the weather around the glass), drift (the
                       city's traffic behind the glass on 2–4) and district
-                      (the wall's signs on 2–4, the lesson's margin signs)
+                      (the wall's signs on 2–4)
 src/desk/*.js         the desk's picture: world (layers), scenes, stage, atmos,
                       weather, life, roads, led + ledfont + pages (the sign),
                       leap, clock
@@ -716,9 +707,8 @@ python3 tools/shots.py                   # each workspace + contact sheet
     the city is up, held or leaping); `nights()` (tonight and the week);
   - `study()` (the study: the scripts, the drawer and its mode, the outline,
     scene, motion, geometry and weather), `drift()` (whether the traffic
-    runs, its frame rate and lights), `district()` (whether the margin's
-    signs are standing, the lesson's column and the course's, the wall's
-    signs), `lesson()`, `rice.*` (the one-entry
+    runs, its frame rate and lights), `district()` (how many wall signs
+    there are: `{ wall: 9 }`), `lesson()`, `rice.*` (the one-entry
     compatibility surface), `sound`;
   - `still()` (a no-op).
 - `tools/browsercheck.py` drives `tools/probe.html` in the Mac's Chrome

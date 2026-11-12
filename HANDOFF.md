@@ -1,6 +1,6 @@
 # Handoff — MIMEI
 
-**Updated:** 2026-11-11
+**Updated:** 2026-11-12
 **Status:**
 - Workspaces 2 and 3 are **the district** (`moodboard/v11-district/`,
   11 Nov 2026): full neon. You fall from the crane into the city; the lesson
@@ -63,8 +63,8 @@ on 11 Nov 2026. Where this file and
   course. Nothing in the browser runs Luau; every script goes into the
   learner's own Roblox Studio.
 - Four workspaces (`Alt+1…4`): **1 desk** (the whole screen, no bar),
-  **2 lessons** (the district's big screen: one lit pane, signs in the
-  margins, the slim bar), **3 manual** (the sign wall; Terminal and Files
+  **2 lessons** (the district's big screen: one lit pane, the margins
+  left to the city, the slim bar), **3 manual** (the sign wall; Terminal and Files
   open here, from the bar or the apps menu, and stack beside it),
   **4 settings**.
 - **The district** (workspaces 2–3, DESIGN.md §2, §3, §5;
@@ -74,8 +74,8 @@ on 11 Nov 2026. Where this file and
     `styles/45-screen.css` (workspace 2), `styles/46-signwall.css`
     (workspace 3 and the windows). They load last but print and only restate
     what they change.
-  - the signs: `src/ui/district.js` (the wall's signs in `#wall`, the
-    lesson's margin signs in `#study .dc-signs`), `src/data/signs.js` (the
+  - the signs: `src/ui/district.js` (the wall's signs in `#wall`),
+    `src/data/signs.js` (the
     street signs' words), `tools/signfont.py` (their face).
   - the manual's board and index: `src/ui/man.js`. The deck layout:
     `src/core/wm.js` (`geometry()`, `DECK_LEAD`, `DECK_WEIGHTS`).
@@ -281,9 +281,7 @@ src/ui/
   session.js               the lesson: body, place, scripts, ticks, the end card
   margins.js               the weather around the glass (never on a pane)
   drift.js                 workspaces 2–4: the city's traffic behind the glass
-  district.js              the district: the wall's signs (2–4) and the lesson's
-                           margin signs (the LED columns, the plates); every
-                           number on them is real
+  district.js              the district: the wall's signs (2–4)
   cab.js                   workspaces 3–4: the scene on <html>/<body>, the mark,
                            the soft city
   bar.js                   the cab's bar: 01–04, this workspace's windows as
@@ -305,7 +303,7 @@ styles/
   44-neon.css              the district's light: the sign colours and what they
                            mean, syntax colour, the wall's signs, the panes' edges
   45-screen.css            workspace 2's light: the billboard, the kinds, code on
-                           a screen, the margin signs, Ice
+                           a screen, Ice
   46-signwall.css          workspace 3's light: each window's edge, the manual's
                            board and index, the terminal, the files, Ice
   37-lesson.css 39-strangers.css   the page's parts; small shell fixes
@@ -373,7 +371,7 @@ From `DESIGN.md`:
   a menu that comes with the mouse. No bar, no windows, no panels on it. It
   fits without scrolling from 1280×800 to 1920×1080.
 - **A lesson is on the district's big screen**: one at a time on one lit pane
-  of glass under the slim bar, signs in the margins, the weather round the
+  of glass under the slim bar, the margins left to the city, the weather round the
   glass and never on the words.
 - **The manual is a sign wall**: a board of cards beside Studio; it leads,
   and the terminal and the files stack beside it.
@@ -390,15 +388,17 @@ Read `DESIGN.md` for anything visual; this summary is not enough.
 
 What it looks like is in DESIGN.md §2, §3 and §5; why, in
 `moodboard/v11-district/BRIEF.md` and `BUILD.md`. It is light laid over the
-study and the cab, which are unchanged underneath and described below. How it
-hangs together:
+study and the cab, which are unchanged underneath and described below. On 12 Nov 2026, after the owner's first look, the glow came
+down, the margin's signs were taken out and the manual was given more air
+(`BUILD.md`, "After the first look"). How it hangs together:
 
 - **Three stylesheets, last in the order.** `44-neon.css` holds the sign
   colours on `:root` (`--nx-cyan`, `--nx-pink`, `--nx-violet`, `--nx-yellow`,
   `--nx-mint`, `--nx-red`, each with an `-rgb` twin for glows), what they
   mean (`--k-read`, `--k-do`, `--k-predict`, `--k-build`, `--k-done`), the
   iridescent run (`--nx-iri`), `--nx-ink` for words on a lit sign and
-  `--nx-glow` for how far light spills. Ice redefines the same names.
+  `--nx-glow` for how far light spills (`.55` at Night, `.2` in Ice). Ice
+  redefines the same names.
   `45-screen.css` and `46-signwall.css` only restate what they change in
   `38-study.css` and `41-cab.css`, with the same selectors, so the order in
   `index.html` is what makes them win.
@@ -408,25 +408,17 @@ hangs together:
   (`#win-man`, `#win-tty`, `#win-files`); the window in front is `--edge-o: 1`
   with a glow, and the lamp is the dot before its name (`.win-t::before`).
 - **A step's kind is a custom property.** `.step[data-kind]` sets `--k` and
-  `--k-rgb`; the step's head, its chip and its hairline read them. The margin's
-  step plate does the same from `data-kind`.
+  `--k-rgb`; the step's head, its chip and its hairline read them.
 - **The billboard** is `session.js`'s `questHead()`: it now adds the lights
   (`.qh-meter`, one `<i>` a checkpoint, `.on` for each reached) and the
   unit's street sign (`.qh-sign`, with `--len` so a long sign is set
   smaller). The lesson is drawn again on every tick, so the lights are
   always current. `study.js` paints the same lights in the pane's head
   (`.rd-meter`).
-- **The margin's signs** (`district.js`): `mountDistrict()` puts `.dc-signs`
-  in `#study` between the weather and the stage, and paints on `onLesson`,
-  `onQuest`, `onPaint`, `onNights` and the workspace changing, keyed so the
-  DOM is only written when a number changes. The stacks sit in the margins
-  through the study's own `--px`, `--pw` and `--g`; each side is a size
-  container, so the signs scale with the margin and stand down under 150px
-  without any JS. A segment's light is one slice of one tall gradient
-  (`--i` of `--n`), and its fill is a mask (`--f`), which is how the
-  course's units show a part.
-- **The wall's signs** are fifteen empty elements in `#wall .wall-signs`,
-  placed and coloured by CSS (`--ws-a` to `--ws-d`).
+- **The wall's signs** (`district.js`): `mountDistrict()` puts fifteen empty
+  elements in `#wall .wall-signs`, placed and coloured by CSS (`--ws-a` to
+  `--ws-d`). That is all it does; the margins of workspace 2 hold no signs
+  and are left to the city and the weather (`margins.js`).
 - **The manual's board** (`man.js`): `board()` moves the rendered sheet into
   a `header.man-top` and one `section.man-card` a heading; `paintIndex()`
   lists every sheet and this sheet's headings. A card is its own size
@@ -441,9 +433,8 @@ hangs together:
 - **The street signs** (`data/signs.js`, `tools/signfont.py`): change a word,
   then `python3 tools/signfont.py --src MPLUSRounded1c-ExtraBold.ttf` (the
   full face is not in the repo; the script's header says where it lives).
-- **The test surface.** `district()` reports whether the margin's signs are
-  standing, the lesson's column (`lit` of `of`), the course's (`units`,
-  `full`, `text`) and how many wall signs there are.
+- **The test surface.** `district()` reports only how many wall signs there
+  are: `{ wall: 9 }`.
 - **Two fixes in the bar** (`bar.js`, `44-neon.css`): `fitLent()` measures
   the full words every time (it used to measure names the last fit had
   hidden, so the steps ran over the workspaces and the readouts every other
@@ -603,11 +594,8 @@ screens keep working. In the study the drawer comes over the page below
 In the cab, below 1000px wide the windows stack in one column under the bar,
 and below 620px the bar's words fold away (the apps button stays).
 
-The district: on workspace 2 the margin's signs need 150px a side, so they
-stand from about 1160px wide and scale up to 1920×1080 (columns 96 to 150px,
-plates up to 290px); they stand down while the scripts drawer is out. On
-workspace 3 the manual sets its cards in two columns from a pane 1000px wide
-and three from 1640px, and shows its index from 880px. At 1440×900 that is two
+The district: on workspace 3 the manual sets its cards in two columns from a
+pane 1180px wide and three from 1980px, and shows its index from 880px. At 1440×900 that is two
 columns alone, and one column (908px, the index still there) with the
 terminal and the files stacked beside it in a 490px column.
 
@@ -755,14 +743,13 @@ When changing the desk:
    baselines (§3;
    `ws2-lesson` is the big screen now; `ws3-man` is the sign wall;
    `ws4-settings` and `launcher` are the cab with a lit edge), then commit.
-2. Live with the district for a few evenings. Is full neon restful enough
-   for an hour's reading, or should `--nx-glow` come down? Do the margin's
-   signs help or pull the eye? Is the manual's board the right density, and
-   are two columns enough at your width?
+2. The district's first look was asked and answered on 12 Nov 2026: the
+   glow came down (`--nx-glow` `.55` at Night, `.2` in Ice), the margin's
+   signs were taken out, and the manual was made airier. Still open: are
+   two columns enough at your width?
 3. The questions left open in `moodboard/v11-district/BUILD.md`: the kicker's
-   word (`STOP 2.1`), whether the margin's columns should be buttons, a
-   street-level picture for the wall, a daylight plate for Ice, and what the
-   terminal is for.
+   word (`STOP 2.1`), a street-level picture for the wall, a daylight plate
+   for Ice, and what the terminal is for.
 4. Workspace 4 and the launcher were not redesigned: settings has the lit
    edge and nothing else.
 5. Optional: a pipeline script for `assets/crane/` like `tools/assets.py`,

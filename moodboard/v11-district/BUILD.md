@@ -31,23 +31,23 @@ white, and each colour means one thing.
 | red | `#ff6b7d` | `#d42a3c` | wrong |
 | amber | `#ffb46b` | `#c96f22` | the lamp: you. Unchanged |
 
-The iridescent run (cyan, violet, pink, amber) is progress: the LED columns
-and every bar that fills. As text on the solid pane every colour clears
+The iridescent run (cyan, violet, pink, amber) is progress: the checkpoint
+lights and every bar that fills. As text on the solid pane every colour clears
 4.5:1 (Night 6.7:1 or better, Ice 4.6:1 or better); ink on a lit sign is
 dark at Night and white in Ice (6.8:1 and 5:1 or better).
 
 ## Decisions
 
 - **Full neon, but the page stays a page.** Lit pane edges, saturated
-  billboards, signs in the margins and scanlines on every head; the prose
+  billboards and scanlines on every head; the prose
   under them is the same white on quiet glass as before.
 - **The lamp keeps its job.** It is no longer the edge of the window in
   front (every window has an edge of its own light now, at full brightness
   in front and 40% behind). It is the dot beside that window's name, the
   keyboard's ring, the step you are on, the bar's dot and the caret.
-- **Signs carry real numbers only.** The unit and the stop, this lesson's
-  checkpoints, the course's twelve units, tonight's time, the step being
-  read, the lesson after this one. Nothing on a sign is made up.
+- **Signs carry real numbers only.** The unit and the stop, and this
+  lesson's checkpoints on the billboard and in the pane's head. Nothing on
+  a sign is made up.
 - **Japanese on the street signs, real words.** Each unit's name as a sign
   would write it (`src/data/signs.js`), set top to bottom, always beside
   the English, never read out. The face is M PLUS Rounded 1c, cut down to
@@ -57,14 +57,15 @@ dark at Night and white in Ice (6.8:1 and 5:1 or better).
 - **The manual leads.** A new layout, the deck, gives the first window about
   two thirds of the width and stacks the others beside it. Workspace 3
   starts in it; `Alt+Shift+M` walks columns, rows and the deck.
-- **A cheatsheet is scanned, not scrolled.** One card a heading, two columns
-  from 1000px, three from 1640px, and an index of all eleven sheets.
+- **A cheatsheet is scanned, not scrolled.** One card a heading, set at
+  16.5px/1.72 with room around each, two columns from a 1180px pane, three
+  from 1980px, and an index of all eleven sheets.
 - **Ice is daylight.** White glass, slate text, magenta and electric blue;
   blue from the sky and blossom light from the street on the wall. Light
-  spills a third as far as at Night (`--nx-glow`).
+  spills about a third as far as at Night (`--nx-glow` .2 against .55).
 - **Motion is small and only at fx 2 and 3.** The wall's screens breathe, a
-  band of light crosses the billboard, a street sign flickers, the margin's
-  signs power on when you arrive. Everything holds at fx 0 and 1 and under
+  band of light crosses the billboard, a street sign flickers.
+  Everything holds at fx 0 and 1 and under
   reduced motion.
 
 ## What shipped
@@ -82,9 +83,7 @@ dark at Night and white in Ice (6.8:1 and 5:1 or better).
     build pink;
   - code on a screen, Studio's output in phosphor mint, probes violet,
     runbooks yellow turning mint, the key idea a line of cyan;
-  - the margins' signs: left, the unit, its street sign, an LED column of
-    this lesson's checkpoints and the step you are reading; right, tonight,
-    a column of the course's twelve units, the 未明 sign and the next lesson.
+  - nothing in the margins: they are left to the city and the weather.
 - **Workspace 3** (`styles/46-signwall.css`, `src/ui/man.js`,
   `src/core/wm.js`):
   - the manual as a board: a billboard, cards in the four sign colours, an
@@ -103,11 +102,9 @@ dark at Night and white in Ice (6.8:1 and 5:1 or better).
 
 ## Geometry
 
-- **Workspace 2 at 1440×900:** the pane is unchanged (995×840 at x 223). Each
-  margin is 195px between the gaps: a 60px street sign and a 98px column,
-  with a plate above and below. At 1920×1080 the margins are 412px, the
-  columns 150px and the plates 290px. The signs stand down when the drawer
-  is out or a margin is under 150px (below about 1160px wide).
+- **Workspace 2 at 1440×900:** the pane is unchanged (995×840 at x 223).
+  The margins either side of it hold no signs; the wall's signs sit behind
+  the pane.
 - **Workspace 3 at 1440×900:** alone, the manual is 1412 wide: a 216px index
   and two columns of cards. With the terminal and the files open the manual
   is 908 wide (one column, the index still there) and the other two stack
@@ -122,10 +119,10 @@ dark at Night and white in Ice (6.8:1 and 5:1 or better).
 
 - No new pictures and no new canvas. The wall's signs are fifteen small
   elements blurred once; four of them fade at fx 2 and 3.
-- `district.js` paints the margins only when a number changes.
+- `district.js` only puts the wall's signs in place, once.
 - Fonts: Sora 34KB (it was already in `assets/fonts/`), the sign face 12KB,
   both fetched only when a sign is on screen.
-- Three stylesheets, about 57KB before compression.
+- Three stylesheets, about 48KB before compression.
 
 ## Stills (1440×900, fx 3, a save with 5 of 210 checkpoints)
 
@@ -150,10 +147,30 @@ dark at Night and white in Ice (6.8:1 and 5:1 or better).
 ## Open for the next round
 
 - The kicker still says `STOP 2.1` (the climb's word). `LESSON 2.1`?
-- Should the margin's columns be buttons (the lesson's to the next open
-  checkpoint, the course's to the course overlay)? Today they are only signs.
 - A real street-level picture for the wall. The signs are drawn over the
   crane's city, which is still seen from above.
 - The terminal is still mostly empty. More commands, or leave it small?
 - Ice's wall is the snowy plate with blue and blossom laid over it; a
   daylight plate of its own would finish it.
+
+## After the first look (12 Nov 2026)
+
+The owner looked at the build and asked for three things.
+
+- **Turn the neon down.** `--nx-glow`, how far light spills, is `.55` at
+  Night (it was `1`) and `.2` in Ice (it was `.35`). The same signs and
+  colours, less spill.
+- **Take the margin's signs out.** The two stacks either side of the
+  lesson, with their street signs, LED columns and plates, are gone. The
+  margins are left to the city and the weather. `district.js` now only
+  puts the wall's signs behind the panes on workspaces 2 to 4, and
+  `window.ossuary.district()` reports only `{ wall: 9 }`. The billboard's
+  vertical sign and the checkpoint lights are as they were.
+- **Give the manual more air.** Type is 16.5px/1.72 (it was 15px/1.62);
+  cards are padded 22px 24px with 30px between them and a 32px column
+  gap; the board's own padding is 34px 38px. Cards set in two columns from
+  a 1180px pane (it was 1000px) and three from 1980px (it was 1640px). At
+  1440×900 the manual alone is still two columns; beside the terminal and
+  the files it is one.
+
+The stills were retaken after these changes.
