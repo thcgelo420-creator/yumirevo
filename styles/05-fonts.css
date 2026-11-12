@@ -83,7 +83,7 @@
    Japanese on the street signs, cut down by tools/signfont.py to the glyphs in
    src/data/signs.js (about 12 KB). Both under the SIL Open Font License 1.1
    (assets/fonts/LICENSE-Sora.txt, LICENSE-MPLUSRounded1c.txt). A sign face is
-   fetched only when a sign is on screen, so the desk's first load is the same. */
+   fetched only when a sign is on screen, so the desk never asks for one. */
 @font-face {
   font-family: 'Sora';
   font-style: normal;

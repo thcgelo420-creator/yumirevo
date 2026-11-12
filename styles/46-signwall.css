@@ -81,12 +81,13 @@
 .man-index .mi-sheet .n { font: 500 11px/1.4 var(--c-mono); letter-spacing: .06em; color: var(--nx-violet); }
 .man-index .mi-sheet .t { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .man-index .mi-sheet:hover { color: var(--fg); border-color: rgba(var(--nx-cyan-rgb), .45); }
+/* the sheet you are on: the lamp is its left edge (the lamp is an edge or a dot, never a word) */
 .man-index .mi-sheet[aria-current] {
-  color: var(--fg); border-color: rgba(var(--nx-pink-rgb), .75);
+  color: var(--fg); border-color: rgba(var(--nx-pink-rgb), .75); border-left: 2px solid var(--lamp);
   background: linear-gradient(90deg, rgba(var(--nx-pink-rgb), .22), rgba(var(--nx-pink-rgb), .04));
   box-shadow: 0 0 calc(20px * var(--nx-glow)) -6px rgba(var(--nx-pink-rgb), .85);
 }
-.man-index .mi-sheet[aria-current] .n { color: var(--lamp); }
+.man-index .mi-sheet[aria-current] .n { color: var(--fg); }
 .man-index .mi-sec {
   display: flex; align-items: baseline; gap: 9px; width: 100%; padding: 5px 8px; border: 0; border-radius: 4px; background: none; text-align: left; cursor: pointer;
   font: 400 12.5px/1.35 var(--c-ui); color: var(--fg-3);

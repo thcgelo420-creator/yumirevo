@@ -1,7 +1,9 @@
-# MIMEI — the quiet desk
+# MIMEI — the quiet desk over a loud city
 
-The design contract. Read this before touching markup. There is **one look**;
-every screen either belongs to it or does not ship.
+The design contract. Read this before touching markup. There is **one look**
+in two registers: the desk is quiet, and the lessons and the manual are down
+in the district, among the signs. Every screen belongs to one of them or does
+not ship.
 
 ---
 
@@ -18,7 +20,7 @@ that loop.
 |---|---|
 | the course | the filesystem at `~/roblox-luau` |
 | a unit | a directory (`unit-03-decisions/`), a roman numeral on the desk |
-| a lesson | a **session**: one lesson on the study's pane of glass (§5) |
+| a lesson | a **session**: one lesson on the district's big screen (§5) |
 | a cheatsheet | a **man page** (`man luau-decisions`) |
 | a goal | a checkpoint the machine tracks |
 | a Studio task list | a **runbook** |
@@ -34,19 +36,44 @@ beginner must never need jargon to learn. There is no fake calendar or
 decorative progress: every number comes from the course, the clock or the
 learner's stored state. Two things on the desk are mood, not data, and never
 pretend otherwise: the weather word names the picture (drizzle, low cloud,
-snow), not a forecast, and the ambience is made in the browser.
+snow), not a forecast, and the ambience is made in the browser. The Japanese
+on the district's street signs (§2) is a third: ornament with a real meaning,
+each unit's name as a sign would write it, always beside the English.
 
 ## 2. The one look
 
-One voice everywhere you look: the desk (§4), the study (§5) and **the cab**,
-the windows on workspaces 3 and 4 (§3; the decisions are in
-`moodboard/v9-cab/BUILD.md`). Inter for words, IBM Plex Mono for code and the
-small capitals; white and city blue at Night and Late, slate in Ice; no
-accent colour. The only warm light is the lamp (`#ffb46b`), and it marks
-*you*. (Inside, the look is still called `ossuary`: `data-rice="ossuary"`.)
+One voice everywhere you look: the desk (§4), the lessons (§5) and **the
+cab**, the windows on workspaces 3 and 4 (§3). Inter for words, IBM Plex Mono
+for code and the small capitals. The desk is the quiet register: white and
+city blue at Night and Late, slate in Ice, no colour but the lamp. Workspaces
+2, 3 and 4 are **the district** (the decisions are in
+`moodboard/v11-district/BUILD.md`; the glass under it is still the cab's,
+`moodboard/v9-cab/BUILD.md`): the same glass, lit. The warm lamp (`#ffb46b`)
+still marks *you*, everywhere. (Inside, the look is still called `ossuary`:
+`data-rice="ossuary"`.)
 
+- **Light belongs to signs** (`styles/44-neon.css`). This replaces "no accent
+  colour" on workspaces 2, 3 and 4. A colour is only ever on something a city
+  would light: a sign, a screen's edge, a status lamp, code on a screen.
+  Prose stays white (slate in Ice) on quiet glass. Each colour means one thing:
+  - **cyan** (`--nx-cyan #45f0ff`): read, and strings and paths;
+  - **yellow** (`--nx-yellow #ffe94a`): do it in Studio (runbooks, the stop's
+    number);
+  - **violet** (`--nx-violet #b089ff`): predict (probes);
+  - **pink** (`--nx-pink #ff4fc3`): build, and the signs' own edge;
+  - **mint** (`--nx-mint #4dffb4`): reached, right; **red** (`--nx-red`): wrong;
+  - **amber**: the lamp, you (the step you are on, the window in front, the
+    caret). Nothing else is amber.
+  - The iridescent run (`--nx-iri`: cyan, violet, pink, amber) is progress:
+    the LED columns, the bars that fill.
+  - Words set on a lit sign are `--nx-ink`. Every coloured word clears 4.5:1
+    on the pane. `--nx-glow` scales how far light spills (1 at Night, .35 in
+    Ice).
+  - In Ice the same names hold daylight values: electric blue, magenta,
+    violet, teal for *do* (yellow cannot be read on white), green, red.
 - **Scenes.** Night (the default) and Late (by itself from 01:30 to 05:00)
-  are dark; Ice is light. It is one choice, made in the desk's menu or in
+  are dark; Ice is light: on workspaces 2, 3 and 4 it is a clear morning, white
+  glass with magenta and electric-blue signs. It is one choice, made in the desk's menu or in
   settings, and every workspace follows it: the desk and the study read
   `sceneNow()`, and `src/ui/cab.js` puts the same scene on
   `<html>` and `<body>` (`data-scene`) for the cab.
@@ -58,20 +85,27 @@ accent colour. The only warm light is the lamp (`#ffb46b`), and it marks
     `rgba(246,248,251,.8)`; text `--fg #18202b`, `--fg-2 #373e48`,
     `--fg-3 #5a6069`, `--fg-4 #656a72`.
   - `--accent` is the text colour itself; `--accent-2 #a9c4e4` (city blue)
-    is strings and paths. `--ok` and `--warn` are plain text too: nothing is
-    coloured to mean good or bad.
-  - **The lamp**: `--lamp #ffb46b` at Night, `#c96f22` in Ice (deeper, so the
-    edge still reads on light glass). It is the edge of the window in front,
-    that window's dot in the bar and the caret where you type. Nothing else
-    is warm.
+    is strings and paths on the desk. `--ok` and `--warn` are plain text
+    there. In the district the sign colours above carry meaning instead.
+  - **The lamp**: `--lamp #ffb46b` at Night, `#c96f22` in Ice (deeper, so it
+    still reads on light glass). It is the keyboard's ring on a window, the
+    dot beside the name of the window in front, that window's dot in the bar,
+    the step you are reading and the caret where you type. Nothing else is
+    amber.
   - `--faint` is for hairlines and ornaments, never words.
-- **Surfaces.** Windows are panes of glass: a hairline edge, 8px corners, a
-  soft shadow, the city faint behind the text, 14px of city between them.
-  The window in front gets the lamp edge with a soft glow. The bar is one
-  slim line of the same glass, and the launcher, the scrim and the empty
-  seat speak the same voice. The tokens are redefined on `:root`, so anything
-  older that reads them follows; the desk keeps its own scoped tokens
-  (`--cr-*`), and the study's panes are the cab's glass (`.glass`).
+- **Surfaces.** Windows are panes of glass: 8px corners, a soft shadow, the
+  city faint behind the text, 14px of city between them. Every pane has **an
+  edge of light** just inside it: the lesson's is iridescent, the scripts
+  drawer's cyan, the manual's pink into violet, the terminal's mint into
+  cyan, the files' cyan into violet, any other window's violet into pink.
+  The window in front is at full brightness with a glow in its colours and
+  the lamp beside its name; the others dim to 40%. The heads of panes carry
+  a hologram's upright lines (`--nx-scan`). The bar is one slim line of the
+  same glass with an iridescent line under it, and the launcher, the scrim
+  and the empty seat speak the same voice. The tokens are redefined on
+  `:root`, so anything older that reads them follows; the desk keeps its own
+  scoped tokens (`--cr-*`), and the lesson's panes are the cab's glass
+  (`.glass`).
 - **Glass** (`styles/43-glass.css`). Every pane has an edge of light along
   its top and a faint sheen and grain under the words. At full effects the
   blur behind the panes goes deeper (1.5× `--glass-blur`) behind a lighter
@@ -81,18 +115,33 @@ accent colour. The only warm light is the lamp (`#ffb46b`), and it marks
   the desk's, dimmer at Late, fainter and greyer on Ice, never on the desk.
 - **Type.** All self-hosted, so the machine starts offline and no third party
   sees the reader:
-  - **Inter** for words: window titles, the manual's prose, settings.
+  - **Inter** for words: the lesson's prose, the manual's, settings.
   - **IBM Plex Mono** for code, the terminal, counts and the small capitals
     (11px, tracked wide) that head sections and label things.
+  - **Sora** for signs: the billboards' titles, step headings, window names
+    and the numerals on the LED columns. Never for running prose.
+  - **M PLUS Rounded 1c** for the Japanese on the street signs, cut down by
+    `tools/signfont.py` to the glyphs in `src/data/signs.js` (about 12KB), so
+    the signs are the same on every machine. A sign face is fetched only
+    when a sign is on screen.
   - Nothing readable is under 11px (`tests/reading.spec.js`; `.brand-name`,
     `.sr-only` and svg are exempt).
   - JetBrains Mono and Space Grotesk are still declared for older parts and
     fallbacks; nothing on screen depends on them.
+- **The street signs** (`src/data/signs.js`). Each unit's name as a sign in
+  the city would write it (変数 for Variables, 関数 for Functions), set top to
+  bottom, and four fixed ones (未明, 授業, 説明書, 進捗). They are ornament with
+  a real meaning: `lang="ja"`, `aria-hidden`, and always next to the English.
+  Add a word there, then rebuild the sign face.
 - **The wall.** The desk's city, out of focus and dimmed, in tonight's scene:
   `assets/walls/city-night.webp`, `city-late.webp` and `city-ice.webp`, made
   by `tools/assets.py` from the desk's plates (`assets/crane/city-*.webp`:
   768px wide, blurred in the file, about 6KB each), under a veil so the panes
-  stay readable. Only tonight's city loads. There is no wall picker and no
+  stay readable. Only tonight's city loads. Over the veil on workspaces 2, 3
+  and 4, **the wall's signs** (`#wall .wall-signs`, put there by
+  `src/ui/district.js`, drawn by CSS): nine out-of-focus screens, most of
+  them left and right of where the panes sit, and their streaks on the wet
+  ground. Ice adds blue from the sky and blossom light from the street. There is no wall picker and no
   theme picker. `window.ossuary.rice` remains a compatibility surface with
   one entry, `ossuary`; the old rice ids, including `komorebi`, return
   `false`. A saved wall is dropped on load: the wall follows the scene.
@@ -108,22 +157,29 @@ accent colour. The only warm light is the lamp (`#ffb46b`), and it marks
   - The desk moves as one picture (§4): rain, traffic, the swaying sign.
     It holds when the tab is hidden or another workspace is up, and it is
     still under reduced motion or fx 0.
+  - The district moves a little, at fx 2 and 3 only: four of the wall's
+    screens breathe, a band of light crosses the billboard every nine
+    seconds, a street sign flickers now and then, and the margin's signs
+    power on when you arrive. A checkpoint reached while you watch flashes
+    its segment (every level but fx 0). At fx 0 and 1, and under reduced
+    motion, all of it holds.
 
 ## 3. The shell
 
 ```
-┌── bar (workspaces 3 and 4) ───────────────────────────────────────────────┐
+┌── bar (workspaces 2, 3 and 4) ────────────────────────────────────────────┐
 │ 未 MIMEI  01 02 03 MANUAL 04    ● manual  terminal  files   9/210  22:08 │
 ├───────────────────────────────────────────────────────────────────────────┤
 │ workspace 1: the desk is the whole screen — no bar, no windows            │
-│ workspace 2: the study — one pane of glass over the city, the slim bar    │
-│ workspaces 3–4: the cab — panes of glass over the soft city, 14px apart   │
+│ workspace 2: the big screen — one lit pane, a stack of signs either side  │
+│ workspace 3: the sign wall — the manual leads, terminal and files stack   │
+│ workspace 4: settings, alone — the same lit glass over the city           │
 └───────────────────────────────────────────────────────────────────────────┘
    in stack mode (<1000px) the windows stack in one column under the bar
 ```
 
-- **Bar** (workspaces 3 and 4): one slim line (32px) of glass, one hairline
-  below.
+- **Bar** (workspaces 2, 3 and 4): one slim line (32px) of glass, one
+  iridescent line below.
   - Left: the 未 mark, `MIMEI` in tracked capitals, then the four workspaces
     as numbers, `01` to `04`. The one you are on shows its name (`MANUAL`,
     `SETTINGS`) and is underlined; the others keep their names for screen
@@ -137,27 +193,37 @@ accent colour. The only warm light is the lamp (`#ffb46b`), and it marks
     620px; the apps button stays.
   - Right: the checkpoints reached (`9/210 checkpoints`), a tabular clock
     (date on hover) and the search and apps controls.
-  - The bar is not shown on workspaces 1 and 2: the desk and the lessons are
-    the whole screen and each has its own menu (§4, §5).
+  - The bar is not shown on workspace 1: the desk is the whole screen and
+    has its own menu (§4). On workspace 2 the middle is lent to the lesson:
+    its steps, the lamp on the one you are reading (§5). The lamp's dot is
+    placed from the middle's own corner on every workspace.
 - **No dock.** The icon strip down the left (the rail) is gone, at every
   width. The bar's words, the apps button (`#mod-apps`: the launcher's
   windows mode), the launcher (`Alt+Enter`) and the keys reach every window.
 - **Workspaces:**
   1. *desk*: the crane over the city, §4. It holds no windows.
-  2. *lessons*: the study, one lesson at a time (§5); the goals/journal
-     window floats over it.
-  3. *manual*: the cheatsheet at full width; the terminal and the file
-     manager open here too.
+  2. *lessons*: the district's big screen, one lesson at a time (§5); the
+     goals/journal window floats over it.
+  3. *manual*: the sign wall. The cheatsheet as a board at full width; the
+     terminal and the file manager open here too and stack beside it (the
+     deck).
   4. *settings*: settings alone.
 
   Switching workspaces tiles that set. An older saved layout that still lists
-  the wall picker on 4, or windows on 1, is cleaned on load.
+  the wall picker on 4, or windows on 1, is cleaned on load, and a workspace 3
+  nobody has rearranged moves to the deck once (`state.deckMig`).
 - **Windows:** real ones, panes of glass. Drag a titlebar to float, drop on
   an edge to snap, drop over another window to swap, double-click to fill.
   Four faint circles at the top left close, hide, float and fill (their keys
   are in their titles); the right-click menu has the same and the layouts.
-  The window in front gets the warm lamp edge; the keyboard ring on a window
-  is a 2px lamp outline just inside it. The keyboard is first class (§7).
+  The window in front has its edge of light at full brightness and the lamp
+  beside its name; the keyboard ring on a window is a 2px lamp outline just
+  inside it. The keyboard is first class (§7).
+- **Layouts** (`core/wm.js`): *columns* (side by side, by weight), *rows*,
+  and **the deck**: the first window leads and takes about two thirds of the
+  width, the others stack in one column beside it, sharing its height by
+  weight (the files get more than the terminal). Workspace 3 starts in the
+  deck; `Alt+Shift+M` walks the three, and the right-click menu names them.
 - **Launcher:** wofi/rofi shape. A centred panel with modes (`lessons`,
   `windows`, `actions`, `keys`), fuzzy matching, arrows, Enter to run and Tab
   to change mode. There is no walls mode.
@@ -259,53 +325,92 @@ build plan and the agreed decisions are in `moodboard/v7-crane/BUILD.md`.
 
 ## 5. Lessons, manual, goals, settings
 
-- **Workspace 2 is the study** (`src/ui/study.js`, `src/ui/session.js`,
-  `src/ui/margins.js`, `styles/38-study.css` and `37-lesson.css`; the
-  decisions are in `moodboard/v10-study/BUILD.md`). Late at night in the
-  cab: one lesson at a time on one big pane of glass, the city faint behind
-  it and one warm lamp. The cab's slim bar stays.
-  - **The picture.** The reading pane in the middle, the city around it and
-    its slow traffic behind the glass (§2). Night and Late are dark, Ice is
-    light. There is no accent colour: warm light only at *you* (the lamp).
+- **Workspace 2 is the district's big screen** (`src/ui/study.js`,
+  `src/ui/session.js`, `src/ui/margins.js`, `src/ui/district.js`;
+  `styles/38-study.css` and `37-lesson.css` for its structure, `45-screen.css`
+  for its light; the decisions are in `moodboard/v11-district/BUILD.md`, and
+  the structure's in `moodboard/v10-study/BUILD.md`). You leap off the crane
+  and land in front of it: one lesson at a time on one big pane of glass with
+  a lit edge, signs standing either side. The slim bar stays. In the code it
+  is still "the study".
+  - **The picture.** The reading pane in the middle with one ring of
+    iridescent light just inside its edge and a glow that spills on the city;
+    the city around it, its slow traffic and the wall's signs behind the
+    glass (§2). Prose is white on quiet glass: the light is on the signs.
+  - **The billboard** (`.quest-head`): the lesson's title across the top of
+    the page, edge to edge, in Sora over a hologram's lines. The stop's
+    number is a yellow sign, the unit's name is in cyan, one light for each
+    checkpoint turns mint as it is reached (`.qh-meter`), and the unit's
+    street sign runs down the right edge (`.qh-sign`).
+  - **The pane's head** (`.rd-head`): the stop's number, the title, the same
+    checkpoints as lights (`.rd-meter`) beside the words `checkpoint 2 of 3`,
+    and the scripts button.
   - **The outline** runs down the pane's left edge: the lesson's steps, the
-    checkpoints under each, lit once reached. Every step and checkpoint is a
-    button that takes you there; the arrows, Home and End walk them. The
+    checkpoints under each, lit mint once reached. Every step and checkpoint
+    is a button that takes you there; the arrows, Home and End walk them. The
     lamp glides to the step you are reading (at once on Still). When the page
     is narrower than 720px the outline folds away.
   - **The page.** Inter for words, IBM Plex Mono for code and the small
-    capitals; each step opens under a quiet head (`.st-sh`). Runbooks and
-    probes tick real checkpoints; a probe answers `Correct.` or `Not quite.`
-    and says why. The lesson ends with **the end card** (`.st-end`). `[` and
-    `]` walk the line to the previous and the next lesson.
+    capitals, Sora for headings. Each step opens under a head (`.st-sh`)
+    that wears what the step asks of you as a sign: read cyan, do yellow,
+    predict violet, build pink. Code is on a screen: keywords pink, strings
+    cyan, numbers yellow, calls violet, Roblox's own names mint, comments
+    grey; what Studio prints is phosphor mint. A probe is a violet sign, a
+    runbook a yellow one that turns mint when done, the key idea one line of
+    cyan. Runbooks and probes tick real checkpoints; a probe answers
+    `Correct.` or `Not quite.` and says why. The lesson ends with **the end
+    card** (`.st-end`). `[` and `]` walk the line to the previous and the
+    next lesson.
+  - **The margins' signs** (`src/ui/district.js`, `.dc-signs`): the space
+    either side of the pane holds a stack of signs, and every number on them
+    is real. Left: the unit (its number and name), its street sign, an **LED
+    column** with one segment for each of this lesson's checkpoints, lit
+    from the bottom as they are reached, and the step you are reading in its
+    kind's colour. Right: tonight's study time against the goal, a column of
+    the course's twelve units (each filled as far as its checkpoints are
+    reached, the lamp beside the unit you are in) with `9/210` under it, the
+    未明 sign, and the lesson after this one. They are `aria-hidden` and take
+    no keys: the outline, the pane's head and the bar say all of it. They
+    stand down when the scripts drawer is out or a margin is under 150px
+    (below about 1160px wide).
   - **The scripts** (`S`, or the button in the pane's head): a drawer slides
     out on the right with this step's script, what it prints and the
-    runbook, which folds when it would squeeze the code. The pane glides
-    aside as it comes (both on transforms, so nothing reflows); on a screen
-    under 760px wide the drawer comes over the page instead. `Esc` puts it
-    away, and whether it is out is kept across visits.
+    runbook, which folds when it would squeeze the code. It has a cyan edge.
+    The pane glides aside as it comes (both on transforms, so nothing
+    reflows); on a screen under 760px wide the drawer comes over the page
+    instead. `Esc` puts it away, and whether it is out is kept across visits.
   - **The bar lends its middle to the lesson** (`lendBarMiddle`): this
     lesson's steps as words you can click, the lamp on the one you are
     reading; when room runs short it keeps only the current name, then only
-    the numbers.
+    the numbers. The fit is measured on the full words every time.
   - **The weather stays in the margins** (`src/ui/margins.js`): drizzle on
     Night, a few drops on Late, snow on Ice, in the city around the glass and
     never on it (nor on the drawer while it is out). Still draws one frame
     and stops.
   - **The course overlay** (`/`) lists every unit and stop, with search.
   - **Progress is checkpoints.** No XP and no ranks anywhere on screen. The
-    outline lights this lesson's; the goals window (`9 / 210`), settings and
-    the bar count the course's.
-- **Manual** (workspace 3, `src/ui/man.js`): the cheatsheet as a real `man`
-  page, set like a lesson page: Inter for words (16px/1.72), IBM Plex Mono
-  for code in the lesson's numbered wells, section heads as small capitals
-  over a hairline. It keeps the man-page frame: the header line
-  (`LUAU-VARIABLES(2)`, `MIMEI manual`, the page count) and the window's
-  footer (`◀ ▶`, `man 1/11`, `top`, `q close`). Beside the terminal and the
-  files (a pane under 560px) the same page is set tighter, and a note after a
-  line of code drops under that line instead of breaking beside it.
+    outline, the billboard, the pane's head and the lesson's column light
+    this lesson's; the goals window (`9 / 210`), settings, the bar and the
+    course's column count the course's.
+- **Manual** (workspace 3, `src/ui/man.js`, `styles/46-signwall.css`): **the
+  sign wall**, a cheatsheet to glance at beside Studio. It keeps the man-page
+  frame: the header line (`LUAU-VARIABLES(2)`, `MIMEI manual`, the page
+  count) and the window's footer (`◀ ▶`, `man 1/11`, `top`, `q close`).
+  - **The board.** The sheet's title is a billboard across the top with the
+    unit's street sign; under it, one **card** for each heading
+    (`.man-card`), in the four sign colours in turn. A pane 1000px wide or
+    more sets the cards in two columns, 1640px in three, so a sheet is
+    scanned, not scrolled. A narrow card sets its code the tight way: a note
+    after a line of code drops under that line instead of breaking beside it.
+  - **The index** (`.man-index`, from 880px): every sheet in the course by
+    unit, the one you are on marked with the lamp, then this sheet's headings
+    with squares that match their cards. A sheet opens in place; a heading
+    scrolls to its card and flashes it. One tab stop; the arrows, Home and
+    End walk it.
 - **Terminal and files** (workspace 3): the terminal greets you with the 未
-  mark, who you are, the checkpoints and what is next; the files window is
-  the course as directories.
+  mark, who you are, the checkpoints and what is next, in phosphor mint; the
+  files window is the course as directories. In the deck (§3) they stack to
+  the right of the manual instead of squeezing it.
 - **Goals/journal:** the open lesson's checkpoints, the course's
   checkpoints reached (`9 / 210`) and the machine log. Ticking a goal updates
   the study, the desk and the bar on the next real event.
@@ -359,6 +464,20 @@ build plan and the agreed decisions are in `moodboard/v7-crane/BUILD.md`.
   tab stop for the whole outline (the arrows, Home and End walk it). The
   scripts drawer is `inert` while it is away, and nothing in the margins
   ever covers a focused control.
+- The district's signs are for the eye only. The margins' stacks, the wall's
+  signs, the lights in the billboard and in the pane's head, and every street
+  sign are `aria-hidden` (the street signs are also `lang="ja"`); the same
+  counts are in the outline, in `checkpoint 2 of 3` and in the bar. Nothing
+  in the margins takes a key or covers a control.
+- Colour is never the only carrier. A step's kind is also its word (`READ`,
+  `DO`, `PREDICT`, `BUILD`), a reached checkpoint says so in its name, a
+  right answer says `Correct.`. Every sign colour clears 4.5:1 as text on
+  the solid surface, in Night and in Ice (Ice's values are darker for it;
+  measured 4.6:1 or better), and words set on a lit sign are dark ink at
+  Night (6.8:1 or better) and white in Ice (5:1 or better).
+- The manual's index is one tab stop, the sheet you are on; the arrows, Home
+  and End walk the sheets and the headings, and a sheet picked there keeps
+  the keyboard in the index.
 - Axe scans run over the desk, a lesson workspace, the manual, settings, the
   launcher and the single look, and over the cab again in Ice. New interactive markup must not add
   violations.
@@ -379,7 +498,7 @@ build plan and the agreed decisions are in `moodboard/v7-crane/BUILD.md`.
 | `Alt+H J K L` / arrows | move focus |
 | `Alt+Shift+H J K L` | reorder · grow / shrink |
 | `Alt+M` `Alt+F` `Alt+Z` | maximise · float · hide |
-| `Alt+Shift+M` | rows or columns layout |
+| `Alt+Shift+M` | the next layout: columns, rows, the deck |
 | `Alt+Q` | close window |
 | `Alt+Tab` or ``Alt+` `` | cycle windows |
 | `Alt+B` | the city only (peek): everything else steps aside |
@@ -430,6 +549,13 @@ always wins.
   reduced motion; its canvas is backed at half size and nothing is
   allocated per frame. It stops while hidden, while booting and on the
   desk.
+- The district costs no picture and no canvas. The wall's signs are fifteen
+  small elements blurred once by CSS (they never move; four of them fade at
+  fx 2 and 3), the margins' stacks are DOM painted only when a number
+  changes (`district.js` keys its paint), and every glow is a static shadow.
+  The two sign faces are 34KB (Sora) and 12KB (the street signs), fetched
+  only when a sign is on screen; the desk never asks for them. The first
+  load gains three stylesheets (about 57KB before compression).
 - A cold `#/2.1` costs one task of about 165ms on the 2-CPU Linux box with
   no GPU (it was about 275ms): the lesson is drawn once, not twice (openLesson
   holds `openFirstSession` off while it switches to the study), the weather's
@@ -449,6 +575,7 @@ assets/crane/         the desk: city plates, hook, glass and sky masks per scene
                       the 未 mark (snow / slate) and the 256px icon
 src/data/course.js    GROUPS LESSONS GOALS TASKS PREDICTS (+ /*@@*/ markers)
 src/data/walls.js     generated by tools/assets.py (the three soft cities)
+src/data/signs.js     the district's street signs: each unit's name as a sign writes it
 src/core/*.js         state, rice (one look), walls, md, wm, keys, effects,
                       sound + ambience (the city at night), nights (tonight's
                       study time), journal, find
@@ -457,25 +584,33 @@ src/ui/*.js           bar, cab (the scene and the wall on 3–4), window (kit + 
                       menu), settings, boot, tty, files, launcher, study (the
                       study: its panes, outline, drawer and course overlay),
                       session (the lesson itself: body, place, scripts, ticks),
-                      margins (the weather around the glass) and drift (the
-                      city's traffic behind the glass on 2–4)
+                      margins (the weather around the glass), drift (the
+                      city's traffic behind the glass on 2–4) and district
+                      (the wall's signs on 2–4, the lesson's margin signs)
 src/desk/*.js         the desk's picture: world (layers), scenes, stage, atmos,
                       weather, life, roads, led + ledfont + pages (the sign),
                       leap, clock
 src/main.js           boot the machine + the `window.ossuary` test surface
 content/*.md          the course, untouched by design work
 tools/                content/asset pipelines, lint, probe, browser check,
-                      screenshot + contact-sheet pipeline
+                      screenshot + contact-sheet pipeline, signfont.py (the
+                      street signs' face, cut to the glyphs in data/signs.js)
 tests/                Playwright: shell, desk, wm, course, lesson, man,
                       wallpaper (look + wall + settings), goals, a11y, perf, visual
 moodboard/v7-crane/   the desk's brief and build plan (BRIEF.md, BUILD.md)
 moodboard/v8-climb/   the climb's decisions (retired in v10), mast photos, prototype CSS
 moodboard/v9-cab/     the cab's decisions (BUILD.md) and its stills
 moodboard/v10-study/  the study's decisions (BUILD.md) and its stills
+moodboard/v11-district/  the district's brief and decisions (BRIEF.md, BUILD.md),
+                      the pictures it was built from and its stills
 ```
 
-The stylesheets load in `index.html` order; `styles/41-cab.css` comes last but
-print, so the cab's tokens win over `36-riced.css` (the shell's structure).
+The stylesheets load in `index.html` order. `styles/41-cab.css` sets the
+cab's tokens over `36-riced.css` (the shell's structure), `43-glass.css` the
+glass, and then the district's three come last but print: `44-neon.css` (the
+sign colours, the wall's signs, the panes' edges), `45-screen.css` (workspace
+2) and `46-signwall.css` (workspace 3 and the windows). They only restate
+what they change, so the structure stays in 38 and 41.
 
 **The rename.** luauOS became Ossuary all the way down: `window.ossuary`, the
 package name, every header comment and visible string, and the store. The
@@ -507,7 +642,9 @@ this file all say `localhost:8925`; Playwright's own server is on 8928.
 ## 10. Tests and tools
 
 Everything below is expected green before a change lands. There is no CI:
-these are the CI.
+these are the CI. The district (v11) is the exception on record: it landed
+ahead of its specs, at the owner's word, and HANDOFF §9 lists what has to be
+moved before the suite is green again.
 
 ```
 npx playwright test
@@ -576,7 +713,9 @@ python3 tools/shots.py                   # each workspace + contact sheet
     the city is up, held or leaping); `nights()` (tonight and the week);
   - `study()` (the study: the scripts, the drawer and its mode, the outline,
     scene, motion, geometry and weather), `drift()` (whether the traffic
-    runs, its frame rate and lights), `lesson()`, `rice.*` (the one-entry
+    runs, its frame rate and lights), `district()` (whether the margin's
+    signs are standing, the lesson's column and the course's, the wall's
+    signs), `lesson()`, `rice.*` (the one-entry
     compatibility surface), `sound`;
   - `still()` (a no-op).
 - `tools/browsercheck.py` drives `tools/probe.html` in the Mac's Chrome
@@ -591,14 +730,19 @@ python3 tools/shots.py                   # each workspace + contact sheet
 ## 11. Rules
 
 1. No build step. Plain ES modules and CSS layers, served by `./serve.sh`.
-2. One look, one contract. Do not add a theme picker, a wall picker, a rice
-   stylesheet or an accent colour. One voice (§2): Inter and IBM Plex Mono,
-   white and city blue at Night and Late, slate in Ice, warm light only at
-   the lamp. The desk is the crane picture (§4), the lessons are the study
-   (§5), and the manual and settings are the cab (§3).
+2. One look, one contract. Do not add a theme picker, a wall picker or a rice
+   stylesheet. One voice (§2): Inter and IBM Plex Mono for reading, Sora for
+   signs. The desk is the crane picture (§4) and stays quiet: white and city
+   blue at Night and Late, slate in Ice, warm light only at the lamp. The
+   lessons are the district's big screen (§5), the manual is its sign wall,
+   and settings shares their glass (§3). There, **light belongs to signs**:
+   do not colour prose, do not add a colour without a meaning, do not give a
+   meaning a second colour, and keep amber for the lamp.
 3. No fake data. If the course, the clock or the learner has not produced a
    number, the UI does not show one. The desk's weather word names the
-   picture, never a forecast.
+   picture, never a forecast. The district's street signs are real words for
+   the units (`src/data/signs.js`), never invented brands, and every number
+   on a sign comes from the course, the clock or the learner.
 4. Content is never edited to fit the design — the design bends to the content.
    `content/*.md` stays the single source of lesson truth.
 5. Never break `tools/lint_lessons.py`, `tools/extract_cases.py` or

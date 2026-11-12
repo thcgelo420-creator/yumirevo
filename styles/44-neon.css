@@ -66,8 +66,8 @@
   --nx-cyan: #0b62e6;     --nx-cyan-rgb: 11, 98, 230;         /* electric blue */
   --nx-pink: #d6006f;     --nx-pink-rgb: 214, 0, 111;         /* the runner's magenta */
   --nx-violet: #6b3fe0;   --nx-violet-rgb: 107, 63, 224;
-  --nx-yellow: #00808c;   --nx-yellow-rgb: 0, 128, 140;       /* yellow cannot be read in daylight: do is teal */
-  --nx-mint: #0a8754;     --nx-mint-rgb: 10, 135, 84;
+  --nx-yellow: #007480;   --nx-yellow-rgb: 0, 116, 128;       /* yellow cannot be read in daylight: do is teal */
+  --nx-mint: #087a4c;     --nx-mint-rgb: 8, 122, 76;
   --nx-red: #d42a3c;      --nx-red-rgb: 212, 42, 60;
   --nx-ink: #ffffff;
   --nx-glow: .35;

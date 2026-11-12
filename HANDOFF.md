@@ -1,13 +1,23 @@
 # Handoff — MIMEI
 
-**Updated:** 2026-11-05
+**Updated:** 2026-11-11
 **Status:**
+- Workspaces 2 and 3 are **the district** (`moodboard/v11-district/`,
+  11 Nov 2026): full neon. You fall from the crane into the city; the lesson
+  is on the district's big screen (workspace 2) and the manual is its wall of
+  signs (workspace 3). The rule is **light belongs to signs**: prose stays
+  white on quiet glass, a colour is only on a sign, an edge, a status lamp or
+  code, and each colour means one thing (cyan read, yellow do, violet
+  predict, pink build, mint reached, amber you). Ice is daylight. It is built
+  on the cab's glass and the study's structure, which are still below.
+  **It landed ahead of its tests** (§9).
 - Workspaces 3 and 4 are **the cab** (`moodboard/v9-cab/BUILD.md`): the
   manual, the terminal, the files and settings on panes of glass over the
   desk's city, out of focus, in tonight's scene. Night and Late are dark,
-  Ice is light; the window in front has a warm lamp edge. The icon strip
+  Ice is light; since the district every window has an edge of its own
+  light, and the one in front carries the lamp beside its name. The icon strip
   (the rail) is gone: the slim bar names this workspace's windows. The
-  manual is set like a lesson page in a man page's frame, and the terminal
+  manual is a board of cards in a man page's frame, and the terminal
   greets you with the 未 mark. The skull garden and the bone-and-oxblood
   shell are retired from the screen.
 - Workspace 2 is **the study** (`moodboard/v10-study/BUILD.md`), which
@@ -37,8 +47,10 @@
 
 `DESIGN.md` is the design authority. `moodboard/v7-crane/BUILD.md` (the desk)
 and `moodboard/v9-cab/BUILD.md` (the manual and settings) have the decisions
-agreed on 5 Nov 2026, and `moodboard/v10-study/BUILD.md` has the lessons'
-(the study; `moodboard/v8-climb/` is the retired climb). Where this file and
+agreed on 5 Nov 2026, `moodboard/v10-study/BUILD.md` has the lessons'
+structure (the study; `moodboard/v8-climb/` is the retired climb), and
+`moodboard/v11-district/BRIEF.md` and `BUILD.md` have the district's, agreed
+on 11 Nov 2026. Where this file and
 `DESIGN.md` disagree, trust `DESIGN.md`.
 
 ---
@@ -51,9 +63,22 @@ agreed on 5 Nov 2026, and `moodboard/v10-study/BUILD.md` has the lessons'
   course. Nothing in the browser runs Luau; every script goes into the
   learner's own Roblox Studio.
 - Four workspaces (`Alt+1…4`): **1 desk** (the whole screen, no bar),
-  **2 lessons** (the study: one pane of glass, the slim bar), **3 manual**
-  (Terminal and Files open here, from the bar or the apps menu),
+  **2 lessons** (the district's big screen: one lit pane, signs in the
+  margins, the slim bar), **3 manual** (the sign wall; Terminal and Files
+  open here, from the bar or the apps menu, and stack beside it),
   **4 settings**.
+- **The district** (workspaces 2–3, DESIGN.md §2, §3, §5;
+  `moodboard/v11-district/BUILD.md`):
+  - the light: `styles/44-neon.css` (the sign colours `--nx-*` and what they
+    mean, syntax colour, the wall's signs, every pane's edge),
+    `styles/45-screen.css` (workspace 2), `styles/46-signwall.css`
+    (workspace 3 and the windows). They load last but print and only restate
+    what they change.
+  - the signs: `src/ui/district.js` (the wall's signs in `#wall`, the
+    lesson's margin signs in `#study .dc-signs`), `src/data/signs.js` (the
+    street signs' words), `tools/signfont.py` (their face).
+  - the manual's board and index: `src/ui/man.js`. The deck layout:
+    `src/core/wm.js` (`geometry()`, `DECK_LEAD`, `DECK_WEIGHTS`).
 - **The cab** (workspaces 3–4, DESIGN.md §2–§3, §5):
   - the look: `styles/41-cab.css` (loaded last but print; it redefines the
     shared tokens on `:root`, Night/Late, and on `:root[data-scene='ice']`).
@@ -88,9 +113,9 @@ agreed on 5 Nov 2026, and `moodboard/v10-study/BUILD.md` has the lessons'
     `styles/37-lesson.css` (the page's parts); the glass of every pane is
     `styles/43-glass.css`, and the traffic behind it is `src/ui/drift.js`.
 - The store key stays **`ossuary-1`** and the test surface stays
-  **`window.ossuary`** (now with `desk()`, `nights()`, `study()` and
-  `cps()`). New store keys:
-  `scene`, `goalMins`, `nights`, `unitsSeen`, `mimei`.
+  **`window.ossuary`** (now with `desk()`, `nights()`, `study()`,
+  `district()` and `cps()`). New store keys:
+  `scene`, `goalMins`, `nights`, `unitsSeen`, `mimei`, `deckMig`.
 - Removed: `src/fx/*` (black hole, flock, dive, lens, clock), `vendor/three/`,
   the old desk panels and their tests, the old visual baselines; with the
   cab, the rail (`src/ui/rail.js`) and the skull-garden wall. They are in
@@ -217,8 +242,9 @@ desk, add `?time=23:47` (and `&fx=0` for a still frame).
 ## 4. File map
 
 ```
-index.html                 shell markup; loads styles 05→00→…→36→35→37→38→39→41→60
-serve.sh                   local HTTP server (8925)
+index.html                 shell markup; loads styles 05→00→…→36→35→37→38→39→41→43→44→45→46→60
+serve.sh                   local HTTP server (8925); HOST and NO_OPEN for a hosted preview
+.hoplite/settings.json     the hosted Preview's run script (serve.sh on every interface, port 3000)
 
 src/main.js                cold start: content, start-up, desk, bar, keymap, hash;
                            the window.ossuary test surface
@@ -228,7 +254,8 @@ src/core/
                            goalMins, nights, unitsSeen; export/import
   nights.js                tonight's study time and the week
   ambience.js, sound.js    the city at night + soft clicks, made in the browser
-  wm.js                    tiling window manager (workspace 1 keeps no windows)
+  wm.js                    tiling window manager (workspace 1 keeps no windows):
+                           columns, rows and the deck (workspace 3's layout)
   effects.js, keys.js, journal.js, rice.js, walls.js, md.js, find.js
 src/desk/                  the desk's picture (ported from proto/crane)
   world.js                 stacks the layers; loads one scene's WebP
@@ -246,23 +273,33 @@ src/ui/
   session.js               the lesson: body, place, scripts, ticks, the end card
   margins.js               the weather around the glass (never on a pane)
   drift.js                 workspaces 2–4: the city's traffic behind the glass
+  district.js              the district: the wall's signs (2–4) and the lesson's
+                           margin signs (the LED columns, the plates); every
+                           number on them is real
   cab.js                   workspaces 3–4: the scene on <html>/<body>, the mark,
                            the soft city
   bar.js                   the cab's bar: 01–04, this workspace's windows as
                            words (on 2, the lesson's steps), the readouts
-  course.js, goals.js, man.js, settings.js, launcher.js,
+  man.js                   the manual: the board (a card a heading), the index
+  course.js, goals.js, settings.js, launcher.js,
   tty.js, files.js, journal-view.js, window.js
 src/data/course.js         GROUPS LESSONS GOALS TASKS PREDICTS (merged content)
+src/data/signs.js          the street signs: each unit's name as a sign writes it
 
 styles/
   35-desk.css              the desk and the start-up (Inter + IBM Plex Mono)
   36-riced.css             the shell's structure: bar, seat, windows, tty, files,
                            launcher (its colour is overridden by 41)
   41-cab.css               the cab: the live tokens (Night/Late, Ice), glass, the
-                           lamp edge, the bar, the manual as a lesson page,
-                           settings, the launcher
-  38-study.css             workspace 2, the study (Inter + IBM Plex Mono, #study)
+                           bar, the manual's page, settings, the launcher
+  38-study.css             workspace 2's structure (the study, #study)
   43-glass.css             the glass of every pane: edge, sheen, grain, deep blur
+  44-neon.css              the district's light: the sign colours and what they
+                           mean, syntax colour, the wall's signs, the panes' edges
+  45-screen.css            workspace 2's light: the billboard, the kinds, code on
+                           a screen, the margin signs, Ice
+  46-signwall.css          workspace 3's light: each window's edge, the manual's
+                           board and index, the terminal, the files, Ice
   37-lesson.css 39-strangers.css   the page's parts; small shell fixes
   20-bar, 21-rail, 30-deck, 34-noctalia         legacy, NOT linked — ignore
 
@@ -270,9 +307,12 @@ assets/crane/              the desk's pictures: 3 city plates (3840×2160 WebP),
                            hook, glass and sky masks per scene, the 未 mark, icon
 assets/walls/              the cab's wall: city-night/-late/-ice.webp (+ @320),
                            soft, about 6 KB each
-assets/fonts/              self-hosted WOFF2 + licences (Inter is new)
+assets/fonts/              self-hosted WOFF2 + licences: Inter, IBM Plex Mono, and
+                           the signs' two (Sora; mplus-rounded-1c-signs, cut by
+                           tools/signfont.py to the glyphs in data/signs.js)
 content/*.md               lesson truth (lessons.md + unit-3..12.md)
-tools/                     lints, probe, browsercheck, screenshots, content merge
+tools/                     lints, probe, browsercheck, screenshots, content merge,
+                           signfont.py (the street signs' face)
 tests/                     the Playwright suite (helpers.js: deskMenu, showScript,
                            readStep, stepMap, study; climbMenu and
                            climbMenuClose still drive the retired climb, §9)
@@ -282,8 +322,11 @@ moodboard/v8-climb/        BUILD.md: why the lessons looked like this until v10
                            proto/climb.css
 moodboard/v9-cab/          BUILD.md: why the manual and settings look like this;
                            stills (cab-*.jpg)
-moodboard/v10-study/       BUILD.md: why the lessons look like this now, the glass
-                           and the drift; stills (*.webp)
+moodboard/v10-study/       BUILD.md: how the lessons are laid out (the study), the
+                           glass and the drift; stills (*.webp)
+moodboard/v11-district/    BRIEF.md and BUILD.md: why the lessons and the manual
+                           look like this now (the district); the seven pictures
+                           it was built from; stills (*.webp)
 ```
 
 `_old/`, `vibe/`, `style-tiles/` and `moodboard/` are reference material: do
@@ -299,23 +342,33 @@ it; if you replace a picture, keep the file name and the pixel size.
 
 From `DESIGN.md`:
 
-- **One look.** The desk is the city from the crane's hook; the lessons (the
-  study) and the manual and settings (the cab) are panes
-  of glass over the same city, out of focus. Night and Late dark, Ice light,
-  warm light only at the lamp. No theme picker, no wall picker, no accent
-  colour.
-- **Type.** Inter for words and IBM Plex Mono for code, everywhere.
+- **One look, two registers.** The desk is the city from the crane's hook,
+  and it is quiet: Night and Late dark, Ice light, warm light only at the
+  lamp. The lessons and the manual are down in that city (the district): the
+  same glass, lit. No theme picker, no wall picker.
+- **Light belongs to signs** (workspaces 2, 3 and 4). Prose stays white on
+  quiet glass. A colour is only on a sign, a pane's edge, a status lamp or
+  code, and each means one thing: cyan read, yellow do, violet predict, pink
+  build, mint reached, red wrong, amber you. Do not colour prose, do not add
+  a colour without a meaning, and keep amber for the lamp.
+- **Type.** Inter for words and IBM Plex Mono for code, everywhere; Sora for
+  signs (billboards, headings, window names, numerals).
 - **Real numbers only.** No XP, no ranks: progress is checkpoints reached.
 - **No fake data.** Every number comes from the course, the clock or the
-  learner's saved state. Two things on the desk are mood and never pretend
-  otherwise: the weather word names the picture (not a forecast), and the
-  ambience is made in the browser.
+  learner's saved state, on the signs too. Three things are mood and never
+  pretend otherwise: the desk's weather word names the picture (not a
+  forecast), the ambience is made in the browser, and the Japanese on the
+  district's street signs is ornament with a real meaning (each unit's name),
+  always beside the English.
 - **Content is truth.** Never edit `content/*.md` to fit the design.
 - **The desk is the first screen**: the crane, the sign, the corner clock and
   a menu that comes with the mouse. No bar, no windows, no panels on it. It
   fits without scrolling from 1280×800 to 1920×1080.
-- **A lesson is the study**: one at a time on one pane of glass under the
-  cab's slim bar, the weather in the margins and never on the words.
+- **A lesson is on the district's big screen**: one at a time on one lit pane
+  of glass under the slim bar, signs in the margins, the weather round the
+  glass and never on the words.
+- **The manual is a sign wall**: a board of cards beside Studio; it leads,
+  and the terminal and the files stack beside it.
 - **Copy is plain English.** The Linux flavour lives in the chrome, the
   terminal and the man pages.
 
@@ -323,7 +376,71 @@ Read `DESIGN.md` for anything visual; this summary is not enough.
 
 ---
 
-## 6. What just shipped: the study (and the cab and the crane desk before it)
+## 6. What just shipped: the district (and the study, the cab and the crane desk before it)
+
+### The district (workspaces 2 and 3, 11 Nov 2026)
+
+What it looks like is in DESIGN.md §2, §3 and §5; why, in
+`moodboard/v11-district/BRIEF.md` and `BUILD.md`. It is light laid over the
+study and the cab, which are unchanged underneath and described below. How it
+hangs together:
+
+- **Three stylesheets, last in the order.** `44-neon.css` holds the sign
+  colours on `:root` (`--nx-cyan`, `--nx-pink`, `--nx-violet`, `--nx-yellow`,
+  `--nx-mint`, `--nx-red`, each with an `-rgb` twin for glows), what they
+  mean (`--k-read`, `--k-do`, `--k-predict`, `--k-build`, `--k-done`), the
+  iridescent run (`--nx-iri`), `--nx-ink` for words on a lit sign and
+  `--nx-glow` for how far light spills. Ice redefines the same names.
+  `45-screen.css` and `46-signwall.css` only restate what they change in
+  `38-study.css` and `41-cab.css`, with the same selectors, so the order in
+  `index.html` is what makes them win.
+- **A pane's edge** is one `::after` ring just inside it (a gradient masked
+  to a 1.5px frame), `--edge` for its colours and `--edge-o` for its
+  brightness. `.win` sets `--w-rgb` and `--w2-rgb` for each window
+  (`#win-man`, `#win-tty`, `#win-files`); the window in front is `--edge-o: 1`
+  with a glow, and the lamp is the dot before its name (`.win-t::before`).
+- **A step's kind is a custom property.** `.step[data-kind]` sets `--k` and
+  `--k-rgb`; the step's head, its chip and its hairline read them. The margin's
+  step plate does the same from `data-kind`.
+- **The billboard** is `session.js`'s `questHead()`: it now adds the lights
+  (`.qh-meter`, one `<i>` a checkpoint, `.on` for each reached) and the
+  unit's street sign (`.qh-sign`, with `--len` so a long sign is set
+  smaller). The lesson is drawn again on every tick, so the lights are
+  always current. `study.js` paints the same lights in the pane's head
+  (`.rd-meter`).
+- **The margin's signs** (`district.js`): `mountDistrict()` puts `.dc-signs`
+  in `#study` between the weather and the stage, and paints on `onLesson`,
+  `onQuest`, `onPaint`, `onNights` and the workspace changing, keyed so the
+  DOM is only written when a number changes. The stacks sit in the margins
+  through the study's own `--px`, `--pw` and `--g`; each side is a size
+  container, so the signs scale with the margin and stand down under 150px
+  without any JS. A segment's light is one slice of one tall gradient
+  (`--i` of `--n`), and its fill is a mask (`--f`), which is how the
+  course's units show a part.
+- **The wall's signs** are fifteen empty elements in `#wall .wall-signs`,
+  placed and coloured by CSS (`--ws-a` to `--ws-d`).
+- **The manual's board** (`man.js`): `board()` moves the rendered sheet into
+  a `header.man-top` and one `section.man-card` a heading; `paintIndex()`
+  lists every sheet and this sheet's headings. A card is its own size
+  container, so 41-cab's rule for a narrow manual (a code line's note drops
+  under it) now applies to a narrow card.
+- **The deck** (`wm.js`): a third `mode` beside `columns` and `rows`. The
+  first tiled window leads with `DECK_LEAD` shares against the mean weight of
+  the rest, which stack and share the height by weight. Workspace 3's
+  defaults are `DECK_WEIGHTS`; a saved workspace 3 still in columns with the
+  old default weights is moved once (`state.deckMig`), anything rearranged
+  by hand is left alone.
+- **The street signs** (`data/signs.js`, `tools/signfont.py`): change a word,
+  then `python3 tools/signfont.py --src MPLUSRounded1c-ExtraBold.ttf` (the
+  full face is not in the repo; the script's header says where it lives).
+- **The test surface.** `district()` reports whether the margin's signs are
+  standing, the lesson's column (`lit` of `of`), the course's (`units`,
+  `full`, `text`) and how many wall signs there are.
+- **Two fixes in the bar** (`bar.js`, `44-neon.css`): `fitLent()` measures
+  the full words every time (it used to measure names the last fit had
+  hidden, so the steps ran over the workspaces and the readouts every other
+  paint), and `.bar-task` is always the lamp's frame (it was only when the
+  lesson lent its steps, so the dot sat by the wrong word on 3 and 4).
 
 ### The study (workspace 2)
 
@@ -478,6 +595,14 @@ screens keep working. In the study the drawer comes over the page below
 In the cab, below 1000px wide the windows stack in one column under the bar,
 and below 620px the bar's words fold away (the apps button stays).
 
+The district: on workspace 2 the margin's signs need 150px a side, so they
+stand from about 1160px wide and scale up to 1920×1080 (columns 96 to 150px,
+plates up to 290px); they stand down while the scripts drawer is out. On
+workspace 3 the manual sets its cards in two columns from a pane 1000px wide
+and three from 1640px, and shows its index from 880px. At 1440×900 that is two
+columns alone, and one column (908px, the index still there) with the
+terminal and the files stacked beside it in a 490px column.
+
 ---
 
 ## 9. Testing state
@@ -566,42 +691,70 @@ When changing the desk:
 - **New colour in the cab reads the tokens.** A hard-coded colour on
   workspaces 3–4 will be wrong in one of the two scenes; check anything new
   with `?scene=ice` as well as Night.
+- **The district's colours are meanings, not a palette.** Reach for
+  `--k-read`, `--k-do`, `--k-predict`, `--k-build` or `--k-done` when the
+  thing has a kind, and for `--nx-*` only for a sign's own edge. Glows are
+  `rgba(var(--nx-…-rgb), a)` times `--nx-glow`, so Ice stays daylight. If a
+  word sits on a lit sign it is `--nx-ink`. Ice's values were darkened until
+  they cleared 4.5:1 as text; measure before changing one.
+- **The district's stylesheets win by order, not weight.** `45` and `46` use
+  the same selectors as `38` and `41`. A rule moved above them, or a
+  selector made heavier in the older files, silently takes a colour back.
+- **Every pane's `::after` is its edge of light** (`.win`, `.rd-read`,
+  `.rd-bench`), and `.win-t::before` is the lamp. Do not reuse them.
+- **The street signs need their face rebuilt** when `src/data/signs.js`
+  changes (`tools/signfont.py`); a glyph missing from the subset falls back
+  to the system's Japanese face, or to boxes where there is none.
+- **A saved workspace 3 is moved to the deck once.** `state.deckMig` marks
+  it; a learner who dragged the split or chose rows keeps what they had.
+- **The hosted Preview serves on port 3000** through `.hoplite/settings.json`
+  (`HOST=0.0.0.0 NO_OPEN=1 ./serve.sh 3000`). Locally nothing changes:
+  `./serve.sh` is still `localhost:8925`.
 
 ---
 
 ## 11. Suggested next steps
 
-1. **Move the climb's specs to the study** (§9), then on the Mac run
-   `npx playwright test`, write and review the visual baselines (§3;
-   `ws2-lesson` is the study now; `ws3-man`, `ws4-settings` and
-   `launcher` are the cab), then commit.
-2. Live with the study for a few evenings: is the drawer ever in the way,
-   does the outline's lamp keep up, is the drift calm enough behind the
-   words?
-3. Live with the cab for a few evenings: is the city too faint or too busy
-   behind the panes, does Ice read in daylight, is the lamp edge enough to
-   find the window in front?
-4. Optional: a pipeline script for `assets/crane/` like `tools/assets.py`,
+1. **Bring the specs up to the district and the study** (§9), then on the Mac
+   run `npx playwright test`, write and review the visual baselines (§3;
+   `ws2-lesson` is the big screen now; `ws3-man` is the sign wall;
+   `ws4-settings` and `launcher` are the cab with a lit edge), then commit.
+2. Live with the district for a few evenings. Is full neon restful enough
+   for an hour's reading, or should `--nx-glow` come down? Do the margin's
+   signs help or pull the eye? Is the manual's board the right density, and
+   are two columns enough at your width?
+3. The questions left open in `moodboard/v11-district/BUILD.md`: the kicker's
+   word (`STOP 2.1`), whether the margin's columns should be buttons, a
+   street-level picture for the wall, a daylight plate for Ice, and what the
+   terminal is for.
+4. Workspace 4 and the launcher were not redesigned: settings has the lit
+   edge and nothing else.
+5. Optional: a pipeline script for `assets/crane/` like `tools/assets.py`,
    so a new picture is one command.
 
 ---
 
 ## 12. Copy-paste kickoff for the next agent
 
-> You're taking over **MIMEI** in `/Users/angeladamian/Documents/cozy3`, a
+> You're taking over **MIMEI** (the `yumirevo` repository; it used to live in
+> `/Users/angeladamian/Documents/cozy3`), a
 > no-build static site that teaches Roblox Luau. Read `HANDOFF.md` and
-> `DESIGN.md` first, then `moodboard/v7-crane/BUILD.md`,
-> `moodboard/v10-study/BUILD.md` and `moodboard/v9-cab/BUILD.md` for the
-> desk's, the lessons' and the manual and settings' decisions. Run
+> `DESIGN.md` first, then `moodboard/v7-crane/BUILD.md` for the desk's
+> decisions, `moodboard/v11-district/BRIEF.md` and `BUILD.md` for the lessons'
+> and the manual's (the district), and `moodboard/v10-study/BUILD.md` and
+> `moodboard/v9-cab/BUILD.md` for the layout and the glass under them. Run
 > `./serve.sh` and `npx playwright test`; if
 > `tests/visual.spec.js-snapshots/` is empty, write the baselines with
 > `--update-snapshots` and look at them before committing. The desk lives in
-> `src/ui/desktop.js`, `src/desk/` and `styles/35-desk.css`; the lessons (the
-> study) in `src/ui/study.js`, `src/ui/session.js`, `src/ui/margins.js` and
-> `styles/38-study.css`; the manual and settings (the cab) in `src/ui/cab.js`,
-> `src/ui/bar.js` and `styles/41-cab.css`. The store key stays `ossuary-1`. Keep every number
+> `src/ui/desktop.js`, `src/desk/` and `styles/35-desk.css`; the lessons in
+> `src/ui/study.js`, `src/ui/session.js`, `src/ui/margins.js`,
+> `src/ui/district.js`, `styles/38-study.css` and `styles/45-screen.css`; the
+> manual and the windows in `src/ui/man.js`, `src/core/wm.js`, `src/ui/cab.js`,
+> `src/ui/bar.js`, `styles/41-cab.css` and `styles/46-signwall.css`; the sign
+> colours in `styles/44-neon.css`. The store key stays `ossuary-1`. Keep every number
 > real (checkpoints, never XP), never edit `content/*.md` to fit the design,
-> and ask before changing the desk's, the study's or the cab's look, the bar
+> keep colour on signs and amber for the lamp,
+> and ask before changing the desk's, the district's or the cab's look, the bar
 > or the content.
 
 ---
