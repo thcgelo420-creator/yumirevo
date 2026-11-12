@@ -11,6 +11,7 @@
    ════════════════════════════════════════════════════════════════════════════ */
 
 import { GOALS, GROUPS, PREDICTS, courseList, lessonById, writtenLessons } from '../data/course.js';
+import { unitSign } from '../data/signs.js';
 import { activeWs, defineWindow, goWorkspace } from '../core/wm.js';
 import { clearMiss, completeGoal, goalsOf, isDone, missList, missProbe, placeOf, setPlace, state, save } from '../core/state.js';
 import { log, announce } from '../core/journal.js';
@@ -310,6 +311,23 @@ function questHead(l, frag) {
   meta.className = 'qh-meta';
   meta.textContent = [n ? `${n} ${n === 1 ? 'checkpoint' : 'checkpoints'}` : 'no checkpoints', l.mins ? `about ${l.mins} minutes` : ''].filter(Boolean).join(' · ');
   head.appendChild(meta);
+  /* the billboard's lights: one segment a checkpoint, lit as they are reached (the pane's head and the outline say the
+     count in words), and the unit's street sign down its edge */
+  if (n) {
+    const have = Math.min(n, goalsOf(l.id).length);
+    const meter = document.createElement('div');
+    meter.className = 'qh-meter';
+    meter.setAttribute('aria-hidden', 'true');
+    meter.innerHTML = Array.from({ length: n }, (_, i) => `<i${i < have ? ' class="on"' : ''}></i>`).join('');
+    head.appendChild(meter);
+  }
+  const sign = document.createElement('span');
+  sign.className = 'qh-sign';
+  sign.lang = 'ja';
+  sign.setAttribute('aria-hidden', 'true');
+  sign.textContent = unitSign(l.g);
+  sign.style.setProperty('--len', String(sign.textContent.length));   // a long sign is set smaller, so it fits the billboard
+  head.appendChild(sign);
   return head;
 }
 

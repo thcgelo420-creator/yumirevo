@@ -24,7 +24,7 @@ import {
 import { DEFAULT_RICE, RICE_BY_ID, RICES, applyRice } from './core/rice.js';
 import { currentWall } from './core/walls.js';
 import {
-  activeWs, flushLayout, focusNext, goWorkspace, initWM, openWindow,
+  activeWs, flushLayout, focusNext, goWorkspace, initWM, layoutMode, openWindow,
   rects as wmRects, windowsOn,
 } from './core/wm.js';
 import { commands, initKeys } from './core/keys.js';
@@ -45,6 +45,7 @@ import './ui/files.js';
 import { deskManual, deskReady, deskReport, mountDesktop, stillDeck } from './ui/desktop.js';
 import { mountStudy, studyReport } from './ui/study.js';
 import { driftReport, mountDrift } from './ui/drift.js';
+import { districtReport, mountDistrict } from './ui/district.js';
 import { initBar } from './ui/bar.js';
 import { initCab } from './ui/cab.js';
 import { initLauncher, launcherOpen, openLauncher } from './ui/launcher.js';
@@ -234,6 +235,7 @@ async function main() {
   mountDesktop(document.getElementById('desk'), { later: !!lessonFromHash() });
   mountStudy(document.getElementById('study'));
   mountDrift();
+  mountDistrict();
   initBar();
   initLauncher();
   initKeys();
@@ -261,11 +263,12 @@ globalThis.ossuary = {
   cps: totalCps,                 // checkpoints reached: the only progress number the course shows
   xp: totalXP,                   // kept for old saves and old tests; nothing shows it
   fx: fxReport,
-  wm: { rects: wmRects, activeWs, windowsOn, open: openWindow, go: goWorkspace, flush: flushLayout },
+  wm: { rects: wmRects, activeWs, windowsOn, open: openWindow, go: goWorkspace, flush: flushLayout, mode: layoutMode },
   wall: { current: currentWall },
   desk: deskReport,
   study: studyReport,
   drift: driftReport,
+  district: districtReport,
   lesson: lessonFromHash,
   rice: { list: RICES, current: () => state.rice,
           /* the machine has one look; these remain for older tools and tests */

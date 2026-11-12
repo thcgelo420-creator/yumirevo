@@ -61,6 +61,7 @@ function skeleton() {
     <div class="rd-read glass">
       <header class="rd-head">
         <div class="rd-where"><b class="rd-n"></b><span class="rd-t"></span></div>
+        <span class="rd-meter" aria-hidden="true"></span>
         <span class="rd-cp" aria-live="off"></span>
         <button type="button" class="rd-sbtn" aria-expanded="false" aria-controls="rd-bench" title="The scripts beside the page (S)">
           <i class="rd-ico" aria-hidden="true"></i><span>scripts</span><kbd aria-hidden="true">s</kbd>
@@ -247,6 +248,12 @@ function paintOutline() {
   els.n.textContent = l ? l.n : '';
   els.t.textContent = l ? l.title : 'No lesson open';
   els.cp.textContent = !l || l.soon ? '' : !N ? 'no checkpoints' : isDone(id) || have >= N ? `all ${N} checkpoints` : `checkpoint ${Math.min(N, have + 1)} of ${N}`;
+  /* the same count as lights: one segment a checkpoint */
+  const lights = !l || l.soon ? '' : `${id}|${N}|${Math.min(N, have)}`;
+  if (els.meter.dataset.k !== lights) {
+    els.meter.dataset.k = lights;
+    els.meter.innerHTML = lights ? Array.from({ length: N }, (_, i) => `<i${i < have ? ' class="on"' : ''}></i>`).join('') : '';
+  }
   const key = `${id}|${steps.map(s => `${s.n}:${s.title}:${s.cleared ? 1 : 0}:${s.cps.map(c => `${c.goal}${c.done ? '+' : '-'}`).join('')}`).join(',')}`;
   if (key !== outlineKey) {
     outlineKey = key;
@@ -257,7 +264,7 @@ function paintOutline() {
     els.title.hidden = !l;
     els.steps.innerHTML = steps.map(s => `
       <li class="ro-s${s.cleared ? ' cleared' : ''}" data-step="${s.n}">
-        <button type="button" class="ro-step" data-step="${s.n}" tabindex="-1" aria-label="Step ${s.n}: ${esc(s.title)}${s.optional ? ', optional' : ''}${s.cleared ? ', done' : ''}"><span class="n">${p2(s.n)}</span><span class="t">${esc(s.title)}</span><i class="ok" aria-hidden="true"></i></button>
+        <button type="button" class="ro-step" data-step="${s.n}" tabindex="-1" aria-label="Step ${s.n}: ${esc(s.title)}${s.optional ? ', optional' : ''}${s.cleared ? ', done' : ''}"><span class="n" data-n="${p2(s.n)}"></span><span class="t">${esc(s.title)}</span><i class="ok" aria-hidden="true"></i></button>
         ${s.cps.length ? `<ul class="ro-cps">${s.cps.map(c => `<li><button type="button" class="ro-cp${c.done ? ' done' : ''}" data-goal="${c.goal}" tabindex="-1" aria-label="Checkpoint ${c.i}: ${esc(c.title)}${c.done ? ', reached' : ''}"><i class="m" aria-hidden="true"></i><span class="t">${esc(c.title)}</span></button></li>`).join('')}</ul>` : ''}
       </li>`).join('');
     if (held) {
@@ -490,7 +497,7 @@ export function mountStudy(el) {
   overlay = q('.st-course');
   els = {
     stage: q('.rd-stage'), read: q('.rd-read'), bench: q('.rd-bench'), scroll: q('#st-scroll'), doc: q('.doc'),
-    n: q('.rd-n'), t: q('.rd-t'), cp: q('.rd-cp'), sbtn: q('.rd-sbtn'),
+    n: q('.rd-n'), t: q('.rd-t'), cp: q('.rd-cp'), meter: q('.rd-meter'), sbtn: q('.rd-sbtn'),
     outline: q('.rd-outline'), list: q('.ro-list'), lamp: q('.ro-lamp'), title: q('.ro-title'), steps: q('.ro-steps'),
     tonight: q('.ro-tonight'), tk: q('.ro-tonight .k'), tn: q('.ro-tonight b'), tbar: q('.ro-tonight .bar i'),
     prev: q('.ro-prev'), next: q('.ro-next'), course: q('.ro-course'),

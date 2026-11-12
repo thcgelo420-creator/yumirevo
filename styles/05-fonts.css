@@ -77,3 +77,25 @@
   font-display: swap;
   src: url('../assets/fonts/ibm-plex-mono-500-normal.woff2') format('woff2');
 }
+
+/* The district's signs (workspaces 2 and 3, styles/44-neon.css): Sora for the
+   billboards' titles and numerals, one variable file; M PLUS Rounded 1c for the
+   Japanese on the street signs, cut down by tools/signfont.py to the glyphs in
+   src/data/signs.js (about 12 KB). Both under the SIL Open Font License 1.1
+   (assets/fonts/LICENSE-Sora.txt, LICENSE-MPLUSRounded1c.txt). A sign face is
+   fetched only when a sign is on screen, so the desk never asks for one. */
+@font-face {
+  font-family: 'Sora';
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url('../assets/fonts/sora.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'M PLUS Rounded 1c';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('../assets/fonts/mplus-rounded-1c-signs.woff2') format('woff2');
+}

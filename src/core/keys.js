@@ -16,8 +16,8 @@
 
 import {
   closeWindow, cycleWindows, focusNext, focusedId, goWorkspace, hideWindow,
-  isOpen, layoutMode, menuOpen, closeMenu, monocleOn, moveToWorkspace, openWindow,
-  reorderFocused, resizeFocused, setLayoutMode, toggleFloat, toggleMonocle,
+  isOpen, menuOpen, closeMenu, monocleOn, moveToWorkspace, nextLayoutMode, openWindow,
+  reorderFocused, resizeFocused, toggleFloat, toggleMonocle,
   windowDef,
 } from './wm.js';
 import { cycleFxPreference, isPeeking, setPeek } from './effects.js';
@@ -138,7 +138,7 @@ function onKey(e) {
       case 'KeyL': case 'ArrowRight': e.preventDefault(); e.shiftKey ? reorderFocused(1) : focusNext(1); return;
       case 'KeyK': case 'ArrowUp':    e.preventDefault(); e.shiftKey ? resizeFocused(1) : focusNext(-1); return;
       case 'KeyJ': case 'ArrowDown':  e.preventDefault(); e.shiftKey ? resizeFocused(-1) : focusNext(1); return;
-      case 'KeyM': e.preventDefault(); if (e.shiftKey) setLayoutMode(layoutMode() === 'rows' ? 'columns' : 'rows'); else toggleMonocle(); return;
+      case 'KeyM': e.preventDefault(); if (e.shiftKey) nextLayoutMode(); else toggleMonocle(); return;
       case 'KeyF': e.preventDefault(); if (e.shiftKey) commands.fx && commands.fx(); else toggleFloat(); return;
       case 'KeyZ': e.preventDefault(); focusedId() && hideWindow(focusedId()); return;
       case 'KeyQ': e.preventDefault(); focusedId() && closeWindow(focusedId()); return;

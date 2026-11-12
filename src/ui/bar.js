@@ -134,6 +134,8 @@ function paintLent(n, own) {
 function fitLent() {
   const t = els.task, bs = [...t.querySelectorAll('.bs')];
   if (!bs.length) { t.classList.remove('fit-1', 'fit-2'); return; }
+  /* measure the full words: a name the last fit hid has no width, and would read as "it all fits" */
+  t.classList.remove('fit-1', 'fit-2');
   const room = t.clientWidth;
   if (!room) return;
   const parts = bs.map(b => ({ here: b.classList.contains('focus'), num: b.querySelector('.bt-num').scrollWidth, name: b.querySelector('.bt-name').scrollWidth }));

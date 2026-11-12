@@ -12,9 +12,22 @@ designs from what is in it, not from its own taste.
   line under "Notes" below.
 - **Start a new direction** by making a new subfolder (`moodboard/v4-vaporwave/`)
   and saying "redesign from moodboard/v4-vaporwave". Old folders stay as history.
-- `current/` holds the images the present "night line" design was built from.
+- `current/` holds the images the "night line" design of Oct 2026 was built
+  from. The newest folder is the design on screen.
 
-## The current design (night line, Oct 2026)
+## The design today (v7, v9, v10 and v11, Nov 2026)
+
+- **Workspace 1, the desk:** `v7-crane/`. The view from a tower crane over a
+  city at night, a sign on the hook naming your lesson. Quiet: no colour but
+  the lamp.
+- **Workspaces 2 and 3, the district:** `v11-district/`. You fall from the
+  crane into the city. The lesson is on the district's big screen, the manual
+  is its wall of signs, in full neon. The glass and the layout under it come
+  from `v9-cab/` and `v10-study/`.
+- `v8-climb/` is retired; `v5` and `v6` were directions that fed the later
+  ones.
+
+## An earlier design (night line, Oct 2026)
 
 A riced Linux desktop on a late-night train.
 
@@ -45,10 +58,34 @@ again, so they count double.
 | `08-iridescent-led-columns-rain` | Iridescent LED columns on a wet plaza; pink and magenta reflections |
 | `09-glass-shatter-moon` | Shattered glass bursting from white-hot light, with a moon |
 
+## v11-district (Nov 2026): workspaces 2 and 3
+
+Seven pictures, four of them picked again from `v6-lunar/`. `BRIEF.md` says
+what each one gave and what was wrong with the two workspaces; `BUILD.md`
+says what was built.
+
+| File | What to take from it |
+| --- | --- |
+| `01-foggy-harbour-holo-billboards` | Calm teal fog with all the colour held on a few tall screens |
+| `02-hologram-dancer-billboard-city` | A hologram of upright lines; white signs with a ghost under them |
+| `03-aerial-city-ring-roads-blue-red` | One hot tower against the blue: the lamp |
+| `04-iridescent-led-columns-rain` | Rounded LED columns, cyan to pink to orange, and their light on wet ground |
+| `05-mirrors-edge-catalyst-daylight` | Daylight: white glass, blue sky, magenta signs, blossom (Ice) |
+| `06-transcendo-chrome-hud` | Chrome and thin frames: a screen as a material |
+| `07-neo-akiba-anime-billboards` | A wall of signs in yellow, magenta and cyan; vertical Japanese |
+
 ## Notes
 
 Write what you want here: what to keep, what to drop, what feels wrong.
 
+- District decisions (11 Nov 2026): full neon on workspaces 2 and 3; the
+  lesson is the district's big screen, lights of real checkpoints on its
+  billboard; workspace 3 is a cheatsheet wall beside Studio, the terminal
+  and files stacked to one side; Ice is Mirror's Edge daylight. The rule that
+  keeps it readable: light belongs to signs, prose stays white, each colour
+  means one thing, amber is still the lamp. After the first look (12 Nov
+  2026) the neon was turned down, the margin's signs were taken out and the
+  manual was given more air.
 - Lunar decisions so far: HUD-style top bar (option E, no bar strip) with
   workspaces, streak, clock and date, Night/Ice toggle and settings, all as live
   widgets; the bar changes per workspace; subtle motion; skull mark in the
