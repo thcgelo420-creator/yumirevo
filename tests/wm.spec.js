@@ -11,7 +11,8 @@ const byId = (list, id) => list.find(r => r.id === id);
 
 /* Workspace 2 is the fixed study now and no longer tiles. Workspace 3 still does:
    the manual lives there, and files and the terminal are opened beside it the way
-   a learner would from the apps launcher (seeded hidden, then the workspace is shown). */
+   a learner would from the apps launcher (seeded hidden, then the workspace is shown).
+   Since the district it opens in the deck: the manual leads, the other two stack. */
 async function openThree(page) {
   await boot(page);
   await page.evaluate(() => {
@@ -22,9 +23,96 @@ async function openThree(page) {
   await expectTiled(page, ['man', 'files', 'tty']);
 }
 
+const layoutOf = page => page.evaluate(() => window.ossuary.wm.mode());
+
+/* The same three side by side: one press of Alt+Shift+M takes the deck to columns. */
+async function openRow(page) {
+  await openThree(page);
+  await key(page, 'Alt+Shift+KeyM');
+  await page.evaluate(() => window.ossuary.wm.flush());
+  expect(await layoutOf(page)).toBe('columns');
+}
+
 test.describe('the window manager', () => {
-  test('a tiled row divides the seat, and focus is one window at a time', async ({ page, errors }) => {
+  test('workspace 3 opens in the deck: the manual leads and the others stack beside it', async ({ page, errors }) => {
     await openThree(page);
+    expect(await layoutOf(page)).toBe('deck');
+    const list = await wmRects(page);
+    const man = byId(list, 'man'), files = byId(list, 'files'), tty = byId(list, 'tty');
+    /* the manual is the widest by a clear margin and takes the seat's height */
+    expect(man.w).toBeGreaterThan(files.w * 1.5);
+    expect(man.h).toBeGreaterThan(files.h + tty.h);
+    /* the other two share one column to its right, one above the other, nothing overlapping */
+    expect(files.x).toBeGreaterThanOrEqual(man.x + man.w);
+    expect(Math.abs(files.x - tty.x)).toBeLessThan(2);
+    expect(Math.abs(files.w - tty.w)).toBeLessThan(2);
+    expect(tty.y).toBeGreaterThanOrEqual(files.y + files.h);
+    /* the files get more of that column than the terminal */
+    expect(files.h).toBeGreaterThan(tty.h);
+    await expectTiled(page);
+    expect(errors).toEqual([]);
+  });
+
+  test('alone, the manual fills the seat whatever the layout', async ({ page }) => {
+    await boot(page);
+    await key(page, 'Alt+Digit3');
+    expect(await layoutOf(page)).toBe('deck');
+    const [man] = await wmRects(page);
+    const seat = await page.evaluate(() => { const s = document.getElementById('seat'); return { w: s.clientWidth, h: s.clientHeight }; });
+    expect(man.id).toBe('man');
+    expect(man.w).toBeGreaterThan(seat.w - 40);
+    expect(man.h).toBeGreaterThan(seat.h - 40);
+  });
+
+  test('Alt+Shift+M walks the layouts: the deck, columns, rows, and the deck again', async ({ page }) => {
+    await openThree(page);
+    const seen = [await layoutOf(page)];
+    for (let i = 0; i < 3; i++) {
+      await key(page, 'Alt+Shift+KeyM');
+      seen.push(await layoutOf(page));
+    }
+    expect(seen).toEqual(['deck', 'columns', 'rows', 'deck']);
+    await expectTiled(page);
+  });
+
+  test('the deck stacks its side column in the order the windows were opened', async ({ page }) => {
+    await boot(page);
+    await page.evaluate(() => {
+      window.ossuary.wm.open('tty', { ws: 3, reveal: false, focus: false, silent: true });
+      window.ossuary.wm.open('files', { ws: 3, reveal: false, focus: false, silent: true });
+    });
+    await key(page, 'Alt+Digit3');           // man, tty, files
+    const list = await expectTiled(page, ['man', 'files', 'tty']);
+    const files = byId(list, 'files'), tty = byId(list, 'tty');
+    expect(files.y).toBeGreaterThanOrEqual(tty.y + tty.h);
+    /* the heights belong to the windows, not to the slots: the files are still the taller of the two */
+    expect(files.h).toBeGreaterThan(tty.h);
+  });
+
+  test('dropping the manual on a side window hands that window the lead', async ({ page, errors }) => {
+    await openThree(page);
+    const target = await page.locator('.win[data-win="files"]').boundingBox();
+    const bar = await page.locator('.win[data-win="man"] .win-bar').boundingBox();
+
+    await page.mouse.move(bar.x + bar.width / 2, bar.y + bar.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(target.x + target.width / 2, target.y + target.height / 2, { steps: 14 });
+    await page.mouse.up();
+
+    expect(await layoutOf(page)).toBe('deck');
+    const list = await wmRects(page);
+    const man = byId(list, 'man'), files = byId(list, 'files'), tty = byId(list, 'tty');
+    expect(man.float).toBe(false);
+    expect(files.x).toBeLessThan(man.x);
+    expect(files.w).toBeGreaterThan(man.w);
+    expect(Math.abs(man.x - tty.x)).toBeLessThan(2);          // the manual took the files' place in the column
+    expect(tty.y).toBeGreaterThanOrEqual(man.y + man.h);
+    await expectTiled(page);
+    expect(errors).toEqual([]);
+  });
+
+  test('a tiled row divides the seat, and focus is one window at a time', async ({ page, errors }) => {
+    await openRow(page);
     const list = await wmRects(page);
     expect(list.filter(r => r.focus)).toHaveLength(1);
     expect(list.map(r => r.id)).toContain(list.find(r => r.focus).id);
@@ -47,7 +135,7 @@ test.describe('the window manager', () => {
   });
 
   test('Alt+Shift+L reorders the row instead of moving focus', async ({ page }) => {
-    await openThree(page);
+    await openRow(page);
     const before = await wmRects(page);
     const focused = before.find(r => r.focus).id;
     await key(page, 'Alt+Shift+KeyL');
@@ -157,9 +245,10 @@ test.describe('the window manager', () => {
   });
 
   test('Alt+Shift+M switches the row to rows', async ({ page }) => {
-    await openThree(page);
+    await openRow(page);
     await key(page, 'Alt+Shift+KeyM');
     await page.evaluate(() => window.ossuary.wm.flush());
+    expect(await layoutOf(page)).toBe('rows');
     const list = (await wmRects(page)).sort((a, b) => a.y - b.y);
     expect(list[0].y).toBeLessThan(40);
     expect(list[1].y).toBeGreaterThan(list[0].y + 40);      // stacked, not side by side
@@ -221,7 +310,7 @@ test.describe('the window manager', () => {
   });
 
   test('dropping one window on another swaps their places', async ({ page, errors }) => {
-    await openThree(page);
+    await openRow(page);
     const list = (await wmRects(page)).sort((a, b) => a.x - b.x);
     const [left, right] = list;
     const target = await page.locator(`.win[data-win="${right.id}"]`).boundingBox();
@@ -255,7 +344,7 @@ test.describe('the window manager', () => {
     expect(after.h).toBeLessThan(before.h - 80);
   });
 
-  test('opening a hidden window from the launcher puts it back in the row', async ({ page, errors }) => {
+  test('opening a hidden window from the launcher puts it back in the tiling', async ({ page, errors }) => {
     await openThree(page);
     await key(page, 'Alt+KeyZ');
     await page.locator('#mod-apps').click();

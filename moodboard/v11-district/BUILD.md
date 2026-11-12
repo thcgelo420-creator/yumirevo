@@ -108,8 +108,10 @@ dark at Night and white in Ice (6.8:1 and 5:1 or better).
 - **Workspace 3 at 1440×900:** alone, the manual is 1412 wide: a 216px index
   and two columns of cards. With the terminal and the files open the manual
   is 908 wide (one column, the index still there) and the other two stack
-  in a 490px column, the files above at 504px and the terminal below at
-  322px. Before, the three stood side by side at 411, 637 and 337px.
+  in a 490px column in the order they were opened: the files 504px tall and
+  the terminal 322px, whichever is on top. The stills opened the files
+  first; opened from the bar's words, left to right, the terminal is on top.
+  Before, the three stood side by side at 411, 637 and 337px.
 - **Below 1000px** the windows stack as before; the manual drops its index
   under 880px.
 

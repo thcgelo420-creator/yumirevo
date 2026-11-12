@@ -221,9 +221,11 @@ still marks *you*, everywhere. (Inside, the look is still called `ossuary`:
   inside it. The keyboard is first class (§7).
 - **Layouts** (`core/wm.js`): *columns* (side by side, by weight), *rows*,
   and **the deck**: the first window leads and takes about two thirds of the
-  width, the others stack in one column beside it, sharing its height by
-  weight (the files get more than the terminal). Workspace 3 starts in the
-  deck; `Alt+Shift+M` walks the three, and the right-click menu names them.
+  width, the others stack in one column beside it in the order they were
+  opened, sharing its height by weight (the files get more than the
+  terminal, wherever they sit). Dropping the lead on one of them hands that
+  window the lead. Workspace 3 starts in the deck; `Alt+Shift+M` walks the
+  three, and the right-click menu names them.
 - **Launcher:** wofi/rofi shape. A centred panel with modes (`lessons`,
   `windows`, `actions`, `keys`), fuzzy matching, arrows, Enter to run and Tab
   to change mode. There is no walls mode.

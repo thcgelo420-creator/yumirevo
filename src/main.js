@@ -24,7 +24,7 @@ import {
 import { DEFAULT_RICE, RICE_BY_ID, RICES, applyRice } from './core/rice.js';
 import { currentWall } from './core/walls.js';
 import {
-  activeWs, flushLayout, focusNext, goWorkspace, initWM, openWindow,
+  activeWs, flushLayout, focusNext, goWorkspace, initWM, layoutMode, openWindow,
   rects as wmRects, windowsOn,
 } from './core/wm.js';
 import { commands, initKeys } from './core/keys.js';
@@ -263,7 +263,7 @@ globalThis.ossuary = {
   cps: totalCps,                 // checkpoints reached: the only progress number the course shows
   xp: totalXP,                   // kept for old saves and old tests; nothing shows it
   fx: fxReport,
-  wm: { rects: wmRects, activeWs, windowsOn, open: openWindow, go: goWorkspace, flush: flushLayout },
+  wm: { rects: wmRects, activeWs, windowsOn, open: openWindow, go: goWorkspace, flush: flushLayout, mode: layoutMode },
   wall: { current: currentWall },
   desk: deskReport,
   study: studyReport,

@@ -426,10 +426,10 @@ hangs together:
   under it) now applies to a narrow card.
 - **The deck** (`wm.js`): a third `mode` beside `columns` and `rows`. The
   first tiled window leads with `DECK_LEAD` shares against the mean weight of
-  the rest, which stack and share the height by weight. Workspace 3's
-  defaults are `DECK_WEIGHTS`; a saved workspace 3 still in columns with the
-  old default weights is moved once (`state.deckMig`), anything rearranged
-  by hand is left alone.
+  the rest, which stack in `order` (the order they were opened) and share
+  the height by weight. Workspace 3's defaults are `DECK_WEIGHTS`; a saved
+  workspace 3 still in columns with the old default weights is moved once
+  (`state.deckMig`), anything rearranged by hand is left alone.
 - **The street signs** (`data/signs.js`, `tools/signfont.py`): change a word,
   then `python3 tools/signfont.py --src MPLUSRounded1c-ExtraBold.ttf` (the
   full face is not in the repo; the script's header says where it lives).
