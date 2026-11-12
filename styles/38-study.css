@@ -159,6 +159,8 @@ body:not([data-ws='2']) #study { display: none; }
 #study .ro-s { margin: 0; padding: 0; }
 #study .ro-step { grid-template-columns: 34px minmax(0, 1fr) 14px; padding: 7px 12px 7px 18px; }
 #study .ro-step .n { font: 500 11px/1.8 var(--c-mono); letter-spacing: .06em; color: var(--faint); transition: color .2s ease; }
+/* the number is drawn, not text: the words on the button are its title, and its name holds those (WCAG 2.5.3) */
+#study .ro-step .n::before { content: attr(data-n); }
 #study .ro-step .t { font: 400 13.5px/1.45 var(--c-ui); }
 #study .ro-title:hover, #study .ro-step:hover, #study .ro-cp:hover { color: var(--fg); }
 #study .ro-step[aria-current] { color: var(--fg); }

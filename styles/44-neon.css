@@ -143,6 +143,8 @@ body.peek #wall .wall-signs { opacity: 1; }
 :root[data-scene='ice'] #bar .ws[aria-current='page'] .num, :root[data-scene='ice'] #bar .bar-mod.cps .v { text-shadow: none; }
 /* the gliding lamp is placed from the task's own corner on every workspace, not only when the lesson lends its steps */
 .bar-task { position: relative; }
+/* one warm dot at a time: the word in front gives up its own while the lamp is out, as a lent step does */
+.bar-task.has-lamp .bw.focus .bt-dot { opacity: 0; }
 .bar-task .bs.done .bt-num { color: var(--nx-mint); }
 
 /* ── a pane's edge: one ring of light just inside it ──────────────────────── */

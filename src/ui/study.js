@@ -264,7 +264,7 @@ function paintOutline() {
     els.title.hidden = !l;
     els.steps.innerHTML = steps.map(s => `
       <li class="ro-s${s.cleared ? ' cleared' : ''}" data-step="${s.n}">
-        <button type="button" class="ro-step" data-step="${s.n}" tabindex="-1" aria-label="Step ${s.n}: ${esc(s.title)}${s.optional ? ', optional' : ''}${s.cleared ? ', done' : ''}"><span class="n">${p2(s.n)}</span><span class="t">${esc(s.title)}</span><i class="ok" aria-hidden="true"></i></button>
+        <button type="button" class="ro-step" data-step="${s.n}" tabindex="-1" aria-label="Step ${s.n}: ${esc(s.title)}${s.optional ? ', optional' : ''}${s.cleared ? ', done' : ''}"><span class="n" data-n="${p2(s.n)}"></span><span class="t">${esc(s.title)}</span><i class="ok" aria-hidden="true"></i></button>
         ${s.cps.length ? `<ul class="ro-cps">${s.cps.map(c => `<li><button type="button" class="ro-cp${c.done ? ' done' : ''}" data-goal="${c.goal}" tabindex="-1" aria-label="Checkpoint ${c.i}: ${esc(c.title)}${c.done ? ', reached' : ''}"><i class="m" aria-hidden="true"></i><span class="t">${esc(c.title)}</span></button></li>`).join('')}</ul>` : ''}
       </li>`).join('');
     if (held) {
