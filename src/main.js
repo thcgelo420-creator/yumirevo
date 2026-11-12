@@ -45,6 +45,7 @@ import './ui/files.js';
 import { deskManual, deskReady, deskReport, mountDesktop, stillDeck } from './ui/desktop.js';
 import { mountStudy, studyReport } from './ui/study.js';
 import { driftReport, mountDrift } from './ui/drift.js';
+import { districtReport, mountDistrict } from './ui/district.js';
 import { initBar } from './ui/bar.js';
 import { initCab } from './ui/cab.js';
 import { initLauncher, launcherOpen, openLauncher } from './ui/launcher.js';
@@ -234,6 +235,7 @@ async function main() {
   mountDesktop(document.getElementById('desk'), { later: !!lessonFromHash() });
   mountStudy(document.getElementById('study'));
   mountDrift();
+  mountDistrict();
   initBar();
   initLauncher();
   initKeys();
@@ -266,6 +268,7 @@ globalThis.ossuary = {
   desk: deskReport,
   study: studyReport,
   drift: driftReport,
+  district: districtReport,
   lesson: lessonFromHash,
   rice: { list: RICES, current: () => state.rice,
           /* the machine has one look; these remain for older tools and tests */

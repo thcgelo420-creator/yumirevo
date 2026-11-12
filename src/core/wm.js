@@ -43,10 +43,15 @@ export const redirectWindow = (id, fn) => { redirects.set(id, fn); };
 export const windowIds = () => [...registry.keys()];
 
 /* ── state ────────────────────────────────────────────────────────────────── */
+/* The deck (workspace 3): the first window is the board and takes DECK_LEAD shares of the width against the
+   column beside it; the files get more of that column's height than the terminal, which only needs a few lines. */
+const DECK_LEAD = 1.9;
+const DECK_WEIGHTS = { man: 1, files: 1.25, tty: .8 };
+const MODES = ['columns', 'rows', 'deck'];
 const DEFAULT_LAYOUT = {
   1: { order: [] },
   2: { order: [] },                          // the study is a fixed layout (ui/study.js), not tiles
-  3: { order: ['man'] },
+  3: { order: ['man'], mode: 'deck', weights: { ...DECK_WEIGHTS } },   // the sign wall: the manual, with the terminal and files stacked beside it
   4: { order: ['settings'] },
 };
 /* the gap is read off the seat, so a workspace can breathe wider than the rest */
@@ -107,6 +112,21 @@ const FOLD_W = 44;                              // a folded rail: just its label
     state.studyMig = 1;
     save();
   }
+}
+
+/* Workspace 3 is the sign wall: the manual leads and the terminal and files stack beside it (the deck). Move a
+   saved layout over once, unless the learner has chosen rows or dragged the split themselves. */
+{
+  const w = state.layout && state.layout[3];
+  if (w && !state.deckMig) {
+    const wt = w.weights || {};
+    const untouched = (wt.man || 1) === 1 && (wt.tty || 1.55) === 1.55 && (wt.files || .82) === .82;
+    if ((w.mode || 'columns') === 'columns' && untouched) {
+      w.mode = 'deck';
+      w.weights = { ...wt, ...DECK_WEIGHTS };
+    }
+  }
+  if (!state.deckMig) { state.deckMig = 1; save(); }
 }
 
 let ws = state.ws || 1;
@@ -432,13 +452,15 @@ export function toggleMonocle(id = focused) {
 
 export function setLayoutMode(mode) {
   const w = cur();
-  w.mode = ['columns', 'rows'].includes(mode) ? mode : 'columns';
+  w.mode = MODES.includes(mode) ? mode : 'columns';
   w.monocle = null;
   save(); layout(); emit();
   log('dim', `[ ~ ] layout: ${w.mode}`);
 }
 
 export const layoutMode = () => cur().mode;
+/** Alt+Shift+M: columns, rows, the deck, and round again. */
+export const nextLayoutMode = () => setLayoutMode(MODES[(MODES.indexOf(cur().mode) + 1) % MODES.length]);
 
 /** Fold a rail down to its label, or open it again. Only windows defined as
  *  rails fold; the seat keeps the space for whatever stays open. */
@@ -584,6 +606,21 @@ function geometry() {
       place(winEl(id), g, y, total, h);
       y += h + g;
     });
+  } else if (w.mode === 'deck' && tiled.length > 1) {
+    // the deck: the first window is the board, the others stack in one column beside it
+    const [lead, ...side] = tiled;
+    const wt = id => w.weights[id] || 1;
+    const sideSum = side.reduce((a, id) => a + wt(id), 0) || 1;
+    const share = clamp(wt(lead) * DECK_LEAD / (wt(lead) * DECK_LEAD + sideSum / side.length), .45, .82);
+    const sideW = Math.max(280, Math.round((total - g) * (1 - share)));
+    const leadW = total - g - sideW;
+    place(winEl(lead), g, g, leadW, height);
+    let y = g;
+    side.forEach(id => {
+      const h = Math.max(120, (height - g * (side.length - 1)) * wt(id) / sideSum);
+      place(winEl(id), g + leadW + g, y, sideW, h);
+      y += h + g;
+    });
   } else {
     // a folded rail keeps a sliver; the open windows share what is left
     const folded = id => w.fold.includes(id) && tiled.length > 1;
@@ -600,7 +637,7 @@ function geometry() {
   }
   for (const id of list) {
     const el = winEl(id);
-    if (el) el.classList.toggle('folded', w.mode !== 'rows' && !w.float[id] && w.fold.includes(id) && tiled.length > 1);
+    if (el) el.classList.toggle('folded', w.mode === 'columns' && !w.float[id] && w.fold.includes(id) && tiled.length > 1);
   }
 
   for (const id of floats) {
@@ -784,6 +821,7 @@ function openMenu(id, x, y) {
     <hr>
     <button role="menuitem" data-act="cols">Columns layout <kbd>alt ⇧ M</kbd></button>
     <button role="menuitem" data-act="rows">Rows layout</button>
+    <button role="menuitem" data-act="deck">Deck layout</button>
     <hr>
     <button role="menuitem" data-act="ws2">Move to 2 · lessons</button>
     <button role="menuitem" data-act="ws3">Move to 3 · manual</button>
@@ -801,6 +839,7 @@ function openMenu(id, x, y) {
     else if (act === 'hide') hideWindow(id);
     else if (act === 'cols') setLayoutMode('columns');
     else if (act === 'rows') setLayoutMode('rows');
+    else if (act === 'deck') setLayoutMode('deck');
     else if (act === 'close') closeWindow(id);
     else if (act.startsWith('ws')) moveToWorkspace(id, +act.slice(2));
   });

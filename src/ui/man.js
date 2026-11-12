@@ -4,21 +4,29 @@
    years. Every cheatsheet in the course is a man page — `man luau-decisions` —
    with a name and section in the corner, capitalised headings and a footer that
    tells you how to leave. `q` closes it, because of course it does.
+
+   Since the district (moodboard/v11-district) the page is a sign wall: the
+   title on top, then one card per heading, so a wide pane sets the sheet in
+   columns you can scan beside Studio. Down the left, when there is room, every
+   sheet in the course and this sheet's headings (the index).
    ════════════════════════════════════════════════════════════════════════════ */
 
 import { GROUPS, courseList, cheatFor, lessonById } from '../data/course.js';
+import { SIGNS, unitSign } from '../data/signs.js';
 import { defineWindow, closeWindow, openWindow } from '../core/wm.js';
 import { state, save } from '../core/state.js';
 import { log } from '../core/journal.js';
-import { renderMarkdown } from '../core/md.js';
+import { escapeHtml as esc, renderMarkdown } from '../core/md.js';
 import { sound } from '../core/sound.js';
 import { openLesson } from './session.js';
 
-let api = null, docEl = null, bodyEl = null, headEl = null, footEl = null;
+let api = null, docEl = null, bodyEl = null, headEl = null, footEl = null, indexEl = null;
 let sheet = null;
 
 const sheets = () => courseList().filter(l => l.kind === 'tool');
 export const currentSheet = () => sheet;
+const stillNow = () => document.documentElement.dataset.fx === '0';
+const short = t => String(t).replace(/ cheatsheet$/i, '');
 
 const sectionOf = l => {
   const g = GROUPS.find(x => x.id === l.g);
@@ -58,7 +66,58 @@ export function nextSheet(dir) {
   render();
 }
 
+/** A sheet picked in the index. */
+function showSheet(id) {
+  if (!id || id === sheet) return;
+  sound.open();
+  sheet = id;
+  render();
+}
+
 /* ── painting ─────────────────────────────────────────────────────────────── */
+/** The sheet as a board: its title and lead on top, then one card per heading, so a wide pane can set it in columns. */
+function board(frag, l) {
+  const top = document.createElement('header');
+  top.className = 'man-top';
+  const cards = document.createElement('div');
+  cards.className = 'man-cards';
+  let card = null;
+  for (const node of [...frag.childNodes]) {
+    if (node.nodeType === 1 && node.tagName === 'H2') {
+      card = document.createElement('section');
+      card.className = 'man-card';
+      card.dataset.i = String(cards.children.length % 4);     // the cards take the four sign colours in turn
+      cards.appendChild(card);
+    }
+    (card || top).appendChild(node);
+  }
+  const ja = document.createElement('span');
+  ja.className = 'man-ja';
+  ja.lang = 'ja';
+  ja.setAttribute('aria-hidden', 'true');
+  ja.textContent = l && l.g ? unitSign(l.g) : SIGNS.manual;
+  top.appendChild(ja);
+  return [top, cards];
+}
+
+/** The index: every sheet, the one you are on marked; then this sheet's headings. One tab stop, the arrows walk it. */
+function paintIndex() {
+  if (!indexEl) return;
+  const list = sheets();
+  const had = indexEl.contains(document.activeElement);
+  indexEl.querySelector('.mi-n').textContent = `${list.length} ${list.length === 1 ? 'sheet' : 'sheets'}`;
+  indexEl.querySelector('.mi-list').innerHTML = list.map(s => {
+    const sec = sectionOf(s), on = s.id === sheet;
+    return `<li><button type="button" class="mi-sheet" data-id="${esc(s.id)}" tabindex="${on ? 0 : -1}"${on ? ' aria-current="page"' : ''}
+      title="${esc(`${sec.name}(${sec.unit})`)}"><span class="n">${esc(String(sec.unit).padStart(2, '0'))}</span><span class="t">${esc(short(s.title))}</span></button></li>`;
+  }).join('');
+  const heads = docEl ? [...docEl.querySelectorAll('.man-card > h2')] : [];
+  indexEl.querySelector('.mi-here').hidden = !heads.length;
+  indexEl.querySelector('.mi-secs').innerHTML = heads.map((h, i) =>
+    `<li><button type="button" class="mi-sec" data-i="${i}" tabindex="-1"><i aria-hidden="true"></i><span>${esc(h.textContent.trim())}</span></button></li>`).join('');
+  if (had) { const on = indexEl.querySelector('.mi-sheet[aria-current]'); if (on) on.focus({ preventScroll: true }); }
+}
+
 function render() {
   if (!docEl) return;
   const l = sheet ? lessonById(sheet) : null;
@@ -83,10 +142,10 @@ function render() {
       <p>Cheatsheets are written alongside the unit they belong to.</p></div>`;
   } else {
     docEl.innerHTML = '';
-    docEl.append(...renderMarkdown(src.textContent, { plain: true }).childNodes);
+    docEl.append(...board(renderMarkdown(src.textContent, { plain: true }), l));
     const back = document.createElement('p');
     back.className = 'hint';
-    back.innerHTML = `want the lesson itself? <button class="btn ghost" id="man-open">open ${l.title.replace(/ cheatsheet$/i, '')}</button>`;
+    back.innerHTML = `want the lesson itself? <button class="btn ghost" id="man-open">open ${short(l.title)}</button>`;
     docEl.appendChild(back);
     const open = docEl.querySelector('#man-open');
     if (open) open.onclick = () => {
@@ -95,6 +154,7 @@ function render() {
     };
   }
   bodyEl.scrollTop = 0;
+  paintIndex();
   paintFoot();
 }
 
@@ -135,7 +195,42 @@ export const manWindow = defineWindow({
     docEl = document.createElement('div');
     docEl.className = 'man-doc';
     bodyEl.appendChild(docEl);
-    root.append(headEl, bodyEl);
+
+    /* the index: every sheet and this sheet's headings, down the left when the pane is wide enough (CSS) */
+    indexEl = document.createElement('nav');
+    indexEl.className = 'man-index';
+    indexEl.setAttribute('aria-label', 'Manual pages');
+    indexEl.innerHTML = `
+      <p class="mi-h"><span class="mi-ja" lang="ja" aria-hidden="true">${SIGNS.manual}</span><b>the manual</b><span class="mi-n"></span></p>
+      <ol class="mi-list"></ol>
+      <p class="mi-h mi-here" hidden><b>on this sheet</b></p>
+      <ol class="mi-secs"></ol>`;
+    indexEl.addEventListener('click', e => {
+      const s = e.target.closest('.mi-sheet');
+      if (s) { showSheet(s.dataset.id); return; }
+      const c = e.target.closest('.mi-sec');
+      const card = c ? docEl.querySelectorAll('.man-card')[+c.dataset.i] : null;
+      if (!card) return;
+      sound.click();
+      card.scrollIntoView({ block: 'start', behavior: stillNow() ? 'auto' : 'smooth' });
+      card.classList.remove('hit');
+      card.getBoundingClientRect();
+      card.classList.add('hit');
+    });
+    indexEl.addEventListener('keydown', e => {
+      if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(e.key)) return;
+      const items = [...indexEl.querySelectorAll('.mi-sheet, .mi-sec')];
+      const i = items.indexOf(document.activeElement);
+      if (i < 0) return;
+      e.preventDefault();
+      const j = e.key === 'Home' ? 0 : e.key === 'End' ? items.length - 1 : Math.max(0, Math.min(items.length - 1, i + (e.key === 'ArrowDown' ? 1 : -1)));
+      items[j].focus();
+    });
+
+    const main = document.createElement('div');
+    main.className = 'man-main';
+    main.append(indexEl, bodyEl);
+    root.append(headEl, main);
     body.appendChild(root);
 
     footEl = winApi.foot;

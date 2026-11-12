@@ -1,0 +1,162 @@
+/* ════════════════════════════════════════════════════════════════════════════
+   MIMEI · 44 NEON · THE DISTRICT'S LIGHT (workspaces 2, 3 and 4)
+   The desk looks over the city; a lesson and the manual are down in it, among
+   the screens. Agreed in moodboard/v11-district/BUILD.md: full neon. Loaded
+   after 43-glass, so these tokens and edges win.
+
+   The rule that replaces "no accent colour": light belongs to signs. A colour
+   is only ever on something a city would light (a sign, a screen's edge, a
+   status lamp, code on a screen), and each colour means one thing:
+     cyan     read · strings and paths      yellow   do it in Studio
+     violet   predict                       pink     build
+     mint     reached, right                red      wrong
+     amber    you: the lamp, as before (the step you are on, the window in
+              front, the caret)
+   Prose stays white (slate in Ice) on quiet glass. Words set on a lit sign
+   are --nx-ink, and every coloured word clears 4.5:1 on the pane, in Night,
+   Late and Ice.
+
+   Ice is daylight: white glass, magenta and electric blue, blossom light.
+   Motion (the wall's breathing, the billboard's sweep, a flicker) runs at fx 2
+   and 3 only; fx 0 and 1, and reduced motion, hold everything still.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* ── the tokens ───────────────────────────────────────────────────────────── */
+:root {
+  --c-sign: 'Sora', 'Inter', system-ui, sans-serif;
+  --c-ja: 'M PLUS Rounded 1c', 'Hiragino Sans', 'Yu Gothic', 'Noto Sans CJK JP', sans-serif;
+
+  --nx-cyan: #45f0ff;     --nx-cyan-rgb: 69, 240, 255;
+  --nx-pink: #ff4fc3;     --nx-pink-rgb: 255, 79, 195;
+  --nx-violet: #b089ff;   --nx-violet-rgb: 176, 137, 255;
+  --nx-yellow: #ffe94a;   --nx-yellow-rgb: 255, 233, 74;
+  --nx-mint: #4dffb4;     --nx-mint-rgb: 77, 255, 180;
+  --nx-red: #ff6b7d;      --nx-red-rgb: 255, 107, 125;
+  --nx-ink: #05070c;                      /* words set on a lit sign */
+  --nx-glow: 1;                           /* how far the light spills: 0 in Ice's daylight */
+
+  /* the iridescent column: cyan through violet and pink to the lamp's amber */
+  --nx-iri: linear-gradient(180deg, #45f0ff 0%, #6f8bff 26%, #b089ff 48%, #ff4fc3 74%, #ffb46b 100%);
+  --nx-iri-h: linear-gradient(90deg, #45f0ff 0%, #6f8bff 26%, #b089ff 48%, #ff4fc3 74%, #ffb46b 100%);
+  --nx-edge: linear-gradient(135deg, rgba(69, 240, 255, .95), rgba(176, 137, 255, .7) 36%, rgba(255, 79, 195, .95) 72%, rgba(255, 180, 107, .85));
+  /* a hologram's lines, upright as on the tower's dancer; and a screen's rows */
+  --nx-scan: repeating-linear-gradient(90deg, rgba(255, 255, 255, .06) 0 1px, transparent 1px 4px);
+  --nx-rows: repeating-linear-gradient(0deg, rgba(255, 255, 255, .045) 0 1px, transparent 1px 3px);
+  --nx-sign-bg: linear-gradient(120deg, rgba(34, 12, 64, .92), rgba(74, 14, 86, .86) 46%, rgba(12, 44, 92, .9));
+  /* a tube's spill behind the Japanese signs: no white bloom, so the heavy strokes keep their counters */
+  --nx-tube-pink: 0 0 8px rgba(var(--nx-pink-rgb), .95), 0 0 22px rgba(var(--nx-pink-rgb), .6);
+  --nx-tube-cyan: 0 0 8px rgba(var(--nx-cyan-rgb), .95), 0 0 22px rgba(var(--nx-cyan-rgb), .6);
+
+  /* what each colour means */
+  --k-read: var(--nx-cyan);        --k-read-rgb: var(--nx-cyan-rgb);
+  --k-do: var(--nx-yellow);        --k-do-rgb: var(--nx-yellow-rgb);
+  --k-predict: var(--nx-violet);   --k-predict-rgb: var(--nx-violet-rgb);
+  --k-build: var(--nx-pink);       --k-build-rgb: var(--nx-pink-rgb);
+  --k-done: var(--nx-mint);        --k-done-rgb: var(--nx-mint-rgb);
+
+  /* code on a screen (the base colour of code stays --fn) */
+  --kw: #ff7ad1; --str: #7deeff; --num: #ffe66a; --com: #8d9abd; --call: #c8afff; --glob: #6dffc0;
+
+  /* the wall's out-of-focus screens */
+  --ws-a: rgba(255, 79, 195, .62); --ws-b: rgba(69, 240, 255, .5); --ws-c: rgba(176, 137, 255, .55); --ws-d: rgba(255, 233, 74, .4);
+  --ws-o: 1;
+}
+:root[data-scene='late'] { --ws-o: .72; }
+:root[data-scene='ice'] {
+  --nx-cyan: #0b62e6;     --nx-cyan-rgb: 11, 98, 230;         /* electric blue */
+  --nx-pink: #d6006f;     --nx-pink-rgb: 214, 0, 111;         /* the runner's magenta */
+  --nx-violet: #6b3fe0;   --nx-violet-rgb: 107, 63, 224;
+  --nx-yellow: #00808c;   --nx-yellow-rgb: 0, 128, 140;       /* yellow cannot be read in daylight: do is teal */
+  --nx-mint: #0a8754;     --nx-mint-rgb: 10, 135, 84;
+  --nx-red: #d42a3c;      --nx-red-rgb: 212, 42, 60;
+  --nx-ink: #ffffff;
+  --nx-glow: .35;
+  --nx-iri: linear-gradient(180deg, #0b62e6 0%, #4a52e8 26%, #6b3fe0 48%, #d6006f 76%, #f0652a 100%);
+  --nx-iri-h: linear-gradient(90deg, #0b62e6 0%, #4a52e8 26%, #6b3fe0 48%, #d6006f 76%, #f0652a 100%);
+  --nx-edge: linear-gradient(135deg, rgba(11, 98, 230, .9), rgba(107, 63, 224, .6) 36%, rgba(214, 0, 111, .9) 72%, rgba(240, 101, 42, .8));
+  --nx-scan: repeating-linear-gradient(90deg, rgba(24, 32, 43, .045) 0 1px, transparent 1px 4px);
+  --nx-rows: repeating-linear-gradient(0deg, rgba(24, 32, 43, .035) 0 1px, transparent 1px 3px);
+  --nx-sign-bg: linear-gradient(120deg, #ffffff, #fdf3f9 46%, #eef5ff);
+  --nx-tube-pink: none; --nx-tube-cyan: none;
+  --kw: #c2187a; --str: #0b5bd3; --num: #96560a; --com: #5d6b85; --call: #6b35d9; --glob: #0a7a4f;
+  --ws-a: rgba(255, 105, 180, .5); --ws-b: rgba(60, 150, 255, .42); --ws-c: rgba(160, 120, 255, .36); --ws-d: rgba(255, 170, 200, .5);
+  --ws-o: .9;
+}
+/* the study shadows the code tokens on itself (38-study), so they are set again there */
+#study.study { --kw: #ff7ad1; --str: #7deeff; --num: #ffe66a; --com: #8d9abd; }
+:root[data-scene='ice'] #study.study { --kw: #c2187a; --str: #0b5bd3; --num: #96560a; --com: #5d6b85; }
+
+/* ── code on a screen ─────────────────────────────────────────────────────── */
+#study .tok-k, .man-doc .tok-k { color: var(--kw); font-weight: 500; }
+#study .tok-s, .man-doc .tok-s { color: var(--str); }
+#study .tok-n, .man-doc .tok-n { color: var(--num); }
+#study .tok-c, .man-doc .tok-c { color: var(--com); font-style: italic; }
+#study .tok-f, .man-doc .tok-f { color: var(--call); }
+#study .tok-g, .man-doc .tok-g { color: var(--glob); }
+
+/* ── the wall: out-of-focus screens and their streaks on the wet ground ───── */
+#wall .wall-signs { position: absolute; inset: 0; overflow: hidden; pointer-events: none; opacity: var(--ws-o); }
+body:not([data-ws='2']):not([data-ws='3']):not([data-ws='4']) #wall .wall-signs { display: none; }
+#wall .wsn, #wall .wst { position: absolute; display: block; pointer-events: none; }
+#wall .wsn { border-radius: 14px; filter: blur(var(--b, 18px)); opacity: var(--o, .8); background: linear-gradient(180deg, var(--c), var(--c2, var(--c))); }
+#wall .wst { top: 78%; bottom: -4%; filter: blur(12px); opacity: var(--o, .5); background: linear-gradient(180deg, var(--c), transparent 92%); }
+/* left of the pane */
+#wall .s1 { --c: var(--ws-a); --c2: var(--ws-c); left: 2.4%; top: 12%; width: 6.6vw; height: 34vh; }
+#wall .s2 { --c: var(--ws-b); left: 10.6%; top: 36%; width: 3.6vw; height: 24vh; --b: 14px; }
+#wall .s3 { --c: var(--ws-d); left: .8%; top: 60%; width: 9vw; height: 11vh; --o: .6; }
+/* right of it */
+#wall .s4 { --c: var(--ws-b); --c2: var(--ws-c); right: 2.8%; top: 9%; width: 6.2vw; height: 30vh; }
+#wall .s5 { --c: var(--ws-a); right: 10.8%; top: 31%; width: 3.4vw; height: 31vh; --b: 14px; }
+#wall .s6 { --c: var(--ws-c); --c2: var(--ws-a); right: 1.2%; top: 55%; width: 8.4vw; height: 13vh; --o: .62; }
+/* behind the glass: fainter, so the words stay on quiet ground */
+#wall .s7 { --c: var(--ws-a); left: 29%; top: 5%; width: 11vw; height: 9vh; --o: .3; --b: 26px; }
+#wall .s8 { --c: var(--ws-b); left: 60%; top: 24%; width: 6vw; height: 17vh; --o: .26; --b: 26px; }
+#wall .s9 { --c: var(--ws-d); left: 43%; top: 63%; width: 13vw; height: 8vh; --o: .22; --b: 28px; }
+#wall .r1 { --c: var(--ws-a); left: 3.4%; width: 4.6vw; }
+#wall .r2 { --c: var(--ws-b); left: 11%; width: 2.6vw; --o: .42; }
+#wall .r3 { --c: var(--ws-b); right: 3.8%; width: 4.2vw; }
+#wall .r4 { --c: var(--ws-a); right: 11.2%; width: 2.4vw; --o: .42; }
+#wall .r5 { --c: var(--ws-d); left: 46%; width: 7vw; --o: .2; }
+#wall .r6 { --c: var(--ws-c); right: 22%; width: 3vw; --o: .24; }
+/* the city only (Alt+B): the screens come up with it */
+body.peek #wall .wall-signs { opacity: 1; }
+/* Ice is a clear morning: blue comes down from the sky and blossom light up from the street */
+:root[data-scene='ice'] #wall .wall-signs {
+  background:
+    linear-gradient(180deg, rgba(58, 138, 255, .3), rgba(58, 138, 255, 0) 48%),
+    radial-gradient(70% 38% at 50% 104%, rgba(255, 140, 196, .3), transparent 72%);
+}
+@keyframes wsn-breathe { from { opacity: calc(var(--o, .8) * .62); } to { opacity: var(--o, .8); } }
+:root:is([data-fx='2'], [data-fx='3']) #wall :is(.s1, .s4, .s5, .s3) { animation: wsn-breathe 6.5s ease-in-out infinite alternate; }
+:root:is([data-fx='2'], [data-fx='3']) #wall .s4 { animation-duration: 8.2s; animation-delay: -3s; }
+:root:is([data-fx='2'], [data-fx='3']) #wall .s5 { animation-duration: 5.1s; animation-delay: -1.4s; }
+:root:is([data-fx='2'], [data-fx='3']) #wall .s3 { animation-duration: 9.4s; animation-delay: -5s; }
+
+/* ── the bar: one iridescent line under it, and the lamp finds its word ───── */
+#bar::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; pointer-events: none;
+  background: var(--nx-iri-h); opacity: .85;
+  box-shadow: 0 0 calc(14px * var(--nx-glow)) rgba(var(--nx-pink-rgb), .7), 0 0 calc(30px * var(--nx-glow)) rgba(var(--nx-cyan-rgb), .45);
+}
+#bar .ws[aria-current='page'] .num { color: var(--nx-cyan); text-shadow: 0 0 calc(10px * var(--nx-glow)) rgba(var(--nx-cyan-rgb), .8); }
+#bar .bar-mod.cps .v { color: var(--nx-mint); text-shadow: 0 0 calc(10px * var(--nx-glow)) rgba(var(--nx-mint-rgb), .6); }
+:root[data-scene='ice'] #bar .ws[aria-current='page'] .num, :root[data-scene='ice'] #bar .bar-mod.cps .v { text-shadow: none; }
+/* the gliding lamp is placed from the task's own corner on every workspace, not only when the lesson lends its steps */
+.bar-task { position: relative; }
+.bar-task .bs.done .bt-num { color: var(--nx-mint); }
+
+/* ── a pane's edge: one ring of light just inside it ──────────────────────── */
+#study .rd-read::after, #study .rd-bench::after, .win::after {
+  content: ''; position: absolute; inset: 0; z-index: 6; box-sizing: border-box; padding: 1.5px; border-radius: inherit; pointer-events: none;
+  background: var(--edge, var(--nx-edge)); opacity: var(--edge-o, 1);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  transition: opacity .25s ease;
+}
+/* the heads of panes are screens too: the hologram's lines run through them */
+#study .rd-head, #study .wb-head, .win-bar, .man-head { background-image: var(--nx-scan); }
+
+@media (prefers-reduced-motion: reduce) {
+  #wall .wsn { animation: none !important; }
+}
