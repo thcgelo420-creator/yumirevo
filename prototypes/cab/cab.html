@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MIMEI · the cab</title>
+<style>
+@font-face { font-family: 'Inter'; font-weight: 100 900; src: url('../../assets/fonts/inter-latin.woff2') format('woff2'); }
+@font-face { font-family: 'IBM Plex Mono'; font-weight: 400; src: url('../../assets/fonts/ibm-plex-mono-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'IBM Plex Mono'; font-weight: 500; src: url('../../assets/fonts/ibm-plex-mono-500-normal.woff2') format('woff2'); }
+:root {
+  --sans: 'Inter', system-ui, sans-serif; --mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --fg: #f2f5fa; --fg-2: rgba(236, 241, 248, .86); --dim: rgba(214, 224, 238, .62); --faint: rgba(200, 212, 230, .42);
+  --line: rgba(220, 235, 255, .12); --lamp: #ffb46b; --lamp-a: rgba(255, 180, 107, .55); --blue: #a9c4e4;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #020305; }
+body { font: 400 16.5px/1.72 var(--sans); color: var(--fg-2); -webkit-font-smoothing: antialiased; }
+body:not(.ready) { visibility: hidden; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+.caps { font: 500 11px/1 var(--mono); letter-spacing: .18em; text-transform: uppercase; }
+
+/* ═══ outside: the city, the rain, the hook with its sign ═══════════════ */
+#city { position: fixed; inset: 0; overflow: hidden; }
+#city .plate { position: absolute; inset: 0; background: center / cover no-repeat; transform: scale(1.012); filter: brightness(.9) saturate(.92); }
+#city canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+#cars { mix-blend-mode: screen; }
+#rig { position: fixed; left: 0; top: 0; transform-origin: 0 0; pointer-events: none; }
+#rig .sway { position: absolute; left: 0; top: 0; width: 800px; height: 1067px; transform-origin: 400px -2600px; animation: sway 11s ease-in-out infinite alternate; }
+@keyframes sway { from { transform: rotate(-.32deg); } to { transform: rotate(.38deg); } }
+#rig .hook { position: absolute; left: 0; top: 0; width: 800px; height: 1067px; }
+#rig .led { position: absolute; left: 151px; top: 593px; width: 530px; height: 400px; mix-blend-mode: screen; }
+
+/* ═══ the glass: rain on it, the cab's own light in it ═════════════════ */
+#glass { position: fixed; inset: 0; pointer-events: none; }
+#glass .tint { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10, 18, 30, .28), rgba(6, 10, 18, .12) 40%, rgba(10, 14, 22, .3)); }
+#glass .sheen { position: absolute; inset: 0; background: linear-gradient(104deg, transparent 0 40%, rgba(200, 220, 255, .045) 47%, transparent 54%), linear-gradient(0deg, rgba(255, 190, 120, .1), transparent 22%); }
+#drops { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* ═══ the cab: its frame, dark steel against the city ═══════════════════ */
+#frame { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+
+/* the roof beam carries the machine's line */
+#roof { position: fixed; z-index: 6; left: 0; right: 0; top: 0; height: 36px; display: flex; align-items: center; justify-content: space-between; padding: 0 26px; color: var(--dim); }
+#roof .l, #roof .r { display: flex; align-items: center; gap: 18px; }
+#roof img { width: 13px; opacity: .9; }
+#roof .nm { color: var(--fg); letter-spacing: .4em; }
+#roof .on { color: var(--fg); border-bottom: 1px solid var(--fg); padding-bottom: 3px; }
+#roof b { color: var(--fg); font-weight: 500; }
+#roof .sb { display: flex; align-items: center; gap: 8px; color: var(--fg-2); }
+#roof .sb kbd { font: 500 10px/1 var(--mono); padding: 3px 6px; border-radius: 3px; box-shadow: inset 0 0 0 1px var(--line); }
+
+/* ═══ the HUD on the glass ════════════════════════════════════════════ */
+.hud { position: fixed; z-index: 4; border-radius: 10px; overflow: hidden;
+  background: linear-gradient(180deg, rgba(10, 15, 24, .58), rgba(6, 9, 15, .66));
+  -webkit-backdrop-filter: blur(12px) saturate(1.1); backdrop-filter: blur(12px) saturate(1.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .16), inset 0 0 0 1px var(--line), 0 30px 60px -30px rgba(0, 0, 0, .7);
+  transition: opacity .8s ease, transform .8s cubic-bezier(.2, .8, .2, 1), clip-path 1s cubic-bezier(.5, 0, .2, 1); }
+body.booting .hud { opacity: 0; transform: translateY(6px); clip-path: inset(0 0 100% 0 round 10px); }
+.hud.lesson { left: var(--lx); top: 58px; width: var(--lw); bottom: calc(100% - var(--rail) + 14px); transition: opacity .8s ease, transform .8s cubic-bezier(.2, .8, .2, 1), clip-path 1s cubic-bezier(.5, 0, .2, 1), width .45s cubic-bezier(.3, .7, .2, 1); }
+body.scripts .hud.lesson { width: var(--lw2); }
+.hud.route { left: 22px; top: 76px; width: calc(var(--pl) - 52px); bottom: calc(100% - var(--rail) + 70px); padding: 22px 18px; }
+.scroll { position: absolute; inset: 0; overflow-y: auto; scrollbar-width: none; padding: 40px 48px 34vh;
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 36px, #000 calc(100% - 64px), transparent); mask-image: linear-gradient(180deg, transparent, #000 36px, #000 calc(100% - 64px), transparent); }
+.scroll::-webkit-scrollbar { display: none; }
+
+/* the lesson, in the desk's voice: Inter, Plex Mono small capitals */
+.kicker { margin: 0 0 16px; font: 500 11px/1 var(--mono); letter-spacing: .2em; text-transform: uppercase; color: var(--dim); }
+.kicker span:first-child { color: var(--fg); }
+.kicker .s { margin: 0 8px; color: var(--faint); }
+.quest-head { margin: 0 0 44px; }
+.quest-head h1 { margin: 0 0 14px; font: 200 60px/1.02 var(--sans); letter-spacing: -.03em; color: var(--fg); }
+.qh-meta { margin: 0; font: 500 11px/1 var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--dim); }
+.doc p, .doc li { color: var(--fg-2); }
+.doc p { margin: 0 0 16px; }
+.doc strong { color: var(--fg); font-weight: 600; }
+.doc em { color: var(--fg); }
+.step-intro p { font-size: 19px; line-height: 1.62; color: var(--fg); }
+.doc ul { padding-left: 20px; } .doc li::marker { color: var(--faint); }
+.doc :not(pre) > code { font: 400 .86em/1 var(--mono); padding: 2px 6px; border-radius: 4px; color: var(--fg); background: rgba(220, 235, 255, .08); }
+.step { position: relative; }
+.step + .step { margin-top: 70px; }
+.st-sh { display: flex; gap: 10px; align-items: center; margin: 0 0 12px; font: 500 11px/1 var(--mono); letter-spacing: .2em; text-transform: uppercase; color: var(--faint); }
+.st-sh .w { color: var(--faint); } .st-sh b { color: var(--fg); font-weight: 500; } .st-sh .kd::before { content: '·'; margin-right: 10px; } .st-sh .ok { display: none; }
+.st-sh::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--line), transparent); }
+.step.here .st-sh b { color: var(--lamp); }
+.step h2 { margin: 0 0 16px; font: 300 36px/1.12 var(--sans); letter-spacing: -.02em; color: var(--fg); }
+figure.code { margin: 22px 0; border-radius: 8px; background: rgba(2, 4, 8, .58); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; }
+.code-head { display: flex; gap: 10px; padding: 10px 14px 0 16px; font: 500 10px/1 var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--faint); }
+.code-head .lang { color: var(--dim); } .code-head .sp { flex: 1; }
+.code-head .copy { padding: 4px 8px; border-radius: 4px; box-shadow: inset 0 0 0 1px var(--line); color: var(--dim); font: 500 9.5px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; }
+figure.code pre { margin: 0; padding: 10px 0 14px; overflow: auto; }
+figure.code code { display: block; font: 400 14px/1.8 var(--mono); color: var(--fg); }
+.cl { display: block; padding: 0 16px; } .cl .ln { display: inline-block; width: 18px; margin-right: 14px; text-align: right; color: var(--faint); } .cl .ln-note { display: none; }
+.tok-k { color: #fff; font-weight: 500; } .tok-s { color: var(--blue); } .tok-n { color: #ffd2a6; } .tok-f { color: var(--fg); }
+.out { margin: -12px 0 24px; padding: 12px 16px 12px; border-radius: 0 0 8px 8px; background: rgba(220, 235, 255, .04); box-shadow: inset 1px 0 0 rgba(220, 235, 255, .2); }
+.out-head { display: flex; gap: 8px; margin-bottom: 4px; font: 500 10px/1 var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--faint); } .out-head .k { color: var(--dim); } .out-head .sp { flex: 1; }
+.out pre { margin: 0; font: 400 13.5px/1.75 var(--mono); color: var(--fg); white-space: pre-wrap; } .out .src { color: var(--faint); }
+.key-idea { margin: 34px 0 0; padding: 2px 0 2px 18px; box-shadow: inset 1px 0 0 rgba(255, 255, 255, .55); }
+.ki-lbl { display: block; margin-bottom: 8px; font: 500 10.5px/1 var(--mono); letter-spacing: .2em; text-transform: uppercase; color: var(--dim); }
+.key-idea p { margin: 0; font: 300 21px/1.45 var(--sans); color: var(--fg); }
+.probe { margin: 34px 0; padding: 18px 20px; border-radius: 8px; box-shadow: inset 0 0 0 1px var(--line); background: rgba(220, 235, 255, .03); }
+.probe-h { display: flex; gap: 10px; margin-bottom: 12px; font: 500 10.5px/1 var(--mono); letter-spacing: .2em; text-transform: uppercase; color: var(--fg); } .probe-h .from { color: var(--faint); }
+.probe figure.code { margin: 0 0 14px; } .probe .code-head { display: none; }
+.probe .q { margin: 0 0 12px; color: var(--fg); font-weight: 500; }
+.opts { display: flex; gap: 8px; flex-wrap: wrap; } .opts button { padding: 10px 16px; border-radius: 6px; font: 400 13.5px/1 var(--mono); color: var(--fg); box-shadow: inset 0 0 0 1px rgba(220, 235, 255, .2); background: rgba(2, 4, 8, .3); }
+.runbook { margin: 30px 0; padding: 18px 20px 16px; border-radius: 8px; box-shadow: inset 0 0 0 1px var(--line); background: rgba(220, 235, 255, .035); }
+.runbook-h { display: flex; gap: 10px; font: 500 10.5px/1 var(--mono); letter-spacing: .2em; text-transform: uppercase; color: var(--fg); } .runbook-h .sub { color: var(--faint); }
+.runbook .t { margin: 8px 0 10px; color: var(--fg); font-weight: 500; font-size: 17px; }
+.checks { list-style: none; margin: 0; padding: 0 !important; }
+.checks li { display: grid; grid-template-columns: 24px 1fr; align-items: baseline; padding: 4px 0; font-size: 15.5px; }
+.checks .m { position: relative; top: 2px; width: 10px; height: 10px; border-radius: 2px; box-shadow: inset 0 0 0 1px var(--dim); }
+.checks li[aria-checked='true'] { color: var(--dim); } .checks li[aria-checked='true'] .m { background: var(--fg); box-shadow: none; }
+.runbook-foot { display: flex; align-items: center; gap: 12px; margin-top: 10px; font: 500 10px/1 var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--faint); }
+.meter { flex: 1; height: 1px; background: var(--line); } .meter i { display: block; height: 100%; background: var(--fg); }
+.runbook.done { box-shadow: inset 0 0 0 1px rgba(255, 180, 107, .45), 0 0 30px -10px var(--lamp-a); } .runbook.done .runbook-foot { color: var(--lamp); } .runbook.done .meter i { background: var(--lamp); }
+details.solution summary { font: 500 11px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--dim); }
+.st-end .big { font: 200 44px/1.1 var(--sans); color: var(--fg); }
+.doc > nav { display: flex; justify-content: space-between; margin-top: 30px; } .doc > nav button { display: grid; gap: 6px; text-align: left; } .doc > nav .k { font: 500 10.5px/1 var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--faint); }
+
+/* the route, on the left window */
+.route .hd { margin: 0 0 4px; color: var(--faint); }
+.route .ttl { margin: 0 0 22px; font: 300 22px/1.2 var(--sans); color: var(--fg); letter-spacing: -.01em; }
+.route ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.route li button { display: grid; grid-template-columns: 26px 1fr auto; align-items: baseline; width: 100%; padding: 6px 0; text-align: left; font: 400 13.5px/1.35 var(--sans); color: var(--dim); }
+.route li button .n { font: 500 10.5px/1 var(--mono); letter-spacing: .08em; color: var(--faint); }
+.route li button .w { display: inline-flex; gap: 4px; padding-left: 8px; }
+.route li button .w i { width: 6px; height: 8px; border-radius: 1px; box-shadow: inset 0 0 0 1px var(--faint); }
+.route li button .w i.lit { background: var(--lamp); box-shadow: 0 0 8px var(--lamp-a); }
+.route li.here button { color: var(--fg); }
+.route li.here button .n { color: var(--lamp); }
+.route li.here button::before { content: ''; position: absolute; left: -18px; width: 2px; height: 16px; margin-top: 2px; background: var(--lamp); box-shadow: 0 0 10px var(--lamp-a); }
+.route li { position: relative; }
+.route .nav { position: absolute; left: 18px; right: 18px; bottom: 18px; display: flex; justify-content: space-between; color: var(--dim); white-space: nowrap; font-size: 10px; letter-spacing: .14em; }
+
+/* the scripts: the console's screen rises onto the glass */
+.hud.scripts { left: var(--sx); width: var(--sw); top: 44%; bottom: calc(100% - var(--rail) + 14px); padding: 20px 20px 18px;
+  transform: translateY(30px); opacity: 0; pointer-events: none; }
+body.scripts .hud.scripts { transform: none; opacity: 1; pointer-events: auto; }
+.hud.scripts .hd { color: var(--faint); margin: 0 0 6px; }
+.hud.scripts .tt { margin: 0 0 14px; font: 300 24px/1.15 var(--sans); color: var(--fg); }
+.hud.scripts figure.code { margin: 0; } .hud.scripts .out { margin: -8px 0 0; }
+
+/* ═══ the console: the little Linux the crane runs on ══════════════════ */
+#console { position: fixed; z-index: 5; left: 0; right: 0; bottom: 0; height: calc(100% - var(--dash)); display: grid; grid-template-columns: var(--pl) var(--lw) 1fr calc(100% - var(--pr)); gap: 0; align-items: center; padding: 18px 0 14px;
+  background: linear-gradient(180deg, #11161d 0, #0a0d12 10px, #07090d 60%, #040507); box-shadow: 0 -1px 0 rgba(220, 235, 255, .16), 0 -30px 60px -20px rgba(0, 0, 0, .6); }
+#console::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 10px; background: linear-gradient(180deg, rgba(220, 235, 255, .07), transparent); }
+.scr { position: relative; height: 100%; margin: 0 14px; padding: 12px 14px; border-radius: 6px; overflow: hidden;
+  background: radial-gradient(120% 140% at 50% 0%, #0d1520, #070b11 70%); box-shadow: inset 0 0 0 1px rgba(220, 235, 255, .07), inset 0 0 30px rgba(120, 160, 220, .06), 0 1px 0 rgba(255, 255, 255, .04);
+  font: 400 11.5px/1.55 var(--mono); color: var(--dim); transition: opacity .4s ease; }
+.scr::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(180deg, rgba(255, 255, 255, .018) 0 1px, transparent 1px 3px); }
+body.booting .scr { opacity: .15; }
+.scr .ok { color: var(--fg); } .scr .ok b { color: var(--lamp); font-weight: 500; }
+.scr.tty div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.scr.code { display: grid; grid-template-columns: 1fr auto; align-content: center; gap: 4px 14px; }
+.scr.code .f { color: var(--fg); } .scr.code .k { grid-row: 1 / 3; grid-column: 2; align-self: center; padding: 8px 12px; border-radius: 4px; color: var(--fg); box-shadow: inset 0 0 0 1px var(--line); letter-spacing: .14em; text-transform: uppercase; font-weight: 500; font-size: 10.5px; }
+.scr.code .p { color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.scr.gauge { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; align-content: center; }
+.scr.gauge .lamps { display: flex; gap: 6px; }
+.scr.gauge .lamps i { width: 12px; height: 15px; border-radius: 2px; box-shadow: inset 0 0 0 1px rgba(220, 235, 255, .22); background: rgba(10, 14, 20, .8); transition: background .6s, box-shadow .6s; }
+.scr.gauge .lamps i.lit { background: var(--lamp); box-shadow: 0 0 8px var(--lamp), 0 0 22px 2px var(--lamp-a); }
+.scr.gauge .v { color: var(--fg); align-self: center; }
+.scr.gauge .bar { grid-column: 1 / -1; height: 2px; background: rgba(220, 235, 255, .1); } .scr.gauge .bar i { display: block; height: 100%; width: 57%; background: var(--fg); }
+.scr.clock { display: grid; align-content: center; justify-items: end; text-align: right; }
+.scr.clock .t { font: 200 38px/1 var(--sans); letter-spacing: -.02em; color: var(--fg); font-variant-numeric: tabular-nums; }
+.scr.clock .d { margin-top: 6px; }
+.demo { position: fixed; z-index: 50; right: 18px; bottom: calc(100% - var(--dash) + 8px); display: flex; align-items: center; gap: 6px; padding: 6px 8px 6px 12px; border-radius: 99px; font: 500 11px/1 var(--mono); color: rgba(255,255,255,.7); background: rgba(0,0,0,.55); backdrop-filter: blur(8px); box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); }
+.demo button { width: 24px; height: 24px; border-radius: 50%; color: #fff; background: rgba(255,255,255,.08); } .demo button.on { background: #fff; color: #000; }
+:root[data-scene='ice'] .hud { --fg: #121a25; --fg-2: #2b3441; --dim: #4f5866; --faint: #6b7480; --line: rgba(20, 30, 45, .14); --lamp: #c4661a; --lamp-a: rgba(196, 102, 26, .4); --blue: #2b5a86;
+  background: linear-gradient(180deg, rgba(246, 248, 252, .74), rgba(232, 238, 245, .82)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9), inset 0 0 0 1px rgba(255, 255, 255, .5), 0 30px 60px -30px rgba(20, 40, 70, .4); }
+:root[data-scene='ice'] .hud figure.code { background: rgba(255, 255, 255, .6); box-shadow: inset 0 0 0 1px rgba(20, 30, 45, .1); }
+:root[data-scene='ice'] .hud .tok-k { color: #0b1119; } :root[data-scene='ice'] .hud .tok-n { color: #b0561c; }
+:root[data-scene='ice'] .hud .out { background: rgba(20, 30, 45, .04); }
+:root[data-scene='ice'] .hud .doc :not(pre) > code { background: rgba(20, 30, 45, .07); }
+:root[data-scene='ice'] .hud .checks li[aria-checked='true'] .m { background: #121a25; }
+:root[data-scene='ice'] #glass .tint { background: linear-gradient(180deg, rgba(20, 30, 45, .12), transparent 40%, rgba(20, 30, 45, .14)); }
+:root[data-scene='ice'] #city .plate { filter: brightness(.96) saturate(.9); }
+@media (prefers-reduced-motion: reduce) { #rig .sway { animation: none; } .hud, .scr { transition: none; } }
+</style>
+</head>
+<body class="booting">
+<div id="city" aria-hidden="true"><div class="plate"></div><canvas id="cars"></canvas><canvas id="far"></canvas></div>
+<div id="rig" aria-hidden="true"><div class="sway"><img class="hook" alt=""><canvas class="led"></canvas></div></div>
+<div id="glass" aria-hidden="true"><div class="tint"></div><canvas id="drops"></canvas><div class="sheen"></div></div>
+<svg id="frame" aria-hidden="true"></svg>
+
+<header id="roof" class="caps">
+  <div class="l"><img src="../../assets/crane/mark-snow.webp" alt=""><span class="nm">MIMEI</span><span>01</span><span class="on">02 lessons</span><span>03</span><span>04</span></div>
+  <div class="r"><button class="sb" id="sbtn" type="button">scripts <kbd>S</kbd></button><span><b>5</b> / 210 checkpoints</span></div>
+</header>
+
+<nav class="hud route" aria-label="Steps"><p class="hd caps">route · 2.1</p><p class="ttl">Your first variable</p><ol></ol><div class="nav caps"><span>← 1.0</span><span>course /</span><span>2.2 →</span></div></nav>
+<section class="hud lesson" aria-label="Lesson"><div class="scroll" id="scroll"><div class="doc"></div></div></section>
+<aside class="hud scripts" aria-label="Scripts"></aside>
+
+<footer id="console">
+  <div class="scr tty" id="tty"></div>
+  <div class="scr code" id="scode"></div>
+  <div class="scr gauge" id="gauge"></div>
+  <div class="scr clock"><div class="t" id="clk"></div><div class="d caps" id="dte"></div></div>
+</footer>
+
+<script type="module">
+import { Sign, LedRenderer, CV } from '../../src/desk/led.js';
+import { ROADS } from '../../src/desk/roads.js';
+import { loadLesson, setReached, demoPanel, stepAt } from './lesson.js';
+const html = document.documentElement, q = new URLSearchParams(location.search);
+const W = innerWidth, H = innerHeight, scene = q.get('scene') || 'night';
+html.dataset.scene = scene;
+const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const load = src => new Promise(ok => { const i = new Image(); i.onload = () => i.decode().then(() => ok(i), () => ok(i)); i.onerror = () => ok(null); i.src = src; });
+
+/* ── geometry: the cab, measured from the screen ── */
+const pl = Math.round(Math.max(230, W * .19));            // left pillar
+const pr = Math.round(W - Math.max(220, W * .165));       // right pillar
+const rail = Math.round(H * .8);                          // the windshield's bottom rail
+const dash = Math.round(H * .855);                        // the console's top
+const lw = Math.round(Math.min(700, (pr - pl) * .66)), lx = pl + 40;
+const sw = Math.round(Math.min(420, Math.max(340, (pr - lx) * .4))), lw2 = pr - 26 - 16 - sw - lx, sx = lx + lw2 + 16;
+Object.entries({ '--lw2': lw2 + 'px', '--sx': sx + 'px', '--sw': sw + 'px', '--pl': pl + 'px', '--pr': pr + 'px', '--rail': rail + 'px', '--dash': dash + 'px', '--lw': lw + 'px', '--lx': lx + 'px' }).forEach(([k, v]) => html.style.setProperty(k, v));
+
+/* ── outside ── */
+const plateSrc = `../../assets/crane/city-${scene}.webp`;
+document.querySelector('#city .plate').style.backgroundImage = `url(${plateSrc})`;
+const s0 = Math.max(W / 3840, H / 2160) * 1.012, ox = (W - 3840 * s0) / 2, oy = (H - 2160 * s0) / 2;
+
+/* the hook and its sign hang out ahead, right of the words, from behind the roof */
+const hookKind = scene === 'ice' ? 'ice' : 'night';
+const [hookImg, glassImg] = await Promise.all([load(`../../assets/crane/hook-${hookKind}.webp`), load(`../../assets/crane/glass-${hookKind}.webp`)]);
+const rig = document.getElementById('rig');
+rig.querySelector('.hook').src = hookImg.src;
+const k = Math.min(.42, (W - (lx + lw) - (W - pr) - 30) / 560);
+const signX = (lx + lw + pr) / 2, signY = H * .33;
+rig.style.transform = `translate(${(signX - 400 * k).toFixed(1)}px, ${(signY - 795 * k).toFixed(1)}px) scale(${k.toFixed(4)})`;
+const sign = new Sign(5), lr = new LedRenderer(rig.querySelector('.led'), { bloom: scene === 'ice' ? .62 : 1, drops: 1, glass: glassImg });
+
+/* traffic on the painted roads; far rain */
+const cars = document.getElementById('cars'), cc = cars.getContext('2d'); cars.width = W; cars.height = H;
+const road = pts => { const d = [0]; for (let i = 1; i < pts.length; i++) d.push(d[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1])); return { pts, d, len: d[d.length - 1] }; };
+const R = Object.fromEntries(Object.entries(ROADS).map(([kk, v]) => [kk, road(v)]));
+const at = (r, s) => { let i = 1; while (i < r.pts.length - 1 && r.d[i] < s) i++; const t = (s - r.d[i - 1]) / ((r.d[i] - r.d[i - 1]) || 1), a = r.pts[i - 1], b = r.pts[i]; return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, Math.atan2(b[1] - a[1], b[0] - a[0])]; };
+const fleet = [];
+for (const [rk, dir] of [['R1', 1], ['R1', -1], ['R2', 1], ['R2', -1], ['U1', 1], ['U1', -1], ['U2', 1], ['U2', -1], ['RS', 1], ['RS', -1]]) for (let i = 0; i < 5; i++) fleet.push({ r: R[rk], dir, s: Math.random() * R[rk].len, v: 70 + Math.random() * 70 });
+const far = document.getElementById('far'), fc = far.getContext('2d'); far.width = W; far.height = H;
+const streaks = Array.from({ length: 140 }, () => ({ x: Math.random() * W, y: Math.random() * H, v: 260 + Math.random() * 260, l: 10 + Math.random() * 18, a: .05 + Math.random() * .1 }));
+
+/* ── the glass: drops on it ── */
+const dv = document.getElementById('drops'), dc = dv.getContext('2d'); dv.width = W; dv.height = H;
+const drops = [];
+{ let seed = 7; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+  for (let i = 0; i < 520; i++) drops.push({ x: rnd() * W, y: rnd() * H, r: .6 + Math.pow(rnd(), 3) * 3.4 }); }
+const runners = Array.from({ length: 6 }, (_, i) => ({ x: W * (.08 + i * .17) + Math.random() * 40, y: Math.random() * H * .6, v: 8 + Math.random() * 14, r: 2 + Math.random() * 1.4 }));
+function paintDrops() {
+  dc.clearRect(0, 0, W, H);
+  const one = (x, y, r) => {
+    const g = dc.createRadialGradient(x - r * .35, y - r * .4, 0, x, y, r * 1.2);
+    g.addColorStop(0, 'rgba(235,242,255,.55)'); g.addColorStop(.35, 'rgba(180,200,230,.16)'); g.addColorStop(.8, 'rgba(10,16,26,.25)'); g.addColorStop(1, 'rgba(10,16,26,0)');
+    dc.fillStyle = g; dc.beginPath(); dc.arc(x, y, r * 1.2, 0, Math.PI * 2); dc.fill();
+  };
+  for (const d of drops) one(d.x, d.y, d.r);
+  for (const d of runners) {
+    dc.strokeStyle = 'rgba(200,215,240,.08)'; dc.lineWidth = d.r * .9; dc.beginPath(); dc.moveTo(d.x, Math.max(0, d.y - 120)); dc.lineTo(d.x + 1, d.y); dc.stroke();
+    one(d.x, d.y, d.r);
+  }
+}
+
+/* ── the frame: pillars, roof beam, rails, in dark steel with a rim of city light ── */
+const fr = document.getElementById('frame');
+fr.setAttribute('viewBox', `0 0 ${W} ${H}`);
+const P = pts => pts.map(p => p.join(',')).join(' ');
+fr.innerHTML = `
+  <defs>
+    <linearGradient id="steel" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#05070a"/><stop offset=".5" stop-color="#0d1218"/><stop offset="1" stop-color="#05070a"/></linearGradient>
+    <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#030406"/><stop offset=".8" stop-color="#0b0f14"/><stop offset="1" stop-color="#151b23"/></linearGradient>
+    <linearGradient id="rail" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a212a"/><stop offset=".25" stop-color="#0c1016"/><stop offset="1" stop-color="#05070a"/></linearGradient>
+    <radialGradient id="glowL" cx="0" cy="1" r="1"><stop offset="0" stop-color="rgba(255,180,107,.18)"/><stop offset="1" stop-color="rgba(255,180,107,0)"/></radialGradient>
+  </defs>
+  <!-- the floor window under the rail, and the dash's shadow on it -->
+  <rect x="0" y="${rail + 16}" width="${W}" height="${dash - rail - 16}" fill="rgba(4,6,10,.35)"/>
+  <!-- side windows' rails -->
+  <polygon points="${P([[0, H * .555], [pl - 30, H * .53], [pl - 30, H * .53 + 9], [0, H * .555 + 12]])}" fill="url(#steel)"/>
+  <polygon points="${P([[W, H * .555], [pr + 30, H * .53], [pr + 30, H * .53 + 9], [W, H * .555 + 12]])}" fill="url(#steel)"/>
+  <!-- the windshield's bottom rail -->
+  <rect x="0" y="${rail}" width="${W}" height="16" fill="url(#rail)"/>
+  <rect x="0" y="${rail}" width="${W}" height="1" fill="rgba(220,235,255,.22)"/>
+  <!-- pillars: raked, a little wider at the foot where they are closer -->
+  <polygon points="${P([[pl - 14, 0], [pl + 12, 0], [pl + 16, rail + 16], [pl - 34, rail + 16]])}" fill="url(#steel)"/>
+  <polygon points="${P([[pr - 12, 0], [pr + 14, 0], [pr + 34, rail + 16], [pr - 16, rail + 16]])}" fill="url(#steel)"/>
+  <line x1="${pl + 12}" y1="0" x2="${pl + 16}" y2="${rail}" stroke="rgba(190,215,245,.28)" stroke-width="1"/>
+  <line x1="${pr - 12}" y1="0" x2="${pr - 16}" y2="${rail}" stroke="rgba(190,215,245,.22)" stroke-width="1"/>
+  <line x1="${pl - 14}" y1="0" x2="${pl - 34}" y2="${rail}" stroke="rgba(190,215,245,.08)" stroke-width="1"/>
+  <!-- the roof beam, deeper at the sides where it comes towards you -->
+  <polygon points="${P([[0, 0], [W, 0], [W, 64], [pr, 36], [pl, 36], [0, 64]])}" fill="url(#beam)"/>
+  <polyline points="${P([[0, 64], [pl, 36], [pr, 36], [W, 64]])}" fill="none" stroke="rgba(190,215,245,.2)" stroke-width="1"/>
+  <!-- the console's light on the foot of the pillars -->
+  <rect x="0" y="${H * .55}" width="${pl + 60}" height="${H * .45}" fill="url(#glowL)"/>
+  <!-- bolts -->
+  ${[0.2, .4, .6, .8].map(f => `<circle cx="${pl - 8 + f * 6}" cy="${36 + f * (rail - 36)}" r="1.6" fill="#1d252f"/>`).join('')}
+  ${[0.2, .4, .6, .8].map(f => `<circle cx="${pr + 8 - f * 6}" cy="${36 + f * (rail - 36)}" r="1.6" fill="#1d252f"/>`).join('')}`;
+
+/* ── the lesson ── */
+const doc = document.querySelector('.doc'), scroll = document.getElementById('scroll');
+const { steps, cps } = await loadLesson(doc);
+doc.querySelector('.kicker').innerHTML = '<span>2.1</span><span class="s">·</span><span>variables</span>';
+const named = steps.filter(s => s.n);
+let here = -1, reached = +(q.get('cp') || 1), log = [];
+
+const route = document.querySelector('.route ol');
+function paintRoute() {
+  route.innerHTML = named.map(s => {
+    const mine = cps.filter(c => c.step === s.n);
+    return `<li class="${s.n === here ? 'here' : ''}"><button type="button" data-step="${s.n}"><span class="n">${String(s.n).padStart(2, '0')}</span><span>${s.title}</span><span class="w">${mine.map(c => `<i class="${c.goal < reached ? 'lit' : ''}"></i>`).join('')}</span></button></li>`;
+  }).join('');
+}
+route.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; const s = steps.find(x => x.n === +b.dataset.step); scroll.scrollBy({ top: s.el.getBoundingClientRect().top - scroll.getBoundingClientRect().top - 30, behavior: 'smooth' }); });
+
+/* the sign says where you are */
+function signFor(n) {
+  const cpLine = `CHECKPOINT ${Math.min(cps.length, reached + (reached < cps.length ? 1 : 0))}/${cps.length}`;
+  if (!n) return [{ text: 'VARIABLES · 2.1', lv: .46, row: 2 }, { text: 'Your first variable', lv: 1, row: 11 }, { text: `${named.length} STEPS · ${cps.length} CHECKPOINTS`, lv: .62, row: 20 }, { text: '▶ READING', lv: .5, row: 29 }];
+  const s = steps.find(x => x.n === n);
+  const mine = cps.filter(c => c.step === n), lit = mine.some(c => c.goal < reached);
+  return [{ text: `STEP ${n}/${named.length} · 2.1`, lv: .46, row: 2 }, { text: s.title, lv: 1, row: 11 }, { text: mine.length ? (lit ? '◆ CHECKPOINT REACHED' : cpLine) : (s.el.dataset.kind || 'read').toUpperCase(), lv: lit ? .9 : .62, row: 20 }, { text: '▶ READING', lv: .46, row: 29 }];
+}
+
+/* the console */
+function tty(line) { log.push(line); log = log.slice(-4); document.getElementById('tty').innerHTML = log.map(l => `<div>${l}</div>`).join(''); }
+function paintConsole() {
+  const s = steps.find(x => x.n === here) || steps[0];
+  const fig = s.el.querySelector('figure.code[data-script]');
+  const lines = fig ? [...fig.querySelectorAll('.cl .tx')].map(t => t.textContent) : [];
+  document.getElementById('scode').innerHTML = fig
+    ? `<span class="f">script.lua · step ${here} · ${lines.length} ${lines.length === 1 ? 'line' : 'lines'}</span><span class="k">open · S</span><span class="p">${lines[0] || ''}</span>`
+    : `<span class="f">no script in this step</span><span class="k">S</span><span class="p">it shows up here as you reach it</span>`;
+  const lit = Math.min(reached, cps.length);
+  document.getElementById('gauge').innerHTML = `<span class="lamps">${cps.map((c, i) => `<i class="${i < lit ? 'lit' : ''}"></i>`).join('')}</span><span class="v">${lit} / ${cps.length} checkpoints</span><span class="caps">tonight</span><span class="v">0:34 / 1:00</span><span class="bar"><i></i></span>`;
+}
+function paintScripts() {
+  const s = steps.find(x => x.n === here) || steps[0];
+  const fig = s.el.querySelector('figure.code[data-script]');
+  const out = fig && fig.nextElementSibling && fig.nextElementSibling.classList.contains('out') ? fig.nextElementSibling : null;
+  const box = document.querySelector('.hud.scripts');
+  box.innerHTML = `<p class="hd caps">${here ? `step ${here}` : 'lesson 2.1'} · script</p><p class="tt">${here ? s.title : 'Your first variable'}</p>`;
+  if (fig) { box.appendChild(fig.cloneNode(true)); if (out) box.appendChild(out.cloneNode(true)); }
+  else box.insertAdjacentHTML('beforeend', '<p style="color:var(--dim)">No script yet. It shows up here as you reach it.</p>');
+}
+function onRead() {
+  const s = stepAt(steps, scroll.getBoundingClientRect().top + 150);
+  if (s.n === here) return;
+  const first = here < 0;
+  here = s.n;
+  steps.forEach(x => x.el.classList.toggle('here', x.n === here));
+  paintRoute(); paintConsole(); paintScripts();
+  sign.show(signFor(here), first ? 'power' : 'roll');
+  if (!first) tty(`<span class="ok">[ OK ]</span> step ${here || 0} · ${here ? s.title.toLowerCase() : 'introduction'}`);
+}
+scroll.addEventListener('scroll', () => requestAnimationFrame(onRead), { passive: true });
+const toggleScripts = () => document.body.classList.toggle('scripts');
+document.getElementById('sbtn').onclick = toggleScripts;
+addEventListener('keydown', e => { if (e.key === 's' || e.key === 'S') toggleScripts(); if (e.key === 'Escape') document.body.classList.remove('scripts'); });
+
+function reach(n) {
+  const was = reached; reached = n; setReached(cps, n); paintRoute(); paintConsole();
+  sign.show(signFor(here), 'roll');
+  if (n > was) tty(`<span class="ok">[ OK ] <b>checkpoint ${n} reached</b></span>`);
+}
+setReached(cps, reached);
+demoPanel(cps.length, reached, reach);
+
+/* the clock */
+const clock = () => { const d = new Date(); document.getElementById('clk').textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }); document.getElementById('dte').textContent = `${scene === 'ice' ? 'snow' : scene === 'late' ? 'low cloud' : 'drizzle'} · ${d.toLocaleDateString([], { weekday: 'short', day: '2-digit', month: 'short' })}`; };
+clock(); setInterval(clock, 15000);
+
+/* ── one loop for everything that moves ── */
+let last = performance.now();
+function frame(now) {
+  const t = now / 1000, dt = Math.min(.05, (now - last) / 1000); last = now;
+  if (sign.update(t)) lr.render(sign.grid);
+  cc.clearRect(0, 0, W, H); cc.globalCompositeOperation = 'lighter';
+  for (const c of fleet) {
+    c.s += c.v * c.dir * dt; if (c.s > c.r.len) c.s -= c.r.len; if (c.s < 0) c.s += c.r.len;
+    const [x, y, a] = at(c.r, c.s), sx = ox + x * s0, sy = oy + y * s0, len = 12 * s0 * 2.4, dx = Math.cos(a) * len * c.dir, dy = Math.sin(a) * len * c.dir;
+    const g = cc.createLinearGradient(sx - dx, sy - dy, sx, sy);
+    g.addColorStop(0, c.dir > 0 ? 'rgba(255,240,215,0)' : 'rgba(255,70,50,0)'); g.addColorStop(1, c.dir > 0 ? 'rgba(255,244,226,.85)' : 'rgba(255,80,60,.8)');
+    cc.strokeStyle = g; cc.lineWidth = 1.6; cc.lineCap = 'round'; cc.beginPath(); cc.moveTo(sx - dx, sy - dy); cc.lineTo(sx, sy); cc.stroke();
+  }
+  fc.clearRect(0, 0, W, H); fc.lineWidth = 1;
+  for (const r of streaks) { r.y += r.v * dt; r.x -= r.v * dt * .08; if (r.y > H) { r.y = -20; r.x = Math.random() * W; } fc.strokeStyle = `rgba(200,215,235,${r.a})`; fc.beginPath(); fc.moveTo(r.x, r.y); fc.lineTo(r.x + r.l * .08, r.y - r.l); fc.stroke(); }
+  for (const d of runners) { d.y += d.v * dt; if (d.y > H) { d.y = -10; } }
+  paintDrops();
+  if (!still) requestAnimationFrame(frame);
+}
+paintDrops();
+
+/* ── power on: the console wakes, the sign comes on, the glass lights ── */
+await document.fonts.ready;
+document.body.classList.add('ready');
+if (still) { document.body.classList.remove('booting'); onRead(); tty('<span class="ok">[ OK ]</span> lesson 2.1 mounted'); if (sign.update(1)) lr.render(sign.grid); }
+else {
+  requestAnimationFrame(frame);
+  const lines = ['mimei 4.0 · tty1', '<span class="ok">[ OK ]</span> cab heaters on', '<span class="ok">[ OK ]</span> lesson 2.1 mounted'];
+  lines.forEach((l, i) => setTimeout(() => tty(l), 180 + i * 260));
+  setTimeout(() => { document.body.classList.remove('booting'); onRead(); }, 950);
+}
+if (q.get('scroll')) setTimeout(() => { scroll.scrollTop = +q.get('scroll'); onRead(); }, 1100);
+if (q.has('scripts')) setTimeout(toggleScripts, 1200);
+</script>
+</body>
+</html>

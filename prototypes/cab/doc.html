@@ -1,0 +1,92 @@
+<header class="quest-head"><p class="kicker"><span>stop 2.1</span><span class="s">·</span>
+    <span class="p">variables</span></p><h1>Your first variable</h1><p class="qh-meta">3 checkpoints · about 10 minutes</p></header><section class="step step-intro here cleared" data-step="0" data-kind="read"><p>A game has to remember things. How many coins you have. What your name is.
+Whether a door is open. A <strong>variable</strong> is how a script remembers something.</p></section><section class="step" data-step="1" data-kind="predict"><div class="st-sh" aria-hidden="true"><span class="w">step</span><b>01</b><span class="kd">predict</span><i class="ok"></i></div><h2 tabindex="-1">A box with a name on it</h2><p>Think of a variable as a box with a label on it:</p><figure class="code" data-lang="luau" data-script="0"><figcaption class="code-head"><span class="lang">luau</span>
+    <span class="cap">script</span><span class="sp"></span><button class="copy" type="button" title="Copy this script into Studio">copy</button></figcaption><pre><code><span class="cl has-note" tabindex="0"><span class="ln" aria-hidden="true">1</span><span class="tx"><span class="tok-k">local</span> coins = <span class="tok-n">10</span></span><span class="ln-note" role="note">10 goes into the box now; nothing shows in Output yet</span></span></code></pre></figure><p>Read it left to right:</p><ul>
+<li><code>local</code> — <em>I am making a new box.</em></li>
+<li><code>coins</code> — <em>the label on the box.</em></li>
+<li><code>=</code> — <em>put this in the box.</em></li>
+<li><code>10</code> — <em>the thing going in.</em></li>
+</ul><p>The <code>=</code> does not mean "is equal to" like in maths. It means <strong>put the thing on
+the right into the box on the left</strong>.</p><p>Now print it. Replace everything in your Script with this:</p><figure class="code" data-lang="luau" data-script="1"><figcaption class="code-head"><span class="lang">luau</span>
+    <span class="cap">script</span><span class="sp"></span><button class="copy" type="button" title="Copy this script into Studio">copy</button></figcaption><pre><code><span class="cl"><span class="ln" aria-hidden="true">1</span><span class="tx"><span class="tok-k">local</span> coins = <span class="tok-n">10</span></span></span><span class="cl has-note" tabindex="0"><span class="ln" aria-hidden="true">2</span><span class="tx"><span class="tok-f">print</span>(coins)</span><span class="ln-note" role="note">no quotes, so print shows what is inside the box</span></span></code></pre></figure><div class="out" data-out-for="1"><div class="out-head"><span class="k">Studio</span><span class="sub">Output</span>
+    <span class="sp"></span><span class="sub">what you should see</span></div>
+    <pre><span class="ln">10<span class="src">  -  Server - Script:2</span></span></pre></div><p><code>print(coins)</code> looks <strong>inside</strong> the box and shows what it finds.</p><div class="probe" data-probe="p-first"><div class="probe-h"><span class="k">quick question</span> <span class="from">predict first</span></div>
+    <figure class="code" data-lang="luau"><figcaption class="code-head"><span class="lang">luau</span>
+    <span class="cap">predict.lua</span><span class="sp"></span></figcaption><pre><code><span class="cl"><span class="ln" aria-hidden="true">1</span><span class="tx"><span class="tok-k">local</span> coins = <span class="tok-n">10</span></span></span><span class="cl"><span class="ln" aria-hidden="true">2</span><span class="tx"><span class="tok-f">print</span>(<span class="tok-s">"coins"</span>)</span></span></code></pre></figure><p class="q">What will the Output window show? Pick before you press Play.</p>
+    <div class="opts"><button type="button" data-i="0">10</button><button type="button" data-i="1">coins</button><button type="button" data-i="2">nothing</button></div>
+    <p class="verdict" hidden=""></p>
+    <button type="button" class="again" hidden="">try again</button></div><aside class="key-idea"><span class="ki-lbl">key idea</span>
+<p>A variable is a name on a box, and <code>=</code> puts the value on its right into the box.</p>
+</aside></section><section class="step" data-step="2" data-kind="do"><div class="st-sh" aria-hidden="true"><span class="w">step</span><b>02</b><span class="kd">do</span><i class="ok"></i></div><h2 tabindex="-1">Three boxes</h2><p>A script can have as many variables as it needs. Each one holds one thing:</p><figure class="code" data-lang="luau" data-script="2"><figcaption class="code-head"><span class="lang">luau</span>
+    <span class="cap">script</span><span class="sp"></span><button class="copy" type="button" title="Copy this script into Studio">copy</button></figcaption><pre><code><span class="cl"><span class="ln" aria-hidden="true">1</span><span class="tx"><span class="tok-k">local</span> coins = <span class="tok-n">10</span></span></span><span class="cl"><span class="ln" aria-hidden="true">2</span><span class="tx"><span class="tok-k">local</span> playerName = <span class="tok-s">"Ada"</span></span></span><span class="cl has-note" tabindex="0"><span class="ln" aria-hidden="true">3</span><span class="tx"><span class="tok-k">local</span> isVip = <span class="tok-k">true</span></span><span class="ln-note" role="note">true has no quotes: it is a yes or no value, not text</span></span><span class="cl"><span class="ln" aria-hidden="true">4</span><span class="tx"></span></span><span class="cl"><span class="ln" aria-hidden="true">5</span><span class="tx"><span class="tok-f">print</span>(coins)</span></span><span class="cl"><span class="ln" aria-hidden="true">6</span><span class="tx"><span class="tok-f">print</span>(playerName)</span></span><span class="cl"><span class="ln" aria-hidden="true">7</span><span class="tx"><span class="tok-f">print</span>(isVip)</span></span></code></pre></figure><div class="out" data-out-for="2"><div class="out-head"><span class="k">Studio</span><span class="sub">Output</span>
+    <span class="sp"></span><span class="sub">what you should see</span></div>
+    <pre><span class="ln">10<span class="src">  -  Server - Script:5</span></span>
+<span class="ln">Ada<span class="src">  -  Server - Script:6</span></span>
+<span class="ln">true<span class="src">  -  Server - Script:7</span></span></pre></div><p>Three different kinds of thing went in: a number, some text, and <code>true</code>. The next
+lesson is about those kinds. For now, notice that <code>"Ada"</code> needed quotes and <code>10</code>
+and <code>true</code> did not.</p><div class="runbook" data-task="first-three" data-cp="0"><div class="runbook-h"><span class="k">in Studio</span><span class="sub">runbook</span></div>
+    <p class="t">Three variables</p>
+    <ul class="checks" role="group" aria-label="Three variables — steps"><li data-i="0" role="checkbox" aria-checked="false" tabindex="0"><span class="m" aria-hidden="true"></span><span>Paste the script above into your Script</span></li><li data-i="1" role="checkbox" aria-checked="false" tabindex="0"><span class="m" aria-hidden="true"></span><span>Press Play and check your Output matches</span></li><li data-i="2" role="checkbox" aria-checked="false" tabindex="0"><span class="m" aria-hidden="true"></span><span>Change <code>playerName</code> to your own name and run it again</span></li>
+    </ul>
+    <div class="runbook-foot"><span class="meter thin"><i style="width:0%"></i></span><span class="hint">0 of 3 done</span></div></div><aside class="key-idea"><span class="ki-lbl">key idea</span>
+<p>Each variable holds one thing, and that thing can be a number, text or true or false.</p>
+</aside></section><section class="step" data-step="3" data-kind="do"><div class="st-sh" aria-hidden="true"><span class="w">step</span><b>03</b><span class="kd">do</span><i class="ok"></i></div><h2 tabindex="-1">Printing more than one thing</h2><p>Give <code>print</code> several things, separated by commas, and it prints them all on one
+line with a space between each:</p><figure class="code" data-lang="luau" data-script="3"><figcaption class="code-head"><span class="lang">luau</span>
+    <span class="cap">script</span><span class="sp"></span><button class="copy" type="button" title="Copy this script into Studio">copy</button></figcaption><pre><code><span class="cl"><span class="ln" aria-hidden="true">1</span><span class="tx"><span class="tok-k">local</span> coins = <span class="tok-n">10</span></span></span><span class="cl"><span class="ln" aria-hidden="true">2</span><span class="tx"><span class="tok-k">local</span> playerName = <span class="tok-s">"Ada"</span></span></span><span class="cl"><span class="ln" aria-hidden="true">3</span><span class="tx"></span></span><span class="cl has-note" tabindex="0"><span class="ln" aria-hidden="true">4</span><span class="tx"><span class="tok-f">print</span>(playerName, <span class="tok-s">"has"</span>, coins, <span class="tok-s">"coins"</span>)</span><span class="ln-note" role="note">boxes show their contents; quoted words show as typed</span></span></code></pre></figure><div class="out" data-out-for="3"><div class="out-head"><span class="k">Studio</span><span class="sub">Output</span>
+    <span class="sp"></span><span class="sub">what you should see</span></div>
+    <pre><span class="ln">Ada has 10 coins<span class="src">  -  Server - Script:4</span></span></pre></div><p>That line is built from two variables and two bits of fixed text. Change what is
+in the boxes and the sentence changes with them — that is the whole point of a
+variable.</p><div class="runbook" data-task="first-sent" data-cp="1"><div class="runbook-h"><span class="k">in Studio</span><span class="sub">runbook</span></div>
+    <p class="t">A sentence</p>
+    <ul class="checks" role="group" aria-label="A sentence — steps"><li data-i="0" role="checkbox" aria-checked="false" tabindex="0"><span class="m" aria-hidden="true"></span><span>Make a variable called <code>level</code> holding a number</span></li><li data-i="1" role="checkbox" aria-checked="false" tabindex="0"><span class="m" aria-hidden="true"></span><span>Print a sentence that uses your name <strong>and</strong> your level</span></li><li data-i="2" role="checkbox" aria-checked="false" tabindex="0"><span class="m" aria-hidden="true"></span><span>Change the level, press Play, and watch the sentence change</span></li>
+    </ul>
+    <div class="runbook-foot"><span class="meter thin"><i style="width:0%"></i></span><span class="hint">0 of 3 done</span></div></div><aside class="key-idea"><span class="ki-lbl">key idea</span>
+<p>Give <code>print</code> several things separated by commas and it shows them all on one line.</p>
+</aside></section><section class="step" data-step="4" data-kind="do"><div class="st-sh" aria-hidden="true"><span class="w">step</span><b>04</b><span class="kd">do</span><i class="ok"></i></div><h2 tabindex="-1">Names matter, exactly</h2><p>Luau reads names exactly as you typed them. <code>coins</code>, <code>Coins</code> and <code>coin</code> are three
+different names.</p><div class="probe" data-probe="p-typo"><div class="probe-h"><span class="k">quick question</span> <span class="from">predict first</span></div>
+    <figure class="code" data-lang="luau"><figcaption class="code-head"><span class="lang">luau</span>
+    <span class="cap">predict.lua</span><span class="sp"></span></figcaption><pre><code><span class="cl"><span class="ln" aria-hidden="true">1</span><span class="tx"><span class="tok-k">local</span> coins = <span class="tok-n">10</span></span></span><span class="cl"><span class="ln" aria-hidden="true">2</span><span class="tx"><span class="tok-f">print</span>(coin)</span></span></code></pre></figure><p class="q">What will the Output window show? Pick before you press Play.</p>
+    <div class="opts"><button type="button" data-i="0">10</button><button type="button" data-i="1">nil</button><button type="button" data-i="2">an error</button></div>
+    <p class="verdict" hidden=""></p>
+    <button type="button" class="again" hidden="">try again</button></div><p>This is one of the most important things in this whole lesson. A misspelled name
+does <strong>not</strong> stop your script. It quietly gives you <code>nil</code>, which is Luau's word
+for <em>nothing is here</em>.</p><div class="out"><div class="out-head"><span class="k">Studio</span><span class="sub">Output</span>
+    <span class="sp"></span><span class="sub">what you should see</span></div>
+    <pre><span class="ln">nil<span class="src">  -  Server - Script:2</span></span></pre></div><p>Studio does try to warn you: look at your script and <code>coin</code> has a wavy underline.
+Hover over it and Studio says something like <em>Unknown global 'coin'</em>. Get into
+the habit of checking those underlines — they find mistakes before you even press
+Play.</p><p>Rules for names:</p><ul>
+<li>letters, numbers and <code>_</code> only — no spaces</li>
+<li>cannot start with a number: <code>2coins</code> is not allowed, <code>coins2</code> is fine</li>
+<li>cannot be a word Luau already uses, like <code>local</code>, <code>end</code> or <code>true</code></li>
+<li>capital letters count: <code>playerName</code> and <code>PlayerName</code> are different</li>
+</ul><div class="runbook" data-task="first-typo" data-cp="2"><div class="runbook-h"><span class="k">in Studio</span><span class="sub">runbook</span></div>
+    <p class="t">Break it on purpose</p>
+    <ul class="checks" role="group" aria-label="Break it on purpose — steps"><li data-i="0" role="checkbox" aria-checked="false" tabindex="0"><span class="m" aria-hidden="true"></span><span>Make a variable, then print it with its name misspelled</span></li><li data-i="1" role="checkbox" aria-checked="false" tabindex="0"><span class="m" aria-hidden="true"></span><span>See <code>nil</code> in the Output</span></li><li data-i="2" role="checkbox" aria-checked="false" tabindex="0"><span class="m" aria-hidden="true"></span><span>Find the wavy underline in the script and hover over it</span></li><li data-i="3" role="checkbox" aria-checked="false" tabindex="0"><span class="m" aria-hidden="true"></span><span>Fix the name and see the real value come back</span></li>
+    </ul>
+    <div class="runbook-foot"><span class="meter thin"><i style="width:0%"></i></span><span class="hint">0 of 4 done</span></div></div><aside class="key-idea"><span class="ki-lbl">key idea</span>
+<p>Names must match exactly, and a misspelt name gives <code>nil</code> instead of an error.</p>
+</aside></section><section class="step" data-step="5" data-kind="build" data-optional=""><div class="st-sh" aria-hidden="true"><span class="w">step</span><b>05</b><span class="kd">build</span><i class="ok"></i></div><h2 tabindex="-1">Your turn</h2><p><em>Optional practice: the stop clears without it.</em></p><p>Write a script with a variable <code>pet</code> holding the name of an animal and a variable
+<code>legs</code> holding how many legs it has. Print one sentence that uses both, so the
+Output shows something like:</p><div class="out"><div class="out-head"><span class="k">Studio</span><span class="sub">Output</span>
+    <span class="sp"></span><span class="sub">what you should see</span></div>
+    <pre><span class="ln">cat has 4 legs<span class="src">  -  Server - Script:4</span></span></pre></div><details class="solution"><summary><span class="k">cat solution.lua</span>
+    <span>Tried it yourself first? Here is one way to do it.</span></summary><figure class="code" data-lang="luau"><figcaption class="code-head"><span class="lang">luau</span>
+    <span class="cap">solution.lua</span><span class="sp"></span><button class="copy" type="button" title="Copy this script into Studio">copy</button></figcaption><pre><code><span class="cl"><span class="ln" aria-hidden="true">1</span><span class="tx"><span class="tok-k">local</span> pet = <span class="tok-s">"cat"</span></span></span><span class="cl"><span class="ln" aria-hidden="true">2</span><span class="tx"><span class="tok-k">local</span> legs = <span class="tok-n">4</span></span></span><span class="cl"><span class="ln" aria-hidden="true">3</span><span class="tx"></span></span><span class="cl"><span class="ln" aria-hidden="true">4</span><span class="tx"><span class="tok-f">print</span>(pet, <span class="tok-s">"has"</span>, legs, <span class="tok-s">"legs"</span>)</span></span></code></pre></figure></details><aside class="recap"><span class="rc-lbl">recap</span>
+
+<ul>
+<li><code>local</code> makes a new variable and <code>=</code> puts a value in it.</li>
+<li>A misspelt name gives <code>nil</code>, not an error.</li>
+<li><code>print</code> shows what is inside a variable in Output.</li>
+</ul>
+</aside></section><blockquote class="done-when">
+<p>all three checklists are ticked. If you remember one thing: a
+typo in a variable name gives you <code>nil</code>, not an error.</p>
+</blockquote><section class="st-end" aria-label="The end of the lesson"><p class="st-k">end of 2.1 · 1 of 3 checkpoints · 0 min tonight</p>
+      <p class="big">2 checkpoints to go.</p>
+      <div class="st-open"><button type="button" class="go" data-cp="1"><span class="n">checkpoint 2</span><span class="t">Print a sentence built from variables</span></button><button type="button" class="go" data-cp="2"><span class="n">checkpoint 3</span><span class="t">Misspell a name and see nil</span></button></div>
+      <div class="st-go"><button type="button" class="go ghost" data-act="desk">Back to the desk</button></div></section><nav class="stepnav" aria-label="Previous and next stop">
+    <button type="button" data-go="1.0">
+      <span class="k">← previous</span><span class="v">1.0 · Set up Roblox Studio</span></button>
+    <button type="button" class="nx" data-go="2.2">
+      <span class="k">next →</span><span class="v">2.2 · Kinds of values</span></button></nav>
